@@ -25,7 +25,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName")),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo")),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
@@ -33,35 +33,22 @@ public class TestCommitCommentEvent {
     }
 
     @Test
-    public void actor_should_be_bold_without_payload_commit_comment() {
+    public void actor_commented_on_repo_should_be_appended_to_main_without_payload_commit_comment() {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName")),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo")),
                 mockMainStyledText,
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserName");
-    }
-
-    @Test
-    public void repo_should_be_bold_without_payload_commit_comment() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
-        Event stubEvent = stubEvent(stubUser("LoginUserName"));
-        EventRepository stubRepo = stubRepo();
-        when(stubEvent.getRepo()).thenReturn(stubRepo);
-        iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent,
-                mockMainStyledText,
-                mockDetailsStyledText());
-
+        verify(mockMainStyledText).append(" commented on ");
         verify(mockMainStyledText).bold("Repo");
     }
 
-    private EventRepository stubRepo() {
+    private EventRepository stubRepo(String repo) {
         EventRepository stubRepo = mock(EventRepository.class);
-        when(stubRepo.getName()).thenReturn("Repo");
+        when(stubRepo.getName()).thenReturn(repo);
         return stubRepo;
     }
 
@@ -73,11 +60,12 @@ public class TestCommitCommentEvent {
         return mock(StyledText.class);
     }
 
-    private Event stubEvent(User stubUser) {
+    private Event stubEvent(User stubUser, EventRepository stubRepo) {
         Event stubEvent = mock(Event.class);
         when(stubEvent.getType()).thenReturn(Event.TYPE_COMMIT_COMMENT);
         when(stubEvent.getActor()).thenReturn(stubUser);
         when(stubEvent.getPayload()).thenReturn(stubPayload());
+        when(stubEvent.getRepo()).thenReturn(stubRepo);
         return stubEvent;
     }
 
