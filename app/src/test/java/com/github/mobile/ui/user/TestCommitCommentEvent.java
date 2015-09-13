@@ -1,17 +1,15 @@
 package com.github.mobile.ui.user;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Matchers.anyChar;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
-import java.lang.String;
-
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
@@ -25,7 +23,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo")),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload()),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
@@ -37,13 +35,29 @@ public class TestCommitCommentEvent {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo")),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload()),
                 mockMainStyledText,
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserName");
         verify(mockMainStyledText).append(" commented on ");
         verify(mockMainStyledText).bold("Repo");
+    }
+
+    @Test
+    public void comment_id_should_be_appended_to_details_when_comment_id_is_10_characters_long() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        CommitCommentPayload stubPayload = stubPayload();
+        CommitComment stubComment = mock(CommitComment.class);
+        when(stubComment.getCommitId()).thenReturn("10chlongId");
+        when(stubPayload.getComment()).thenReturn(stubComment);
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload),
+                mockMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("Comment in");
     }
 
     private EventRepository stubRepo(String repo) {
@@ -53,18 +67,20 @@ public class TestCommitCommentEvent {
     }
 
     private StyledText mockDetailsStyledText() {
-        return mock(StyledText.class);
+        StyledText mock = mock(StyledText.class);
+        when(mock.append(anyChar())).thenReturn(mock);
+        return mock;
     }
 
     private StyledText mockMainStyledText() {
         return mock(StyledText.class);
     }
 
-    private Event stubEvent(User stubUser, EventRepository stubRepo) {
+    private Event stubEvent(User stubUser, EventRepository stubRepo, CommitCommentPayload stubPayload) {
         Event stubEvent = mock(Event.class);
         when(stubEvent.getType()).thenReturn(Event.TYPE_COMMIT_COMMENT);
         when(stubEvent.getActor()).thenReturn(stubUser);
-        when(stubEvent.getPayload()).thenReturn(stubPayload());
+        when(stubEvent.getPayload()).thenReturn(stubPayload);
         when(stubEvent.getRepo()).thenReturn(stubRepo);
         return stubEvent;
     }

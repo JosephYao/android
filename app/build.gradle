@@ -33,6 +33,10 @@ android {
         }
         androidTest.setRoot(project(':integration-tests').projectDir.absolutePath + "/src/main")
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 repositories {
