@@ -23,7 +23,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload()),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
@@ -35,7 +35,7 @@ public class TestCommitCommentEvent {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload()),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
                 mockMainStyledText,
                 mockDetailsStyledText());
 
@@ -45,19 +45,25 @@ public class TestCommitCommentEvent {
     }
 
     @Test
-    public void comment_id_should_be_appended_to_details_when_comment_id_is_10_characters_long() {
+    public void comment_id_should_be_appended_to_details_without_change_when_comment_id_is_10_characters_long() {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
-        CommitCommentPayload stubPayload = stubPayload();
-        CommitComment stubComment = mock(CommitComment.class);
-        when(stubComment.getCommitId()).thenReturn("10chlongId");
-        when(stubPayload.getComment()).thenReturn(stubComment);
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubPayload),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
         verify(mockDetailsStyledText).append("Comment in");
+        verify(mockDetailsStyledText).append(' ');
+        verify(mockDetailsStyledText).monospace("10chlongId");
+        verify(mockDetailsStyledText).append(':');
+        verify(mockDetailsStyledText).append('\n');
+    }
+
+    private CommitComment stubCommitComment(String commentId) {
+        CommitComment stubComment = mock(CommitComment.class);
+        when(stubComment.getCommitId()).thenReturn(commentId);
+        return stubComment;
     }
 
     private EventRepository stubRepo(String repo) {
@@ -85,8 +91,10 @@ public class TestCommitCommentEvent {
         return stubEvent;
     }
 
-    private CommitCommentPayload stubPayload() {
-        return mock(CommitCommentPayload.class);
+    private CommitCommentPayload stubCommitCommentPayload(CommitComment commitComment) {
+        CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
+        when(stubCommitCommentPayload.getComment()).thenReturn(commitComment);
+        return stubCommitCommentPayload;
     }
 
     private User stubUser(String loginUserName) {
