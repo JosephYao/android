@@ -15,6 +15,7 @@ import java.lang.String;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventRepository;
 import org.junit.Test;
 
 public class TestCommitCommentEvent {
@@ -22,7 +23,7 @@ public class TestCommitCommentEvent {
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
-    public void icon_should_be_comment() throws Exception {
+    public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent(stubUser("LoginUserName")),
                 mockMainStyledText(),
@@ -32,7 +33,7 @@ public class TestCommitCommentEvent {
     }
 
     @Test
-    public void actor_should_be_bold_without_payload_commit_comment() throws Exception {
+    public void actor_should_be_bold_without_payload_commit_comment() {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
@@ -41,6 +42,27 @@ public class TestCommitCommentEvent {
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserName");
+    }
+
+    @Test
+    public void repo_should_be_bold_without_payload_commit_comment() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        Event stubEvent = stubEvent(stubUser("LoginUserName"));
+        EventRepository stubRepo = stubRepo();
+        when(stubEvent.getRepo()).thenReturn(stubRepo);
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent,
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).bold("Repo");
+    }
+
+    private EventRepository stubRepo() {
+        EventRepository stubRepo = mock(EventRepository.class);
+        when(stubRepo.getName()).thenReturn("Repo");
+        return stubRepo;
     }
 
     private StyledText mockDetailsStyledText() {
