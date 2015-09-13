@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verify;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
+import java.lang.String;
+
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
@@ -17,43 +19,54 @@ import org.junit.Test;
 
 public class TestCommitCommentEvent {
 
+    IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+
     @Test
     public void icon_should_be_comment() throws Exception {
-        // Arrange
-        Event event = new Event();
-        event.setType(Event.TYPE_COMMIT_COMMENT);
+        String icon = iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubUser("LoginUserName")),
+                mockMainStyledText(),
+                mockDetailsStyledText());
 
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-        IconAndViewTextManager spyIconAndViewTextManager = spy(iconAndViewTextManager);
-        doNothing().when(spyIconAndViewTextManager).formatCommitComment(event, null, null);
-
-        // Act
-        String icon = spyIconAndViewTextManager.setIconAndFormatStyledText(event, null, null);
-
-        // Assert
         assertEquals(TypefaceUtils.ICON_COMMENT, icon);
     }
 
     @Test
-    public void actor_should_be_bold() throws Exception {
-        // Arrange
+    public void actor_should_be_bold_without_payload_commit_comment() throws Exception {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubUser("LoginUserName")),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).bold("LoginUserName");
+    }
+
+    private StyledText mockDetailsStyledText() {
+        return mock(StyledText.class);
+    }
+
+    private StyledText mockMainStyledText() {
+        return mock(StyledText.class);
+    }
+
+    private Event stubEvent(User stubUser) {
         Event stubEvent = mock(Event.class);
         when(stubEvent.getType()).thenReturn(Event.TYPE_COMMIT_COMMENT);
-        User stubUser = mock(User.class);
-        when(stubUser.getLogin()).thenReturn("LoginUserName");
         when(stubEvent.getActor()).thenReturn(stubUser);
-        CommitCommentPayload stubPayload = mock(CommitCommentPayload.class);
-        when(stubEvent.getPayload()).thenReturn(stubPayload);
+        when(stubEvent.getPayload()).thenReturn(stubPayload());
+        return stubEvent;
+    }
 
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-        StyledText mockMain = mock(StyledText.class);
-        StyledText mockDetails = mock(StyledText.class);
+    private CommitCommentPayload stubPayload() {
+        return mock(CommitCommentPayload.class);
+    }
 
-        // Act
-        String icon = iconAndViewTextManager.setIconAndFormatStyledText(stubEvent, mockMain, mockDetails);
-
-        // Assert
-        verify(mockMain).bold("LoginUserName");
+    private User stubUser(String loginUserName) {
+        User stubUser = mock(User.class);
+        when(stubUser.getLogin()).thenReturn(loginUserName);
+        return stubUser;
     }
 
 }
