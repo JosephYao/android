@@ -23,7 +23,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId", "comment"))),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
@@ -31,11 +31,11 @@ public class TestCommitCommentEvent {
     }
 
     @Test
-    public void actor_commented_on_repo_should_be_appended_to_main_without_payload_commit_comment() {
+    public void actor_commented_on_repo_should_be_appended_to_main() {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId", "comment"))),
                 mockMainStyledText,
                 mockDetailsStyledText());
 
@@ -49,7 +49,8 @@ public class TestCommitCommentEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId"))),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment
+                        ("10chlongId", "comment"))),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
@@ -61,11 +62,25 @@ public class TestCommitCommentEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("longerthan10charId"))),
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment
+                        ("longerthan10charId", "comment"))),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
+    }
+
+    @Test
+    public void comment_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"),
+                        stubCommitCommentPayload(stubCommitComment("longerthan10charId", "comment"))),
+                mockMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("comment");
     }
 
     private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
@@ -76,9 +91,10 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).append('\n');
     }
 
-    private CommitComment stubCommitComment(String commentId) {
+    private CommitComment stubCommitComment(String commentId, String body) {
         CommitComment stubComment = mock(CommitComment.class);
         when(stubComment.getCommitId()).thenReturn(commentId);
+        when(stubComment.getBody()).thenReturn(body);
         return stubComment;
     }
 
