@@ -53,9 +53,25 @@ public class TestCommitCommentEvent {
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
+        verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
+    }
+
+    @Test
+    public void comment_id_should_be_trimmed_and_appended_to_details_when_comment_id_is_longer_than_10_characters() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("longerthan10charId"))),
+                mockMainStyledText(),
+                mockDetailsStyledText);
+
+        verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
+    }
+
+    private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
         verify(mockDetailsStyledText).append("Comment in");
         verify(mockDetailsStyledText).append(' ');
-        verify(mockDetailsStyledText).monospace("10chlongId");
+        verify(mockDetailsStyledText).monospace(text3);
         verify(mockDetailsStyledText).append(':');
         verify(mockDetailsStyledText).append('\n');
     }
