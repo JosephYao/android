@@ -1,19 +1,20 @@
 package com.github.mobile.ui.user;
 
-import com.github.mobile.util.TypefaceUtils;
-
-import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.IssuesPayload;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import com.github.mobile.util.TypefaceUtils;
+
+import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.IssuesPayload;
+import org.junit.Ignore;
+import org.junit.Test;
+
 public class IconAndViewTextManagerTest {
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_commit_comment_then_icon_should_be_comment_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
