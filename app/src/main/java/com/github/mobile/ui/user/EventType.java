@@ -10,6 +10,7 @@ import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.EventRepository;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
@@ -21,39 +22,40 @@ public enum EventType {
     CommitCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            boldActor(main, event);
-            main.append(" commented on ");
-            boldRepo(main, event);
+            return generate(main, details);
+        }
 
-            CommitCommentPayload payload = (CommitCommentPayload) event
-                    .getPayload();
-            appendCommitComment(details, payload.getComment());
+        private String generate(StyledText main, StyledText details) {
+            renderUserCommentOnRepo(main);
+            renderCommitComment(details);
             return TypefaceUtils.ICON_COMMENT;
         }
 
-        private StyledText boldActor(final StyledText text, final Event event) {
-            return boldUser(text, event.getActor());
+        private CommitComment commitComment() {
+            return ((CommitCommentPayload)payload).getComment();
         }
 
-        private StyledText boldUser(final StyledText text, final User user) {
-            if (user != null)
-                text.bold(user.getLogin());
-            return text;
+        private void renderUserCommentOnRepo(StyledText main) {
+            renderUserLogin(main);
+            main.append(" commented on ");
+            renderRepoName(main);
         }
 
-        private StyledText boldRepo(final StyledText text, final Event event) {
-            EventRepository repo = event.getRepo();
+        private void renderRepoName(StyledText main) {
             if (repo != null)
-                text.bold(repo.getName());
-            return text;
+                main.bold(repo.getName());
         }
 
-        private void appendCommitComment(final StyledText details,
-                final CommitComment comment) {
-            if (comment == null)
+        private void renderUserLogin(StyledText main) {
+            if (user != null)
+                main.bold(user.getLogin());
+        }
+
+        private void renderCommitComment(final StyledText details) {
+            if (commitComment() == null)
                 return;
 
-            String id = comment.getCommitId();
+            String id = commitComment().getCommitId();
             if (!TextUtils.isEmpty(id)) {
                 if (id.length() > 10)
                     id = id.substring(0, 10);
@@ -62,7 +64,7 @@ public enum EventType {
                 details.monospace(id);
                 details.append(':').append('\n');
             }
-            appendComment(details, comment);
+            appendComment(details, commitComment());
         }
 
         private void appendText(final StyledText details, String text) {
@@ -202,12 +204,16 @@ public enum EventType {
         }
     };
 
-    private Event event;
+    protected User user;
+    protected EventRepository repo;
+    protected EventPayload payload;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
             if (event.getType().equals(eventType.name())) {
-                eventType.event = event;
+                eventType.user = event.getActor();
+                eventType.repo = event.getRepo();
+                eventType.payload = event.getPayload();
                 return eventType;
             }
 
