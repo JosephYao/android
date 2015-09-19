@@ -1,11 +1,14 @@
 package com.github.mobile.ui.user;
 
+import static com.github.kevinsawicki.wishlist.ViewUpdater.FORMAT_INT;
 import android.text.TextUtils;
 
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.mobile.core.issue.IssueUtils;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TimeUtils;
+
+import java.util.List;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Commit;
@@ -30,10 +33,6 @@ import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.event.TeamAddPayload;
-
-import java.util.List;
-
-import static com.github.kevinsawicki.wishlist.ViewUpdater.FORMAT_INT;
 
 public class IconAndViewTextManager {
     public static final String ISSUES_PAYLOAD_ACTION_OPENED = "opened";
@@ -406,6 +405,6 @@ public class IconAndViewTextManager {
 
     String setIconAndFormatStyledText(Event event, StyledText main, StyledText details) {
 
-        return EventType.valueOf(event.getType()).generateIconAndFormatStyledText(this, event, main, details);
+        return EventType.createInstance(event).generateIconAndFormatStyledText(this, event, main, details);
     }
 }

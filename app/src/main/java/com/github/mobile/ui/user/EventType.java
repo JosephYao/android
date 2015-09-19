@@ -17,6 +17,7 @@ import org.eclipse.egit.github.core.event.IssuesPayload;
  * Created by twer on 3/22/15.
  */
 public enum EventType {
+
     CommitCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -199,8 +200,19 @@ public enum EventType {
             iconAndViewTextManager.formatWatch(event, main, details);
             return TypefaceUtils.ICON_STAR;
         }
-    },
-    ;
+    };
+
+    private Event event;
+
+    public static EventType createInstance(Event event) {
+        for(EventType eventType : values())
+            if (event.getType().equals(eventType.name())) {
+                eventType.event = event;
+                return eventType;
+            }
+
+        throw new IllegalArgumentException();
+    }
 
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
 }
