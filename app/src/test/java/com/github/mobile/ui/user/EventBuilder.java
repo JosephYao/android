@@ -19,7 +19,7 @@ public class EventBuilder {
         this.type = type;
         this.loginUserName = "LoginUserName";
         this.repoName = "Repo";
-        this.payloadBuilder = new PayloadBuilder().defaultStubCommitCommentPayload();
+        this.payloadBuilder = new CommitCommentPayloadBuilder().defaultStubPayload();
         return this;
     }
 
@@ -34,7 +34,7 @@ public class EventBuilder {
         User stubUser = stubUser();
         when(stubEvent.getActor()).thenReturn(stubUser);
 
-        EventPayload stubPayload = payloadBuilder.defaultStubCommitCommentPayload().build();
+        EventPayload stubPayload = payloadBuilder.build();
         when(stubEvent.getPayload()).thenReturn(stubPayload);
 
         EventRepository stubRepo = stubRepo();
@@ -52,5 +52,10 @@ public class EventBuilder {
         EventRepository stubRepo = mock(EventRepository.class);
         when(stubRepo.getName()).thenReturn(repoName);
         return stubRepo;
+    }
+
+    public EventBuilder withPayload(PayloadBuilder payloadBuilder) {
+        this.payloadBuilder = payloadBuilder;
+        return this;
     }
 }
