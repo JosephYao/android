@@ -23,7 +23,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId", "comment"))),
+                new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT).build(),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
