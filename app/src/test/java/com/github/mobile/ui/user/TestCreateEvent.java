@@ -72,4 +72,18 @@ public class TestCreateEvent {
         verify(mockMainStyledText).bold("RepoForCreate");
     }
 
+    @Test
+    public void repo_should_be_trimmed_from_slash_and_bold_to_main_when_ref_type_is_repository() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new CreatePayloadBuilder().defaultStubPayload().
+                                withRefType("repository")).
+                        withRepo("Repos/RepoForCreate").
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForCreate");
+    }
+
 }
