@@ -82,30 +82,11 @@ public enum EventType {
 
         private String generate(StyledText main, StyledText details) {
             renderUserLogin(main);
-
             main.append(" created ");
-            String refType = ((CreatePayload) payload).getRefType();
-            main.append(refType);
-            main.append(' ');
-            if (!"repository".equals(refType)) {
-                main.append(((CreatePayload) payload).getRef());
-                main.append(" at ");
-                renderRepoName(main);
-            } else
-                boldRepoName(main);
-            return TypefaceUtils.ICON_CREATE;
-        }
 
-        private StyledText boldRepoName(final StyledText text) {
-            if (repo != null) {
-                String name = repo.getName();
-                if (!TextUtils.isEmpty(name)) {
-                    int slash = name.indexOf('/');
-                    if (slash != -1 && slash + 1 < name.length())
-                        text.bold(name.substring(slash + 1));
-                }
-            }
-            return text;
+            payloadRef.renderToMain(main);
+
+            return TypefaceUtils.ICON_CREATE;
         }
 
     },
@@ -226,6 +207,7 @@ public enum EventType {
     protected User user;
     protected EventRepository repo;
     protected EventPayload payload;
+    protected PayloadRef payloadRef;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -233,6 +215,8 @@ public enum EventType {
                 eventType.user = event.getActor();
                 eventType.repo = event.getRepo();
                 eventType.payload = event.getPayload();
+                if (eventType.payload instanceof CreatePayload)
+                    eventType.payloadRef = PayloadRefFactory.create(eventType.payload, eventType.repo);
                 return eventType;
             }
 
