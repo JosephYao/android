@@ -9,21 +9,19 @@ import static org.mockito.Mockito.when;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.CommitComment;
-import org.eclipse.egit.github.core.User;
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.EventRepository;
 import org.junit.Test;
 
 public class TestCommitCommentEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT);
+    private CommitCommentPayloadBuilder stubPayload = new CommitCommentPayloadBuilder().defaultStubPayload();
 
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT).build(),
+                stubEvent.build(),
                 mockMainStyledText(),
                 mockDetailsStyledText());
 
@@ -35,7 +33,10 @@ public class TestCommitCommentEvent {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment("10chlongId", "comment"))),
+                stubEvent
+                        .withLoginUserName("LoginUserName")
+                        .withRepo("Repo")
+                        .build(),
                 mockMainStyledText,
                 mockDetailsStyledText());
 
@@ -49,8 +50,9 @@ public class TestCommitCommentEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment
-                        ("10chlongId", "comment"))),
+                stubEvent.withPayload(stubPayload.
+                        withCommentId("10chlongId")).
+                        build(),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
@@ -62,8 +64,9 @@ public class TestCommitCommentEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"), stubCommitCommentPayload(stubCommitComment
-                        ("longerthan10charId", "comment"))),
+                stubEvent.withPayload(stubPayload.
+                        withCommentId("longerthan10charId")).
+                        build(),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
@@ -75,8 +78,9 @@ public class TestCommitCommentEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubUser("LoginUserName"), stubRepo("Repo"),
-                        stubCommitCommentPayload(stubCommitComment("longerthan10charId", "comment"))),
+                stubEvent.withPayload(stubPayload.
+                        withComment("comment")).
+                        build(),
                 mockMainStyledText(),
                 mockDetailsStyledText);
 
@@ -91,19 +95,6 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).append('\n');
     }
 
-    private CommitComment stubCommitComment(String commentId, String body) {
-        CommitComment stubComment = mock(CommitComment.class);
-        when(stubComment.getCommitId()).thenReturn(commentId);
-        when(stubComment.getBody()).thenReturn(body);
-        return stubComment;
-    }
-
-    private EventRepository stubRepo(String repo) {
-        EventRepository stubRepo = mock(EventRepository.class);
-        when(stubRepo.getName()).thenReturn(repo);
-        return stubRepo;
-    }
-
     private StyledText mockDetailsStyledText() {
         StyledText mock = mock(StyledText.class);
         when(mock.append(anyChar())).thenReturn(mock);
@@ -112,27 +103,6 @@ public class TestCommitCommentEvent {
 
     private StyledText mockMainStyledText() {
         return mock(StyledText.class);
-    }
-
-    private Event stubEvent(User stubUser, EventRepository stubRepo, CommitCommentPayload stubPayload) {
-        Event stubEvent = mock(Event.class);
-        when(stubEvent.getType()).thenReturn(Event.TYPE_COMMIT_COMMENT);
-        when(stubEvent.getActor()).thenReturn(stubUser);
-        when(stubEvent.getPayload()).thenReturn(stubPayload);
-        when(stubEvent.getRepo()).thenReturn(stubRepo);
-        return stubEvent;
-    }
-
-    private CommitCommentPayload stubCommitCommentPayload(CommitComment commitComment) {
-        CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
-        when(stubCommitCommentPayload.getComment()).thenReturn(commitComment);
-        return stubCommitCommentPayload;
-    }
-
-    private User stubUser(String loginUserName) {
-        User stubUser = mock(User.class);
-        when(stubUser.getLogin()).thenReturn(loginUserName);
-        return stubUser;
     }
 
 }

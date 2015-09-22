@@ -31,4 +31,14 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
         when(stubComment.getBody()).thenReturn(comment);
         return stubComment;
     }
+
+    public PayloadBuilder withCommentId(String commentId) {
+        this.commentId = commentId;
+        return this;
+    }
+
+    public PayloadBuilder withComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
 }

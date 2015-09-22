@@ -11,14 +11,14 @@ import org.eclipse.egit.github.core.event.EventRepository;
 public class EventBuilder {
 
     private String loginUserName;
-    private String repoName;
+    private String repo;
     private PayloadBuilder payloadBuilder;
     private String type;
 
     public EventBuilder defaultStubEventFor(String type) {
         this.type = type;
         this.loginUserName = "LoginUserName";
-        this.repoName = "Repo";
+        this.repo = "Repo";
         this.payloadBuilder = new CommitCommentPayloadBuilder().defaultStubPayload();
         return this;
     }
@@ -50,12 +50,22 @@ public class EventBuilder {
 
     private EventRepository stubRepo() {
         EventRepository stubRepo = mock(EventRepository.class);
-        when(stubRepo.getName()).thenReturn(repoName);
+        when(stubRepo.getName()).thenReturn(repo);
         return stubRepo;
     }
 
     public EventBuilder withPayload(PayloadBuilder payloadBuilder) {
         this.payloadBuilder = payloadBuilder;
+        return this;
+    }
+
+    public EventBuilder withLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
+        return this;
+    }
+
+    public EventBuilder withRepo(String repo) {
+        this.repo = repo;
         return this;
     }
 }
