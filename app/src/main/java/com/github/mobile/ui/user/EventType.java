@@ -9,6 +9,7 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
+import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.EventRepository;
@@ -39,16 +40,6 @@ public enum EventType {
             renderUserLogin(main);
             main.append(" commented on ");
             renderRepoName(main);
-        }
-
-        private void renderRepoName(StyledText main) {
-            if (repo != null)
-                main.bold(repo.getName());
-        }
-
-        private void renderUserLogin(StyledText main) {
-            if (user != null)
-                main.bold(user.getLogin());
         }
 
         private void renderCommitComment(final StyledText details) {
@@ -86,9 +77,37 @@ public enum EventType {
     CreateEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatCreate(event, main, details);
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
+            renderUserLogin(main);
+
+            main.append(" created ");
+            String refType = ((CreatePayload) payload).getRefType();
+            main.append(refType);
+            main.append(' ');
+            if (!"repository".equals(refType)) {
+                main.append(((CreatePayload) payload).getRef());
+                main.append(" at ");
+                renderRepoName(main);
+            } else
+                boldRepoName(main);
             return TypefaceUtils.ICON_CREATE;
         }
+
+        private StyledText boldRepoName(final StyledText text) {
+            if (repo != null) {
+                String name = repo.getName();
+                if (!TextUtils.isEmpty(name)) {
+                    int slash = name.indexOf('/');
+                    if (slash != -1 && slash + 1 < name.length())
+                        text.bold(name.substring(slash + 1));
+                }
+            }
+            return text;
+        }
+
     },
     DeleteEvent {
         @Override
@@ -221,4 +240,15 @@ public enum EventType {
     }
 
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
+
+    protected void renderUserLogin(StyledText main) {
+        if (user != null)
+            main.bold(user.getLogin());
+    }
+
+    protected void renderRepoName(StyledText main) {
+        if (repo != null)
+            main.bold(repo.getName());
+    }
+
 }
