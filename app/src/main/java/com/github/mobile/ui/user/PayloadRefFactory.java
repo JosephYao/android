@@ -10,8 +10,9 @@ public class PayloadRefFactory {
         CreatePayload createPayload = (CreatePayload) payload;
 
         if (createPayload.getRefType().equals("repository"))
-            return new RepositoryRef(createPayload.getRefType(), repo);
+            return new RepositoryRef(createPayload.getRefType(), new RepositoryRepo(repo));
         else
-            return new NonRepositoryRef(createPayload.getRefType(), createPayload.getRef(), repo);
+            return new NonRepositoryRef(createPayload.getRefType(), createPayload.getRef(), new NonRepositoryRepo(repo));
     }
+
 }
