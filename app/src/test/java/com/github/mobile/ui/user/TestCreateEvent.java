@@ -1,9 +1,9 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.StyledTextDataMother.mockDetailsStyledText;
+import static com.github.mobile.ui.user.StyledTextDataMother.mockMainStyledText;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
-import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
@@ -27,11 +27,4 @@ public class TestCreateEvent {
         assertEquals(TypefaceUtils.ICON_CREATE, icon);
     }
 
-    private StyledText mockDetailsStyledText() {
-        return mock(StyledText.class);
-    }
-
-    private StyledText mockMainStyledText() {
-        return mock(StyledText.class);
-    }
 }

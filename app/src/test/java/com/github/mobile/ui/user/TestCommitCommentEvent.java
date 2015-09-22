@@ -1,10 +1,9 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.StyledTextDataMother.mockDetailsStyledText;
+import static com.github.mobile.ui.user.StyledTextDataMother.mockMainStyledText;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyChar;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
@@ -93,16 +92,6 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).monospace(text3);
         verify(mockDetailsStyledText).append(':');
         verify(mockDetailsStyledText).append('\n');
-    }
-
-    private StyledText mockDetailsStyledText() {
-        StyledText mock = mock(StyledText.class);
-        when(mock.append(anyChar())).thenReturn(mock);
-        return mock;
-    }
-
-    private StyledText mockMainStyledText() {
-        return mock(StyledText.class);
     }
 
 }
