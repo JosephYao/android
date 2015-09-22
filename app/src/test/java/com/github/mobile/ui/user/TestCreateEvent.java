@@ -39,6 +39,23 @@ public class TestCreateEvent {
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserNameForCreate");
+        verify(mockMainStyledText).append(" created ");
+    }
+
+    @Test
+    public void ref_type_should_be_appended_to_main_when_ref_type_is_not_repository() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new CreatePayloadBuilder().defaultStubPayload().
+                                withRefType("refType")).
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).append("refType");
+        verify(mockMainStyledText).append(' ');
     }
 
 }
