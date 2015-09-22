@@ -42,7 +42,7 @@ public class TestCreateEvent {
     }
 
     @Test
-    public void ref_type_should_be_appended_to_main_when_ref_type_is_not_repository() {
+    public void ref_type_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(new CreatePayloadBuilder().defaultStubPayload().
@@ -53,6 +53,23 @@ public class TestCreateEvent {
 
         verify(mockMainStyledText).append("refType");
         verify(mockMainStyledText).append(' ');
+    }
+
+    @Test
+    public void ref_should_be_appended_to_main_and_repo_should_be_bold_to_main_when_ref_type_is_not_repository() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new CreatePayloadBuilder().defaultStubPayload().
+                                withRefType("refType").
+                                withRef("ref")).
+                        withRepo("RepoForCreate").
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).append("ref");
+        verify(mockMainStyledText).append(" at ");
+        verify(mockMainStyledText).bold("RepoForCreate");
     }
 
 }
