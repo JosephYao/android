@@ -16,12 +16,13 @@ public class TestCreateEvent {
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_CREATE).
             withPayload(new CreatePayloadBuilder().defaultStubPayload());
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_create() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.build(),
-                mockMainStyledText(),
+                mockMainStyledText,
                 mockDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_CREATE, icon);
@@ -29,8 +30,6 @@ public class TestCreateEvent {
 
     @Test
     public void actor_should_be_bold_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForCreate").
@@ -44,8 +43,6 @@ public class TestCreateEvent {
 
     @Test
     public void ref_type_should_be_appended_to_main_when_ref_type_is_not_repository() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(new CreatePayloadBuilder().defaultStubPayload().

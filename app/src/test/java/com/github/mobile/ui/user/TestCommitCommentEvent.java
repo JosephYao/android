@@ -16,12 +16,14 @@ public class TestCommitCommentEvent {
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT);
     private CommitCommentPayloadBuilder stubPayload = new CommitCommentPayloadBuilder().defaultStubPayload();
+    private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.build(),
-                mockMainStyledText(),
+                mockMainStyledText,
                 mockDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_COMMENT, icon);
@@ -29,8 +31,6 @@ public class TestCommitCommentEvent {
 
     @Test
     public void actor_commented_on_repo_should_be_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent
                         .withLoginUserName("LoginUserName")
@@ -46,13 +46,11 @@ public class TestCommitCommentEvent {
 
     @Test
     public void comment_id_should_be_appended_to_details_without_change_when_comment_id_is_10_characters_long() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
                         withCommentId("10chlongId")).
                         build(),
-                mockMainStyledText(),
+                mockMainStyledText,
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
@@ -60,13 +58,11 @@ public class TestCommitCommentEvent {
 
     @Test
     public void comment_id_should_be_trimmed_and_appended_to_details_when_comment_id_is_longer_than_10_characters() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
                         withCommentId("longerthan10charId")).
                         build(),
-                mockMainStyledText(),
+                mockMainStyledText,
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
@@ -74,13 +70,11 @@ public class TestCommitCommentEvent {
 
     @Test
     public void comment_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
                         withComment("comment")).
                         build(),
-                mockMainStyledText(),
+                mockMainStyledText,
                 mockDetailsStyledText);
 
         verify(mockDetailsStyledText).append("comment");
