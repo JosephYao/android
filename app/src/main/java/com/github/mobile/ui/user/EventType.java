@@ -12,7 +12,6 @@ import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventPayload;
-import org.eclipse.egit.github.core.event.EventRepository;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 /**
@@ -39,7 +38,7 @@ public enum EventType {
         private void renderUserCommentOnRepo(StyledText main) {
             renderUserLogin(main);
             main.append(" commented on ");
-            renderRepoName(main);
+            repo.render(main);
         }
 
         private void renderCommitComment(final StyledText details) {
@@ -205,18 +204,18 @@ public enum EventType {
     };
 
     protected User user;
-    protected EventRepository repo;
     protected EventPayload payload;
     protected PayloadRef payloadRef;
+    protected Repo repo;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
             if (event.getType().equals(eventType.name())) {
                 eventType.user = event.getActor();
-                eventType.repo = event.getRepo();
+                eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 eventType.payload = event.getPayload();
                 if (eventType.payload instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.create(eventType.payload, eventType.repo);
+                    eventType.payloadRef = PayloadRefFactory.create(eventType.payload, event.getRepo());
                 return eventType;
             }
 
@@ -228,11 +227,6 @@ public enum EventType {
     protected void renderUserLogin(StyledText main) {
         if (user != null)
             main.bold(user.getLogin());
-    }
-
-    protected void renderRepoName(StyledText main) {
-        if (repo != null)
-            main.bold(repo.getName());
     }
 
 }
