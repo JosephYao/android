@@ -3,6 +3,8 @@ package com.github.mobile.ui.user;
 import static com.github.mobile.ui.user.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.StyledTextDataMother.mockMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
@@ -84,6 +86,25 @@ public class TestCreateEvent {
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("RepoForCreate");
+    }
+
+    @Test
+    public void repo_should_not_be_bold_to_main_when_repo_name_has_slash_as_the_last_character() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withLoginUserName("willBeBold").
+                        withPayload(new CreatePayloadBuilder().defaultStubPayload().
+                                withRefType("repository")).
+                        withRepo("WillNotBeBold/").
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verifyNoRepoNameIsBold();
+    }
+
+    private void verifyNoRepoNameIsBold() {
+        verify(mockMainStyledText, times(1)).bold(anyString());
     }
 
 }
