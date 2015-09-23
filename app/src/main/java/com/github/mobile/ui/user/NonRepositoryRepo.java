@@ -13,7 +13,6 @@ public class NonRepositoryRepo implements Repo {
 
     @Override
     public void render(StyledText text) {
-        if (repo != null)
-            text.bold(repo.getName());
+        text.bold(repo.getName());
     }
 }
