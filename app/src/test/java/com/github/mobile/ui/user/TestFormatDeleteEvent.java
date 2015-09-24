@@ -17,6 +17,7 @@ public class TestFormatDeleteEvent {
     EventBuilder stubEvent = new EventBuilder().
             defaultStubEventFor(Event.TYPE_DELETE).
             withPayload(new DeletePayloadBuilder().defaultStubPayload());
+    StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_delete() {
@@ -31,8 +32,6 @@ public class TestFormatDeleteEvent {
 
     @Test
     public void actor_should_be_bold_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForDelete").
@@ -41,5 +40,23 @@ public class TestFormatDeleteEvent {
                 mockDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserNameForDelete");
+    }
+
+    @Test
+    public void payload_ref_type_and_ref_should_be_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new DeletePayloadBuilder().defaultStubPayload().
+                                withRefType("RefType").
+                                withRef("Ref")).
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).append(" deleted ");
+        verify(mockMainStyledText).append("RefType");
+        verify(mockMainStyledText).append(' ');
+        verify(mockMainStyledText).append("Ref");
+        verify(mockMainStyledText).append(" at ");
     }
 }
