@@ -59,4 +59,16 @@ public class TestFormatDeleteEvent {
         verify(mockMainStyledText).append("Ref");
         verify(mockMainStyledText).append(" at ");
     }
+
+    @Test
+    public void repo_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withRepo("RepoForDelete").
+                        build(),
+                mockMainStyledText,
+                mockDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForDelete");
+    }
 }
