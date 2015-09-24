@@ -1,17 +1,12 @@
 package com.github.mobile.ui.user;
 
-import android.text.TextUtils;
-
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.Comment;
-import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 /**
@@ -27,50 +22,14 @@ public enum EventType {
 
         private String generate(StyledText main, StyledText details) {
             renderUserCommentOnRepo(main);
-            renderCommitComment(details);
+            commitComment.render(details);
             return TypefaceUtils.ICON_COMMENT;
-        }
-
-        private CommitComment commitComment() {
-            return ((CommitCommentPayload)payload).getComment();
         }
 
         private void renderUserCommentOnRepo(StyledText main) {
             renderUserLogin(main);
             main.append(" commented on ");
             repo.render(main);
-        }
-
-        private void renderCommitComment(final StyledText details) {
-            if (commitComment() == null)
-                return;
-
-            String id = commitComment().getCommitId();
-            if (!TextUtils.isEmpty(id)) {
-                if (id.length() > 10)
-                    id = id.substring(0, 10);
-                appendText(details, "Comment in");
-                details.append(' ');
-                details.monospace(id);
-                details.append(':').append('\n');
-            }
-            appendComment(details, commitComment());
-        }
-
-        private void appendText(final StyledText details, String text) {
-            if (text == null)
-                return;
-            text = text.trim();
-            if (text.length() == 0)
-                return;
-
-            details.append(text);
-        }
-
-        private void appendComment(final StyledText details,
-                final Comment comment) {
-            if (comment != null)
-                appendText(details, comment.getBody());
         }
     },
     CreateEvent {
@@ -82,9 +41,7 @@ public enum EventType {
         private String generate(StyledText main, StyledText details) {
             renderUserLogin(main);
             main.append(" created ");
-
             payloadRef.renderToMain(main);
-
             return TypefaceUtils.ICON_CREATE;
         }
 
@@ -204,18 +161,19 @@ public enum EventType {
     };
 
     protected User user;
-    protected EventPayload payload;
     protected PayloadRef payloadRef;
     protected Repo repo;
+    protected com.github.mobile.ui.user.CommitComment commitComment;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
             if (event.getType().equals(eventType.name())) {
                 eventType.user = event.getActor();
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                eventType.payload = event.getPayload();
-                if (eventType.payload instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.create(eventType.payload, event.getRepo());
+                if (event.getPayload() instanceof CreatePayload)
+                    eventType.payloadRef = PayloadRefFactory.create(event.getPayload(), event.getRepo());
+                if (event.getPayload() instanceof CommitCommentPayload)
+                    eventType.commitComment = CommitCommentFactory.create(event.getPayload());
                 return eventType;
             }
 
