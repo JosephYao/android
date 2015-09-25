@@ -3,7 +3,6 @@ package com.github.mobile.ui.user;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.Download;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
@@ -24,16 +23,11 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            renderUserCommentOnRepo(main);
+            renderUserActOnRepo(main, " commented on ");
             commitComment.render(details);
             return TypefaceUtils.ICON_COMMENT;
         }
 
-        private void renderUserCommentOnRepo(StyledText main) {
-            renderUserLogin(main);
-            main.append(" commented on ");
-            repo.render(main);
-        }
     },
     CreateEvent {
         @Override
@@ -65,15 +59,8 @@ public enum EventType {
     DownloadEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            renderUserLogin(main);
-            main.append(" uploaded a file to ");
-            repo.render(main);
-
-            DownloadPayload payload = (DownloadPayload) event.getPayload();
-            Download download = payload.getDownload();
-            if (download != null)
-                appendText(details, download.getName());
-
+            renderUserActOnRepo(main, " uploaded a file to ");
+            download.render(details);
             return TypefaceUtils.ICON_UPLOAD;
         }
     },
@@ -181,6 +168,7 @@ public enum EventType {
     protected PayloadRef payloadRef;
     protected Repo repo;
     protected com.github.mobile.ui.user.CommitComment commitComment;
+    protected com.github.mobile.ui.user.Download download;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -192,7 +180,9 @@ public enum EventType {
                 if (event.getPayload() instanceof CommitCommentPayload)
                     eventType.commitComment = CommitCommentFactory.create(event.getPayload());
                 if (event.getPayload() instanceof DeletePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload)event.getPayload());
+                    eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload) event.getPayload());
+                if (event.getPayload() instanceof DownloadPayload)
+                    eventType.download = DownloadFactory.create((DownloadPayload)event.getPayload());
                 return eventType;
             }
 
@@ -206,13 +196,9 @@ public enum EventType {
             main.bold(user.getLogin());
     }
 
-    protected void appendText(final StyledText details, String text) {
-        if (text == null)
-            return;
-        text = text.trim();
-        if (text.length() == 0)
-            return;
-
-        details.append(text);
+    protected void renderUserActOnRepo(StyledText main, String action) {
+        renderUserLogin(main);
+        main.append(action);
+        repo.render(main);
     }
 }
