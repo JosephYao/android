@@ -11,7 +11,7 @@ import com.github.mobile.util.TypefaceUtils;
 import org.eclipse.egit.github.core.event.Event;
 import org.junit.Test;
 
-public class TestFormatDeleteEvent {
+public class TestDeleteEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     EventBuilder stubEvent = new EventBuilder().
