@@ -6,6 +6,7 @@ import com.github.mobile.util.TypefaceUtils;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
+import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
@@ -49,7 +50,16 @@ public enum EventType {
     DeleteEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatDelete(event, main, details);
+            renderUserLogin(main);
+
+            DeletePayload payload = (DeletePayload) event.getPayload();
+            main.append(" deleted ");
+            main.append(payload.getRefType());
+            main.append(' ');
+            main.append(payload.getRef());
+            main.append(" at ");
+
+            repo.render(main);
             return TypefaceUtils.ICON_DELETE;
         }
     },
