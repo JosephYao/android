@@ -3,10 +3,12 @@ package com.github.mobile.ui.user;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.util.TypefaceUtils;
 
+import org.eclipse.egit.github.core.Download;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
+import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
@@ -63,7 +65,15 @@ public enum EventType {
     DownloadEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatDownload(event, main, details);
+            renderUserLogin(main);
+            main.append(" uploaded a file to ");
+            repo.render(main);
+
+            DownloadPayload payload = (DownloadPayload) event.getPayload();
+            Download download = payload.getDownload();
+            if (download != null)
+                appendText(details, download.getName());
+
             return TypefaceUtils.ICON_UPLOAD;
         }
     },
@@ -196,4 +206,13 @@ public enum EventType {
             main.bold(user.getLogin());
     }
 
+    protected void appendText(final StyledText details, String text) {
+        if (text == null)
+            return;
+        text = text.trim();
+        if (text.length() == 0)
+            return;
+
+        details.append(text);
+    }
 }
