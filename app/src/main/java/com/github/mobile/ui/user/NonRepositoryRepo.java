@@ -2,17 +2,15 @@ package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
 
-import org.eclipse.egit.github.core.event.EventRepository;
-
 public class NonRepositoryRepo implements Repo {
-    private final EventRepository repo;
+    private final String name;
 
-    public NonRepositoryRepo(EventRepository repo) {
-        this.repo = repo;
+    public NonRepositoryRepo(String name) {
+        this.name = name;
     }
 
     @Override
     public void render(StyledText text) {
-        text.bold(repo.getName());
+        text.bold(name);
     }
 }

@@ -2,13 +2,11 @@ package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
 
-import org.eclipse.egit.github.core.event.EventRepository;
-
 public class RepositoryRepo implements Repo {
     private final String name;
 
-    public RepositoryRepo(EventRepository repo) {
-        this.name = repo.getName();
+    public RepositoryRepo(String name) {
+        this.name = name;
     }
 
     @Override

@@ -10,15 +10,15 @@ public class RepoFactory {
             return new EmptyRepo();
 
         if (refType.equals("repository"))
-            return new RepositoryRepo(repo);
+            return new RepositoryRepo(repo.getName());
         else
-            return new NonRepositoryRepo(repo);
+            return new NonRepositoryRepo(repo.getName());
     }
 
     public static Repo createRepoFromEventRepository(EventRepository repo) {
         if (repo == null)
             return new EmptyRepo();
 
-        return new NonRepositoryRepo(repo);
+        return new NonRepositoryRepo(repo.getName());
     }
 }

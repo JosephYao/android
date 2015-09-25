@@ -2,16 +2,14 @@ package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
 
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
-
-public abstract class IdCommitComment implements CommitComment{
+public class IdCommitComment implements CommitComment{
 
     private final String commitId;
     private final String body;
 
-    public IdCommitComment(CommitCommentPayload payload, String commitId) {
+    public IdCommitComment(String body, String commitId) {
         this.commitId = commitId;
-        this.body = payload.getComment().getBody();
+        this.body = body;
     }
 
     @Override

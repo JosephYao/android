@@ -11,12 +11,7 @@ public class NoIdCommitComment implements CommitComment {
 
     @Override
     public void render(StyledText text) {
-        if (!isTrimmedBodyEmpty())
-            text.append(body.trim());
-    }
-
-    private boolean isTrimmedBodyEmpty() {
-        return body == null && body.trim().length() == 0;
+        text.append(body.trim());
     }
 
 }

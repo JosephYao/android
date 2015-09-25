@@ -16,6 +16,6 @@ public class PayloadRefFactory {
     }
 
     public static PayloadRef createFromDelete(DeletePayload payload) {
-        return new DeleteRef(payload);
+        return new DeleteRef(payload.getRefType(), payload.getRef());
     }
 }
