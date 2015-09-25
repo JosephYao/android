@@ -42,7 +42,7 @@ public enum EventType {
         private String generate(StyledText main, StyledText details) {
             renderUserLogin(main);
             main.append(" created ");
-            payloadRef.renderToMain(main);
+            payloadRef.render(main);
             return TypefaceUtils.ICON_CREATE;
         }
 
@@ -50,15 +50,12 @@ public enum EventType {
     DeleteEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
             renderUserLogin(main);
-
-            DeletePayload payload = (DeletePayload) event.getPayload();
-            main.append(" deleted ");
-            main.append(payload.getRefType());
-            main.append(' ');
-            main.append(payload.getRef());
-            main.append(" at ");
-
+            payloadRef.render(main);
             repo.render(main);
             return TypefaceUtils.ICON_DELETE;
         }
@@ -181,9 +178,11 @@ public enum EventType {
                 eventType.user = event.getActor();
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 if (event.getPayload() instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.create(event.getPayload(), event.getRepo());
+                    eventType.payloadRef = PayloadRefFactory.createFromCreate((CreatePayload)event.getPayload(), event.getRepo());
                 if (event.getPayload() instanceof CommitCommentPayload)
                     eventType.commitComment = CommitCommentFactory.create(event.getPayload());
+                if (event.getPayload() instanceof DeletePayload)
+                    eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload)event.getPayload());
                 return eventType;
             }
 

@@ -1,20 +1,21 @@
 package com.github.mobile.ui.user;
 
 import org.eclipse.egit.github.core.event.CreatePayload;
-import org.eclipse.egit.github.core.event.EventPayload;
+import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.EventRepository;
 
 public class PayloadRefFactory {
 
-    public static PayloadRef create(EventPayload payload, EventRepository repo) {
-        CreatePayload createPayload = (CreatePayload) payload;
-
-        if (createPayload.getRefType().equals("repository"))
-            return new RepositoryRef(createPayload.getRefType(),
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, createPayload.getRefType()));
+    public static PayloadRef createFromCreate(CreatePayload payload, EventRepository repo) {
+        if (payload.getRefType().equals("repository"))
+            return new RepositoryRef(payload.getRefType(),
+                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, payload.getRefType()));
         else
-            return new NonRepositoryRef(createPayload.getRefType(), createPayload.getRef(),
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, createPayload.getRefType()));
+            return new NonRepositoryRef(payload.getRefType(), payload.getRef(),
+                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, payload.getRefType()));
     }
 
+    public static PayloadRef createFromDelete(DeletePayload payload) {
+        return new DeleteRef(payload);
+    }
 }

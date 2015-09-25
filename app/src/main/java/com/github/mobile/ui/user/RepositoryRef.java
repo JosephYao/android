@@ -12,10 +12,10 @@ public class RepositoryRef implements PayloadRef {
     }
 
     @Override
-    public void renderToMain(StyledText main) {
-        main.append(refType);
-        main.append(' ');
-        repo.render(main);
+    public void render(StyledText text) {
+        text.append(refType);
+        text.append(' ');
+        repo.render(text);
     }
 
 }

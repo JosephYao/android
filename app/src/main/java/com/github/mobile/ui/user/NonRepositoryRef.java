@@ -14,12 +14,12 @@ public class NonRepositoryRef implements PayloadRef {
     }
 
     @Override
-    public void renderToMain(StyledText main) {
-        main.append(refType);
-        main.append(' ');
-        main.append(ref);
-        main.append(" at ");
-        repo.render(main);
+    public void render(StyledText text) {
+        text.append(refType);
+        text.append(' ');
+        text.append(ref);
+        text.append(" at ");
+        repo.render(text);
     }
 
 }

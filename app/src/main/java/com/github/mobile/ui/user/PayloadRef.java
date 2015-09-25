@@ -4,5 +4,5 @@ import com.github.mobile.ui.StyledText;
 
 public interface PayloadRef {
 
-    void renderToMain(StyledText main);
+    void render(StyledText text);
 }
