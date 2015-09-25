@@ -43,4 +43,19 @@ public class TestDownloadEvent {
         verify(mockMainStyledText).append(" uploaded a file to ");
         verify(mockMainStyledText).bold("RepoForDownload");
     }
+
+    @Test
+    public void download_name_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent
+                        .withPayload(new DownloadPayloadBuilder().defaultStubPayload().
+                            withDownload("Download"))
+                        .build(),
+                mockMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("Download");
+    }
 }
