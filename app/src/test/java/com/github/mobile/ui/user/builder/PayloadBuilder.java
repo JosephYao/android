@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.builder;
 
 import org.eclipse.egit.github.core.event.EventPayload;
 

@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.builder;
 
 import static org.mockito.Matchers.anyChar;
 import static org.mockito.Mockito.mock;

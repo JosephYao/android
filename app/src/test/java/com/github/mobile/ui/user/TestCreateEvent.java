@@ -1,13 +1,15 @@
 package com.github.mobile.ui.user;
 
-import static com.github.mobile.ui.user.StyledTextDataMother.mockDetailsStyledText;
-import static com.github.mobile.ui.user.StyledTextDataMother.mockMainStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.builder.CreatePayloadBuilder;
+import com.github.mobile.ui.user.builder.EventBuilder;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
