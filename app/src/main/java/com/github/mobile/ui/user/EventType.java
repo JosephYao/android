@@ -45,7 +45,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            renderUserLogin(main);
+            renderUserLogin(main, user);
             main.append(" created ");
             payloadRef.render(main);
             return TypefaceUtils.ICON_CREATE;
@@ -59,7 +59,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            renderUserLogin(main);
+            renderUserLogin(main, user);
             payloadRef.render(main);
             repo.render(main);
             return TypefaceUtils.ICON_DELETE;
@@ -68,6 +68,10 @@ public enum EventType {
     DownloadEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
             renderUserActOnRepo(main, " uploaded a file to ");
             download.render(details);
             return TypefaceUtils.ICON_UPLOAD;
@@ -76,19 +80,16 @@ public enum EventType {
     FollowEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            renderUserLogin(main);
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
+            renderUserLogin(main, user);
             main.append(" started following ");
-
-            boldUser(main, ((FollowPayload) event.getPayload()).getTarget());
-
+            renderUserLogin(main, target);
             return TypefaceUtils.ICON_FOLLOW;
         }
 
-        private StyledText boldUser(final StyledText text, final User user) {
-            if (user != null)
-                text.bold(user.getLogin());
-            return text;
-        }
     },
     ForkEvent {
         @Override
@@ -188,6 +189,7 @@ public enum EventType {
     protected Repo repo;
     protected CommitComment commitComment;
     protected Download download;
+    protected User target;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -203,6 +205,8 @@ public enum EventType {
                     eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload) event.getPayload());
                 if (event.getPayload() instanceof DownloadPayload)
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
+                if (event.getPayload() instanceof FollowPayload)
+                    eventType.target = ((FollowPayload)event.getPayload()).getTarget();
                 return eventType;
             }
 
@@ -211,13 +215,13 @@ public enum EventType {
 
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
 
-    protected void renderUserLogin(StyledText main) {
+    protected void renderUserLogin(StyledText main, User user) {
         if (user != null)
             main.bold(user.getLogin());
     }
 
     protected void renderUserActOnRepo(StyledText main, String action) {
-        renderUserLogin(main);
+        renderUserLogin(main, user);
         main.append(action);
         repo.render(main);
     }
