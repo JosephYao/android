@@ -1,8 +1,8 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.repo;
 
 import com.github.mobile.ui.StyledText;
 
-public interface PayloadRef {
+public interface Repo {
 
     void render(StyledText text);
 }

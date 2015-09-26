@@ -1,4 +1,6 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.ref;
+
+import com.github.mobile.ui.user.repo.RepoFactory;
 
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;

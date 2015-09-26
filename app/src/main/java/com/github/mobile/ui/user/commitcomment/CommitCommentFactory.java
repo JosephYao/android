@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.commitcomment;
 
 import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextNotEmpty;
 import android.text.TextUtils;

@@ -1,6 +1,14 @@
 package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.commitcomment.CommitComment;
+import com.github.mobile.ui.user.commitcomment.CommitCommentFactory;
+import com.github.mobile.ui.user.download.Download;
+import com.github.mobile.ui.user.download.DownloadFactory;
+import com.github.mobile.ui.user.ref.PayloadRef;
+import com.github.mobile.ui.user.ref.PayloadRefFactory;
+import com.github.mobile.ui.user.repo.Repo;
+import com.github.mobile.ui.user.repo.RepoFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.User;
@@ -167,8 +175,8 @@ public enum EventType {
     protected User user;
     protected PayloadRef payloadRef;
     protected Repo repo;
-    protected com.github.mobile.ui.user.CommitComment commitComment;
-    protected com.github.mobile.ui.user.Download download;
+    protected CommitComment commitComment;
+    protected Download download;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -176,13 +184,14 @@ public enum EventType {
                 eventType.user = event.getActor();
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 if (event.getPayload() instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromCreate((CreatePayload)event.getPayload(), event.getRepo());
+                    eventType.payloadRef = PayloadRefFactory.createFromCreate((CreatePayload) event.getPayload(),
+                            event.getRepo());
                 if (event.getPayload() instanceof CommitCommentPayload)
                     eventType.commitComment = CommitCommentFactory.create(event.getPayload());
                 if (event.getPayload() instanceof DeletePayload)
                     eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload) event.getPayload());
                 if (event.getPayload() instanceof DownloadPayload)
-                    eventType.download = DownloadFactory.create((DownloadPayload)event.getPayload());
+                    eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 return eventType;
             }
 

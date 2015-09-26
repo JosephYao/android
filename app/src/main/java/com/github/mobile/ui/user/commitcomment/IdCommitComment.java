@@ -1,8 +1,8 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.commitcomment;
 
 import com.github.mobile.ui.StyledText;
 
-public class IdCommitComment implements CommitComment{
+public class IdCommitComment implements CommitComment {
 
     private final String commitId;
     private final String body;

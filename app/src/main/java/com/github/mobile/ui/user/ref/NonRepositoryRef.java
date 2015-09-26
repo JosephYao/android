@@ -1,6 +1,7 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.ref;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.repo.Repo;
 
 public class NonRepositoryRef implements PayloadRef {
     private final String ref;

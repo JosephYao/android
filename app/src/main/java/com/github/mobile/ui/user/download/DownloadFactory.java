@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.download;
 
 import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextNotEmpty;
 

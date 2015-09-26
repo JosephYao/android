@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.repo;
 
 import android.text.TextUtils;
 
