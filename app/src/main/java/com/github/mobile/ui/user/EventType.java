@@ -11,7 +11,6 @@ import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -45,7 +44,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            renderUserLogin(main, user);
+            user.render(main);
             main.append(" created ");
             payloadRef.render(main);
             return TypefaceUtils.ICON_CREATE;
@@ -59,7 +58,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            renderUserLogin(main, user);
+            user.render(main);
             payloadRef.render(main);
             repo.render(main);
             return TypefaceUtils.ICON_DELETE;
@@ -84,9 +83,9 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            renderUserLogin(main, user);
+            user.render(main);
             main.append(" started following ");
-            renderUserLogin(main, target);
+            target.render(main);
             return TypefaceUtils.ICON_FOLLOW;
         }
 
@@ -184,17 +183,17 @@ public enum EventType {
         }
     };
 
-    protected User user;
+    protected com.github.mobile.ui.user.User user;
     protected PayloadRef payloadRef;
     protected Repo repo;
     protected CommitComment commitComment;
     protected Download download;
-    protected User target;
+    protected com.github.mobile.ui.user.User target;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
             if (event.getType().equals(eventType.name())) {
-                eventType.user = event.getActor();
+                eventType.user = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 if (event.getPayload() instanceof CreatePayload)
                     eventType.payloadRef = PayloadRefFactory.createFromCreate((CreatePayload) event.getPayload(),
@@ -206,7 +205,7 @@ public enum EventType {
                 if (event.getPayload() instanceof DownloadPayload)
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
-                    eventType.target = ((FollowPayload)event.getPayload()).getTarget();
+                    eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 return eventType;
             }
 
@@ -215,13 +214,8 @@ public enum EventType {
 
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
 
-    protected void renderUserLogin(StyledText main, User user) {
-        if (user != null)
-            main.bold(user.getLogin());
-    }
-
     protected void renderUserActOnRepo(StyledText main, String action) {
-        renderUserLogin(main, user);
+        user.render(main);
         main.append(action);
         repo.render(main);
     }
