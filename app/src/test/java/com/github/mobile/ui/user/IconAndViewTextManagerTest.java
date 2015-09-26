@@ -86,7 +86,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatDownload(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_follow_then_icon_should_be_follow_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();

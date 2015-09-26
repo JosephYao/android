@@ -17,6 +17,7 @@ import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 /**
@@ -75,8 +76,18 @@ public enum EventType {
     FollowEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatFollow(event, main, details);
+            renderUserLogin(main);
+            main.append(" started following ");
+
+            boldUser(main, ((FollowPayload) event.getPayload()).getTarget());
+
             return TypefaceUtils.ICON_FOLLOW;
+        }
+
+        private StyledText boldUser(final StyledText text, final User user) {
+            if (user != null)
+                text.bold(user.getLogin());
+            return text;
         }
     },
     ForkEvent {
@@ -210,4 +221,5 @@ public enum EventType {
         main.append(action);
         repo.render(main);
     }
+
 }
