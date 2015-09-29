@@ -15,12 +15,13 @@ import org.junit.Test;
 
 public class TestGollumEvent {
 
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GOLLUM);
+    IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+
     @Test
     public void icon_should_be_wiki() {
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_GOLLUM).build(),
+                stubEvent.build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -29,11 +30,10 @@ public class TestGollumEvent {
 
     @Test
     public void actor_and_repo_should_be_bold_and_appended_to_main() {
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_GOLLUM).
+                stubEvent.
                         withLoginUserName("LoginUserNameForWiki").
                         withRepo("RepoForWiki").
                         build(),
