@@ -18,6 +18,7 @@ public class TestGistEvent {
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).
             withPayload(new GistPayloadBuilder().defaultStubPayload());
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_gist() {
@@ -31,8 +32,6 @@ public class TestGistEvent {
 
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForGist").
@@ -46,8 +45,6 @@ public class TestGistEvent {
 
     @Test
     public void create_action_should_be_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(new GistPayloadBuilder().defaultStubPayload().
@@ -61,8 +58,6 @@ public class TestGistEvent {
 
     @Test
     public void update_action_should_be_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(new GistPayloadBuilder().defaultStubPayload().
@@ -76,8 +71,6 @@ public class TestGistEvent {
 
     @Test
     public void other_action_should_be_appended_to_main_without_change() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(new GistPayloadBuilder().defaultStubPayload().
@@ -87,5 +80,19 @@ public class TestGistEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).append("otherAction");
+    }
+
+    @Test
+    public void gist_id_should_be_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                            withGistId("GistId")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append(" Gist ");
+        verify(mockMainStyledText).append("GistId");
     }
 }

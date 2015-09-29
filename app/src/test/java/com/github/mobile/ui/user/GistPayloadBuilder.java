@@ -37,4 +37,9 @@ public class GistPayloadBuilder implements PayloadBuilder {
         this.action = action;
         return this;
     }
+
+    public GistPayloadBuilder withGistId(String gistId) {
+        this.gistId = gistId;
+        return this;
+    }
 }
