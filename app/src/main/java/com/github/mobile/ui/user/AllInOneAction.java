@@ -2,12 +2,12 @@ package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
 
-public class NormalAction implements Action {
+public class AllInOneAction implements Action {
 
     private final String action;
     private final String gistId;
 
-    public NormalAction(String action, String gistId) {
+    public AllInOneAction(String action, String gistId) {
         this.action = action;
         this.gistId = gistId;
     }
