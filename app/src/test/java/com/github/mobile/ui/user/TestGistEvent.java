@@ -15,14 +15,14 @@ import org.junit.Test;
 
 public class TestGistEvent {
 
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).
+            withPayload(new GistPayloadBuilder().defaultStubPayload());
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
     public void icon_should_be_gist() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).
-                        withPayload(new GistPayloadBuilder().defaultStubPayload()).
-                        build(),
+                stubEvent.build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -34,8 +34,7 @@ public class TestGistEvent {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).
-                        withPayload(new GistPayloadBuilder().defaultStubPayload()).
+                stubEvent.
                         withLoginUserName("LoginUserNameForGist").
                         build(),
                 mockMainStyledText,
@@ -43,5 +42,50 @@ public class TestGistEvent {
 
         verify(mockMainStyledText).bold("LoginUserNameForGist");
         verify(mockMainStyledText).append(' ');
+    }
+
+    @Test
+    public void create_action_should_be_appended_to_main() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                                withAction("create")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append("created");
+    }
+
+    @Test
+    public void update_action_should_be_appended_to_main() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                                withAction("update")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append("updated");
+    }
+
+    @Test
+    public void other_action_should_be_appended_to_main_without_change() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                                withAction("otherAction")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append("otherAction");
     }
 }

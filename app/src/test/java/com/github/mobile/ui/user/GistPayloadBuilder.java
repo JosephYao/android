@@ -11,18 +11,30 @@ import org.eclipse.egit.github.core.event.GistPayload;
 
 public class GistPayloadBuilder implements PayloadBuilder {
     private String gistId;
+    private String action;
 
     @Override
     public EventPayload build() {
         GistPayload stubPayload = mock(GistPayload.class);
+        Gist stubGist = stubGist();
+        when(stubPayload.getGist()).thenReturn(stubGist);
+        when(stubPayload.getAction()).thenReturn(action);
+        return stubPayload;
+    }
+
+    private Gist stubGist() {
         Gist stubGist = mock(Gist.class);
         when(stubGist.getId()).thenReturn(this.gistId);
-        when(stubPayload.getGist()).thenReturn(stubGist);
-        return stubPayload;
+        return stubGist;
     }
 
     public GistPayloadBuilder defaultStubPayload() {
         this.gistId = "GistId";
+        return this;
+    }
+
+    public GistPayloadBuilder withAction(String action) {
+        this.action = action;
         return this;
     }
 }
