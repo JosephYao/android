@@ -17,6 +17,7 @@ import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
+import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 /**
@@ -104,7 +105,9 @@ public enum EventType {
     GistEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatGist(event, main, details);
+            user.render(main);
+            main.append(' ');
+            action.render(main);
             return TypefaceUtils.ICON_GIST;
         }
     },
@@ -193,6 +196,7 @@ public enum EventType {
     protected CommitComment commitComment;
     protected Download download;
     protected com.github.mobile.ui.user.User target;
+    protected Action action;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -210,6 +214,8 @@ public enum EventType {
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
                     eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
+                if (event.getPayload() instanceof GistPayload)
+                    eventType.action = ActionFactory.create((GistPayload) event.getPayload());
                 return eventType;
             }
 
