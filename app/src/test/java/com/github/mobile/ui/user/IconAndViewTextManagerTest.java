@@ -140,7 +140,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatGist(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_gollum_then_icon_should_be_gollum_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();

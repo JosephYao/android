@@ -114,8 +114,12 @@ public enum EventType {
     GollumEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatWiki(event, main, details);
+            generate(main);
             return TypefaceUtils.ICON_WIKI;
+        }
+
+        private void generate(StyledText main) {
+            renderUserActOnRepo(main, " updated the wiki in ");
         }
     },
     IssueCommentEvent {
