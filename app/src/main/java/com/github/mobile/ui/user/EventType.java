@@ -98,9 +98,7 @@ public enum EventType {
         }
 
         private void generate(StyledText main) {
-            user.render(main);
-            main.append(" forked repository ");
-            repo.render(main);
+            renderUserActOnRepo(main, " forked repository ");
         }
     },
     GistEvent {
