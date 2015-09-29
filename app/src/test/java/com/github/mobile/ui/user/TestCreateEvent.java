@@ -1,7 +1,8 @@
 package com.github.mobile.ui.user;
 
-import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -26,8 +27,8 @@ public class TestCreateEvent {
     public void icon_should_be_create() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.build(),
-                mockMainStyledText,
-                mockDetailsStyledText());
+                stubMainStyledText(),
+                stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_CREATE, icon);
     }
@@ -39,7 +40,7 @@ public class TestCreateEvent {
                         withLoginUserName("LoginUserNameForCreate").
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserNameForCreate");
         verify(mockMainStyledText).append(" created ");
@@ -53,7 +54,7 @@ public class TestCreateEvent {
                                 withRefType("refType")).
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).append("refType");
         verify(mockMainStyledText).append(' ');
@@ -69,7 +70,7 @@ public class TestCreateEvent {
                         withRepo("RepoForCreate").
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).append("ref");
         verify(mockMainStyledText).append(" at ");
@@ -85,7 +86,7 @@ public class TestCreateEvent {
                         withRepo("Repos/RepoForCreate").
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("RepoForCreate");
     }
@@ -100,7 +101,7 @@ public class TestCreateEvent {
                         withRepo("WillNotBeBold/").
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verifyNoRepoNameIsBold();
     }

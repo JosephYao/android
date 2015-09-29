@@ -12,9 +12,19 @@ public class StyledTextDataMother {
         return mock(StyledText.class);
     }
 
+    public static StyledText stubMainStyledText() {
+        return mock(StyledText.class);
+    }
+
     public static StyledText mockDetailsStyledText() {
         StyledText mock = mock(StyledText.class);
         when(mock.append(anyChar())).thenReturn(mock);
         return mock;
+    }
+
+    public static StyledText stubDetailsStyledText() {
+        StyledText stub = mock(StyledText.class);
+        when(stub.append(anyChar())).thenReturn(stub);
+        return stub;
     }
 }

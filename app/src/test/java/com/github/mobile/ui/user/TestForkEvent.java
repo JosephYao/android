@@ -1,7 +1,8 @@
 package com.github.mobile.ui.user;
 
-import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
@@ -21,8 +22,8 @@ public class TestForkEvent {
     public void icon_should_be_fork() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.build(),
-                mockMainStyledText(),
-                mockDetailsStyledText());
+                stubMainStyledText(),
+                stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_FORK, icon);
     }
@@ -37,7 +38,7 @@ public class TestForkEvent {
                         withRepo("RepoForFork").
                         build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserNameForFork");
         verify(mockMainStyledText).append(" forked repository ");

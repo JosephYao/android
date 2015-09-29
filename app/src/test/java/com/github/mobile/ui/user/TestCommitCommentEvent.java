@@ -2,6 +2,8 @@ package com.github.mobile.ui.user;
 
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
@@ -25,8 +27,8 @@ public class TestCommitCommentEvent {
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.build(),
-                mockMainStyledText,
-                mockDetailsStyledText());
+                stubMainStyledText(),
+                stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_COMMENT, icon);
     }
@@ -39,7 +41,7 @@ public class TestCommitCommentEvent {
                         .withRepo("Repo")
                         .build(),
                 mockMainStyledText,
-                mockDetailsStyledText());
+                stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserName");
         verify(mockMainStyledText).append(" commented on ");
@@ -52,7 +54,7 @@ public class TestCommitCommentEvent {
                 stubEvent.withPayload(stubPayload.
                         withCommentId("10chlongId")).
                         build(),
-                mockMainStyledText,
+                stubMainStyledText(),
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
@@ -64,7 +66,7 @@ public class TestCommitCommentEvent {
                 stubEvent.withPayload(stubPayload.
                         withCommentId("longerthan10charId")).
                         build(),
-                mockMainStyledText,
+                stubMainStyledText(),
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
@@ -76,7 +78,7 @@ public class TestCommitCommentEvent {
                 stubEvent.withPayload(stubPayload.
                         withComment("comment")).
                         build(),
-                mockMainStyledText,
+                stubMainStyledText(),
                 mockDetailsStyledText);
 
         verify(mockDetailsStyledText).append("comment");
