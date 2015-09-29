@@ -93,8 +93,14 @@ public enum EventType {
     ForkEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatFork(event, main, details);
+            generate(main);
             return TypefaceUtils.ICON_FORK;
+        }
+
+        private void generate(StyledText main) {
+            user.render(main);
+            main.append(" forked repository ");
+            repo.render(main);
         }
     },
     GistEvent {
