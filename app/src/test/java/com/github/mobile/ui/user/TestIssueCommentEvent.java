@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
@@ -79,6 +80,21 @@ public class TestIssueCommentEvent {
 
         verify(mockMainStyledText).append(" on ");
         verify(mockMainStyledText).bold("RepoForIssueComment");
+    }
+
+    @Test
+    public void comment_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(new IssueCommentPayloadBuilder().defaultStubPayload().
+                            withComment("IssueComment")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("IssueComment");
     }
 
     private IssueCommentPayloadBuilder stubIssueCommentPayloadWithIssueNumber(int issueNumber) {

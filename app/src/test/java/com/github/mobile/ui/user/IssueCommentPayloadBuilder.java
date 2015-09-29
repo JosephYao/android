@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.mobile.ui.user.builder.PayloadBuilder;
 
+import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.event.EventPayload;
@@ -13,12 +14,16 @@ import org.eclipse.egit.github.core.event.IssueCommentPayload;
 public class IssueCommentPayloadBuilder implements PayloadBuilder {
     private Integer issueNumber;
     private boolean withPullRequest;
+    private String comment;
 
     @Override
     public EventPayload build() {
         IssueCommentPayload stubPayload = mock(IssueCommentPayload.class);
         Issue stubIssue = stubIssue();
         when(stubPayload.getIssue()).thenReturn(stubIssue);
+        Comment stubComment = mock(Comment.class);
+        when(stubComment.getBody()).thenReturn(comment);
+        when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
 
@@ -55,6 +60,11 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
 
     public IssueCommentPayloadBuilder withOutPullRequest() {
         this.withPullRequest = false;
+        return this;
+    }
+
+    public IssueCommentPayloadBuilder withComment(String comment) {
+        this.comment = comment;
         return this;
     }
 }
