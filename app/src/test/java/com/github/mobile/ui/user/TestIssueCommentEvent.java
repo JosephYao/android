@@ -68,6 +68,19 @@ public class TestIssueCommentEvent {
         verify(mockMainStyledText).bold("issue " + ISSUE_NUMBER);
     }
 
+    @Test
+    public void repo_should_be_bold_and_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withRepo("RepoForIssueComment").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append(" on ");
+        verify(mockMainStyledText).bold("RepoForIssueComment");
+    }
+
     private IssueCommentPayloadBuilder stubIssueCommentPayloadWithIssueNumber(int issueNumber) {
         return new IssueCommentPayloadBuilder().withIssueNumber(issueNumber);
     }
