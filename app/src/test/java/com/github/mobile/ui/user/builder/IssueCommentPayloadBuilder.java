@@ -1,9 +1,7 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.builder;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import com.github.mobile.ui.user.builder.PayloadBuilder;
 
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
