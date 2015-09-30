@@ -14,7 +14,7 @@ public class CommentBuilder<T extends Comment> {
         this.classOfComment = classOfComment;
     }
 
-    public CommentBuilder defaultStubComment() {
+    public CommentBuilder<T> defaultStubComment() {
         return this;
     }
 
@@ -24,7 +24,7 @@ public class CommentBuilder<T extends Comment> {
         return stubComment;
     }
 
-    public CommentBuilder withComment(String comment) {
+    public CommentBuilder<T> withComment(String comment) {
         this.comment = comment;
         return this;
     }

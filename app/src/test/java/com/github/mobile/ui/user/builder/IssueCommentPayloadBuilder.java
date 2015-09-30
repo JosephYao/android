@@ -13,7 +13,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     private Integer issueNumber;
     private boolean withPullRequest;
     private String comment;
-    private CommentBuilder commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
+    private CommentBuilder<Comment> commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
 
     @Override
     public EventPayload build() {
