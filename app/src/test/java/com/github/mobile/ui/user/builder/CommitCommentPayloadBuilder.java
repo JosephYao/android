@@ -9,6 +9,8 @@ import org.eclipse.egit.github.core.event.EventPayload;
 
 public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
+    private final CommentBuilder commentBuilder = new CommentBuilder<>(CommitComment.class).
+            defaultStubComment();
     private String commentId;
     private String comment;
 
@@ -20,24 +22,20 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
     public EventPayload build() {
         CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
-        CommitComment stubComment = stubCommitComment();
+        CommitComment stubComment = (CommitComment) commentBuilder.
+                withComment(comment).
+                build();
+        when(stubComment.getCommitId()).thenReturn(commentId);
         when(stubCommitCommentPayload.getComment()).thenReturn(stubComment);
         return stubCommitCommentPayload;
     }
 
-    private CommitComment stubCommitComment() {
-        CommitComment stubComment = mock(CommitComment.class);
-        when(stubComment.getCommitId()).thenReturn(commentId);
-        when(stubComment.getBody()).thenReturn(comment);
-        return stubComment;
-    }
-
-    public PayloadBuilder withCommentId(String commentId) {
+    public CommitCommentPayloadBuilder withCommentId(String commentId) {
         this.commentId = commentId;
         return this;
     }
 
-    public PayloadBuilder withComment(String comment) {
+    public CommitCommentPayloadBuilder withComment(String comment) {
         this.comment = comment;
         return this;
     }

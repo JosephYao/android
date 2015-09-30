@@ -13,14 +13,14 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     private Integer issueNumber;
     private boolean withPullRequest;
     private String comment;
+    private CommentBuilder commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
 
     @Override
     public EventPayload build() {
         IssueCommentPayload stubPayload = mock(IssueCommentPayload.class);
         Issue stubIssue = stubIssue();
         when(stubPayload.getIssue()).thenReturn(stubIssue);
-        Comment stubComment = mock(Comment.class);
-        when(stubComment.getBody()).thenReturn(comment);
+        Comment stubComment = commentBuilder.withComment(comment).build();
         when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
