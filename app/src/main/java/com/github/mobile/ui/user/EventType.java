@@ -94,17 +94,22 @@ public enum EventType {
     ForkEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            generate(main);
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
+            renderUserActOnRepo(main, " forked repository ");
             return TypefaceUtils.ICON_FORK;
         }
 
-        private void generate(StyledText main) {
-            renderUserActOnRepo(main, " forked repository ");
-        }
     },
     GistEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
             user.render(main);
             main.append(' ');
             action.render(main);
@@ -114,13 +119,14 @@ public enum EventType {
     GollumEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            generate(main);
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
+            renderUserActOnRepo(main, " updated the wiki in ");
             return TypefaceUtils.ICON_WIKI;
         }
 
-        private void generate(StyledText main) {
-            renderUserActOnRepo(main, " updated the wiki in ");
-        }
     },
     IssueCommentEvent {
         @Override
