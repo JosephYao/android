@@ -7,6 +7,8 @@ import com.github.mobile.ui.user.commitcomment.Comment;
 import com.github.mobile.ui.user.commitcomment.CommentFactory;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
+import com.github.mobile.ui.user.issue.Issue;
+import com.github.mobile.ui.user.issue.IssueFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -222,7 +224,7 @@ public enum EventType {
     protected Download download;
     protected User target;
     protected Action action;
-    protected com.github.mobile.ui.user.Issue issue;
+    protected Issue issue;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -246,7 +248,7 @@ public enum EventType {
                 if (event.getPayload() instanceof IssueCommentPayload) {
                     eventType.comment = CommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());
-                    eventType.issue = IssueFactory.create((IssueCommentPayload)event.getPayload());
+                    eventType.issue = IssueFactory.create((IssueCommentPayload) event.getPayload());
                 }
                 return eventType;
             }
