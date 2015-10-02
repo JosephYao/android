@@ -13,7 +13,6 @@ public class CreatePayloadBuilder implements PayloadBuilder {
 
     public CreatePayloadBuilder defaultStubPayload() {
         this.refType = "refType";
-        this.ref = "ref";
         return this;
     }
 

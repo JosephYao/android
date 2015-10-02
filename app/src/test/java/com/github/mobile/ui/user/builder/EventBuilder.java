@@ -17,8 +17,6 @@ public class EventBuilder {
 
     public EventBuilder defaultStubEventFor(String type) {
         this.type = type;
-        this.loginUserName = "LoginUserName";
-        this.repo = "Repo";
         this.payloadBuilder = new CommitCommentPayloadBuilder().defaultStubPayload();
         return this;
     }
