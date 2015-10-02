@@ -1,4 +1,4 @@
-package com.github.mobile.ui.user.commitcomment;
+package com.github.mobile.ui.user.comment;
 
 import com.github.mobile.ui.StyledText;
 

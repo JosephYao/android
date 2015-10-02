@@ -1,8 +1,8 @@
-package com.github.mobile.ui.user.commitcomment;
+package com.github.mobile.ui.user.issue;
 
 import com.github.mobile.ui.StyledText;
 
-public interface Comment {
+public interface Issue {
 
     void render(StyledText text);
 }
