@@ -52,7 +52,7 @@ public class TestCommitCommentEvent {
     public void comment_id_should_be_appended_to_details_without_change_when_comment_id_is_10_characters_long() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
-                        withCommentId("10chlongId")).
+                        withCommitId("10chlongId")).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -64,7 +64,7 @@ public class TestCommitCommentEvent {
     public void comment_id_should_be_trimmed_and_appended_to_details_when_comment_id_is_longer_than_10_characters() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
-                        withCommentId("longerthan10charId")).
+                        withCommitId("longerthan10charId")).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);

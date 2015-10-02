@@ -11,11 +11,11 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
     private final CommentBuilder<CommitComment> commentBuilder = new CommentBuilder<>(CommitComment.class).
             defaultStubComment();
-    private String commentId;
+    private String commitId;
     private String comment;
 
     public CommitCommentPayloadBuilder defaultStubPayload() {
-        this.commentId = "commentId";
+        this.commitId = "commitId";
         this.comment = "comment";
         return this;
     }
@@ -23,13 +23,13 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
     public EventPayload build() {
         CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
         CommitComment stubComment = commentBuilder.withComment(comment).build();
-        when(stubComment.getCommitId()).thenReturn(commentId);
+        when(stubComment.getCommitId()).thenReturn(commitId);
         when(stubCommitCommentPayload.getComment()).thenReturn(stubComment);
         return stubCommitCommentPayload;
     }
 
-    public CommitCommentPayloadBuilder withCommentId(String commentId) {
-        this.commentId = commentId;
+    public CommitCommentPayloadBuilder withCommitId(String commitId) {
+        this.commitId = commitId;
         return this;
     }
 
