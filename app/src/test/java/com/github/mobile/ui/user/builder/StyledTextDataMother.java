@@ -13,7 +13,7 @@ public class StyledTextDataMother {
     }
 
     public static StyledText stubMainStyledText() {
-        return mock(StyledText.class);
+        return mockMainStyledText();
     }
 
     public static StyledText mockDetailsStyledText() {
@@ -23,8 +23,6 @@ public class StyledTextDataMother {
     }
 
     public static StyledText stubDetailsStyledText() {
-        StyledText stub = mock(StyledText.class);
-        when(stub.append(anyChar())).thenReturn(stub);
-        return stub;
+        return mockDetailsStyledText();
     }
 }
