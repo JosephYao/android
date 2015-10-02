@@ -1,6 +1,8 @@
 package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.action.Action;
+import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.commitcomment.CommitComment;
 import com.github.mobile.ui.user.commitcomment.CommitCommentFactory;
 import com.github.mobile.ui.user.download.Download;
@@ -9,6 +11,8 @@ import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
+import com.github.mobile.ui.user.user.User;
+import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
@@ -200,12 +204,12 @@ public enum EventType {
         }
     };
 
-    protected com.github.mobile.ui.user.User user;
+    protected User user;
     protected PayloadRef payloadRef;
     protected Repo repo;
     protected CommitComment commitComment;
     protected Download download;
-    protected com.github.mobile.ui.user.User target;
+    protected User target;
     protected Action action;
 
     public static EventType createInstance(Event event) {

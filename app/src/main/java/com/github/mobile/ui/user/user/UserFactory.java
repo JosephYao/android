@@ -1,10 +1,10 @@
-package com.github.mobile.ui.user;
+package com.github.mobile.ui.user.user;
 
 import org.eclipse.egit.github.core.User;
 
 public class UserFactory {
 
-    public static com.github.mobile.ui.user.User create(User user) {
+    public static com.github.mobile.ui.user.user.User create(User user) {
         if (user == null)
             return new EmptyUser();
 
