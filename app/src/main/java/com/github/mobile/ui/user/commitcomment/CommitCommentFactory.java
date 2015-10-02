@@ -4,13 +4,12 @@ import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextNotEmpty;
 import android.text.TextUtils;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
-import org.eclipse.egit.github.core.event.EventPayload;
+import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
 public class CommitCommentFactory {
 
-    public static CommitComment create(EventPayload payload) {
-        CommitCommentPayload commitCommentPayload = (CommitCommentPayload) payload;
-        org.eclipse.egit.github.core.CommitComment comment = commitCommentPayload.getComment();
+    public static CommitComment createFromCommitCommentPayload(CommitCommentPayload payload) {
+        org.eclipse.egit.github.core.CommitComment comment = payload.getComment();
 
         if (comment == null || isTrimmedTextNotEmpty(comment.getBody()))
             return new EmptyCommitComment();
@@ -19,10 +18,10 @@ public class CommitCommentFactory {
             return new NoIdCommitComment(comment.getBody());
 
         if (comment.getCommitId().length() <= 10) {
-            return new IdCommitComment(bodyOf(commitCommentPayload), shortCommitIdOf(commitCommentPayload));
+            return new IdCommitComment(bodyOf(payload), shortCommitIdOf(payload));
         }
 
-        return new IdCommitComment(bodyOf(commitCommentPayload), longCommitIdOf(commitCommentPayload));
+        return new IdCommitComment(bodyOf(payload), longCommitIdOf(payload));
     }
 
     private static String longCommitIdOf(CommitCommentPayload payload) {
@@ -37,4 +36,12 @@ public class CommitCommentFactory {
         return payload.getComment().getBody();
     }
 
+    public static CommitComment createFromIssueCommentPayload(IssueCommentPayload payload) {
+        org.eclipse.egit.github.core.Comment comment = payload.getComment();
+
+        if (comment == null || isTrimmedTextNotEmpty(comment.getBody()))
+            return new EmptyCommitComment();
+
+        return new NoIdCommitComment(comment.getBody());
+    }
 }

@@ -16,7 +16,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
@@ -157,24 +156,8 @@ public enum EventType {
 
             repo.render(main);
 
-            appendComment(details, payload.getComment());
+            commitComment.render(details);
             return TypefaceUtils.ICON_ISSUE_COMMENT;
-        }
-
-        private void appendComment(final StyledText details,
-                final Comment comment) {
-            if (comment != null)
-                appendText(details, comment.getBody());
-        }
-
-        private void appendText(final StyledText details, String text) {
-            if (text == null)
-                return;
-            text = text.trim();
-            if (text.length() == 0)
-                return;
-
-            details.append(text);
         }
 
     },
@@ -257,18 +240,22 @@ public enum EventType {
                 eventType.user = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 if (event.getPayload() instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromCreate((CreatePayload) event.getPayload(),
+                    eventType.payloadRef = PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
                             event.getRepo());
                 if (event.getPayload() instanceof CommitCommentPayload)
-                    eventType.commitComment = CommitCommentFactory.create(event.getPayload());
+                    eventType.commitComment = CommitCommentFactory.createFromCommitCommentPayload(
+                            (CommitCommentPayload) event.getPayload());
                 if (event.getPayload() instanceof DeletePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromDelete((DeletePayload) event.getPayload());
+                    eventType.payloadRef = PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
                 if (event.getPayload() instanceof DownloadPayload)
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
                     eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)
                     eventType.action = ActionFactory.create((GistPayload) event.getPayload());
+                if (event.getPayload() instanceof IssueCommentPayload)
+                    eventType.commitComment = CommitCommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
+                            event.getPayload());
                 return eventType;
             }
 
