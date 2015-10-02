@@ -158,7 +158,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatWiki(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_issue_comment_then_icon_should_be_issue_comment_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();

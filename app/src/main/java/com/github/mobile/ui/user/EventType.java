@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import com.github.mobile.core.issue.IssueUtils;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -15,6 +16,8 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
+import org.eclipse.egit.github.core.Comment;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -22,6 +25,7 @@ import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
+import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 /**
@@ -135,9 +139,44 @@ public enum EventType {
     IssueCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatIssueComment(event, main, details);
+            user.render(main);
+
+            main.append(" commented on ");
+
+            IssueCommentPayload payload = (IssueCommentPayload) event.getPayload();
+
+            Issue issue = payload.getIssue();
+            String number;
+            if (IssueUtils.isPullRequest(issue))
+                number = "pull request " + issue.getNumber();
+            else
+                number = "issue " + issue.getNumber();
+            main.bold(number);
+
+            main.append(" on ");
+
+            repo.render(main);
+
+            appendComment(details, payload.getComment());
             return TypefaceUtils.ICON_ISSUE_COMMENT;
         }
+
+        private void appendComment(final StyledText details,
+                final Comment comment) {
+            if (comment != null)
+                appendText(details, comment.getBody());
+        }
+
+        private void appendText(final StyledText details, String text) {
+            if (text == null)
+                return;
+            text = text.trim();
+            if (text.length() == 0)
+                return;
+
+            details.append(text);
+        }
+
     },
     IssuesEvent {
         @Override
