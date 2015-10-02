@@ -10,7 +10,7 @@ public class DownloadFactory {
         if (payload.getDownload() == null || isTrimmedTextNotEmpty(payload.getDownload().getName()))
             return new EmptyDownload();
 
-        return new NoEmptyDownload(payload.getDownload().getName());
+        return new NonEmptyDownload(payload.getDownload().getName());
     }
 
 }

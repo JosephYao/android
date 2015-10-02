@@ -1,6 +1,5 @@
 package com.github.mobile.ui.user;
 
-import com.github.mobile.core.issue.IssueUtils;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -16,7 +15,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -138,24 +136,15 @@ public enum EventType {
     IssueCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
             user.render(main);
-
             main.append(" commented on ");
-
-            IssueCommentPayload payload = (IssueCommentPayload) event.getPayload();
-
-            Issue issue = payload.getIssue();
-            String number;
-            if (IssueUtils.isPullRequest(issue))
-                number = "pull request " + issue.getNumber();
-            else
-                number = "issue " + issue.getNumber();
-            main.bold(number);
-
-            main.append(" on ");
-
+            issue.render(main);
             repo.render(main);
-
+            main.append(" on ");
             commitComment.render(details);
             return TypefaceUtils.ICON_ISSUE_COMMENT;
         }
@@ -233,6 +222,7 @@ public enum EventType {
     protected Download download;
     protected User target;
     protected Action action;
+    protected com.github.mobile.ui.user.Issue issue;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -253,9 +243,11 @@ public enum EventType {
                     eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)
                     eventType.action = ActionFactory.create((GistPayload) event.getPayload());
-                if (event.getPayload() instanceof IssueCommentPayload)
+                if (event.getPayload() instanceof IssueCommentPayload) {
                     eventType.commitComment = CommitCommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());
+                    eventType.issue = IssueFactory.create((IssueCommentPayload)event.getPayload());
+                }
                 return eventType;
             }
 

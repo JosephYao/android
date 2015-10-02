@@ -2,10 +2,10 @@ package com.github.mobile.ui.user.download;
 
 import com.github.mobile.ui.StyledText;
 
-public class NoEmptyDownload implements Download {
+public class NonEmptyDownload implements Download {
     private final String name;
 
-    public NoEmptyDownload(String name) {
+    public NonEmptyDownload(String name) {
         this.name = name;
     }
 
