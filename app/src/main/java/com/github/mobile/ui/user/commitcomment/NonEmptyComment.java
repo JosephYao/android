@@ -2,10 +2,10 @@ package com.github.mobile.ui.user.commitcomment;
 
 import com.github.mobile.ui.StyledText;
 
-public class NoIdCommitComment implements CommitComment {
+public class NonEmptyComment implements Comment {
     private final String body;
 
-    public NoIdCommitComment(String body) {
+    public NonEmptyComment(String body) {
         this.body = body;
     }
 

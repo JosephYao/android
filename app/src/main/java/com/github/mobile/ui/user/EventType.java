@@ -3,8 +3,8 @@ package com.github.mobile.ui.user;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
-import com.github.mobile.ui.user.commitcomment.CommitComment;
-import com.github.mobile.ui.user.commitcomment.CommitCommentFactory;
+import com.github.mobile.ui.user.commitcomment.Comment;
+import com.github.mobile.ui.user.commitcomment.CommentFactory;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
@@ -38,7 +38,7 @@ public enum EventType {
 
         private String generate(StyledText main, StyledText details) {
             renderUserActOnRepo(main, " commented on ");
-            commitComment.render(details);
+            comment.render(details);
             return TypefaceUtils.ICON_COMMENT;
         }
 
@@ -145,7 +145,7 @@ public enum EventType {
             issue.render(main);
             repo.render(main);
             main.append(" on ");
-            commitComment.render(details);
+            comment.render(details);
             return TypefaceUtils.ICON_ISSUE_COMMENT;
         }
 
@@ -218,7 +218,7 @@ public enum EventType {
     protected User user;
     protected PayloadRef payloadRef;
     protected Repo repo;
-    protected CommitComment commitComment;
+    protected Comment comment;
     protected Download download;
     protected User target;
     protected Action action;
@@ -233,7 +233,7 @@ public enum EventType {
                     eventType.payloadRef = PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
                             event.getRepo());
                 if (event.getPayload() instanceof CommitCommentPayload)
-                    eventType.commitComment = CommitCommentFactory.createFromCommitCommentPayload(
+                    eventType.comment = CommentFactory.createFromCommitCommentPayload(
                             (CommitCommentPayload) event.getPayload());
                 if (event.getPayload() instanceof DeletePayload)
                     eventType.payloadRef = PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
@@ -244,7 +244,7 @@ public enum EventType {
                 if (event.getPayload() instanceof GistPayload)
                     eventType.action = ActionFactory.create((GistPayload) event.getPayload());
                 if (event.getPayload() instanceof IssueCommentPayload) {
-                    eventType.commitComment = CommitCommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
+                    eventType.comment = CommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());
                     eventType.issue = IssueFactory.create((IssueCommentPayload)event.getPayload());
                 }
