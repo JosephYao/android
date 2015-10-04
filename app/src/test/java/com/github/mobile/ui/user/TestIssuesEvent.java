@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
@@ -99,6 +100,20 @@ public class TestIssuesEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("RepoForIssues");
+    }
+
+    @Test
+    public void issue_title_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubPayload().
+                        withIssueTitle("IssueTitle")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("IssueTitle");
     }
 
     private IssuesPayloadBuilder stubPayload() {
