@@ -155,8 +155,20 @@ public enum EventType {
     IssuesEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatIssues(event, main, details);
-            String action = ((IssuesPayload) event.getPayload()).getAction();
+            user.render(main);
+
+            IssuesPayload payload = (IssuesPayload) event.getPayload();
+            String action = payload.getAction();
+            org.eclipse.egit.github.core.Issue issue = payload.getIssue();
+            main.append(' ');
+            main.append(action);
+            main.append(' ');
+            main.bold("issue " + issue.getNumber());
+            main.append(" on ");
+
+            repo.render(main);
+
+            appendText(details, issue.getTitle());
             String icon = null;
             if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_OPENED.equals(action))
                 icon = TypefaceUtils.ICON_ISSUE_OPEN;
@@ -166,6 +178,17 @@ public enum EventType {
                 icon = TypefaceUtils.ICON_ISSUE_CLOSE;
             return icon;
         }
+
+        private void appendText(final StyledText details, String text) {
+            if (text == null)
+                return;
+            text = text.trim();
+            if (text.length() == 0)
+                return;
+
+            details.append(text);
+        }
+
     },
     MemberEvent {
         @Override

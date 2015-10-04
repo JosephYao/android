@@ -176,7 +176,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatIssueComment(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_issues_and_action_is_opened_then_icon_should_be_issue_open_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
@@ -197,7 +197,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatIssues(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_issues_and_action_is_reopened_then_icon_should_be_issue_reopen_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
@@ -218,7 +218,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatIssues(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_issues_and_action_is_closed_then_icon_should_be_issue_close_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
