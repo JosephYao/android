@@ -1,13 +1,14 @@
 package com.github.mobile.ui.user.action;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.util.TypefaceUtils;
 
-public class AllInOneAction implements Action {
+public class GistAction implements Action {
 
     private final String action;
     private final String gistId;
 
-    public AllInOneAction(String action, String gistId) {
+    public GistAction(String action, String gistId) {
         this.action = action;
         this.gistId = gistId;
     }
@@ -16,6 +17,11 @@ public class AllInOneAction implements Action {
     public void render(StyledText main) {
         renderAction(main);
         renderGistId(main);
+    }
+
+    @Override
+    public String getIcon() {
+        return TypefaceUtils.ICON_GIST;
     }
 
     private void renderGistId(StyledText main) {

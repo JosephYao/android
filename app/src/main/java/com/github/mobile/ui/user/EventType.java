@@ -120,7 +120,7 @@ public enum EventType {
             user.render(main);
             main.append(' ');
             action.render(main);
-            return TypefaceUtils.ICON_GIST;
+            return action.getIcon();
         }
     },
     GollumEvent {
@@ -155,33 +155,16 @@ public enum EventType {
     IssuesEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
             user.render(main);
             action.render(main);
             repo.render(main);
             issue.render(details);
-
-            IssuesPayload payload = (IssuesPayload) event.getPayload();
-            String action = payload.getAction();
-            String icon = null;
-            if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_OPENED.equals(action))
-                icon = TypefaceUtils.ICON_ISSUE_OPEN;
-            else if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_REOPENED.equals(action))
-                icon = TypefaceUtils.ICON_ISSUE_REOPEN;
-            else if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_CLOSED.equals(action))
-                icon = TypefaceUtils.ICON_ISSUE_CLOSE;
-            return icon;
+            return action.getIcon();
         }
-
-        private void appendText(final StyledText details, String text) {
-            if (text == null)
-                return;
-            text = text.trim();
-            if (text.length() == 0)
-                return;
-
-            details.append(text);
-        }
-
     },
     MemberEvent {
         @Override

@@ -6,7 +6,7 @@ import org.eclipse.egit.github.core.event.IssuesPayload;
 public class ActionFactory {
 
     public static Action createFromGistPayload(GistPayload payload) {
-        return new AllInOneAction(payload.getAction(), payload.getGist().getId());
+        return new GistAction(payload.getAction(), payload.getGist().getId());
     }
 
     public static Action createFromIssuesPayload(IssuesPayload payload) {
