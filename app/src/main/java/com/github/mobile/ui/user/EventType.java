@@ -261,7 +261,7 @@ public enum EventType {
                 if (event.getPayload() instanceof FollowPayload)
                     eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)
-                    eventType.action = ActionFactory.create((GistPayload) event.getPayload());
+                    eventType.action = ActionFactory.createFromGistPayload((GistPayload) event.getPayload());
                 if (event.getPayload() instanceof IssueCommentPayload) {
                     eventType.comment = CommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());
