@@ -156,19 +156,13 @@ public enum EventType {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
             user.render(main);
-
-            IssuesPayload payload = (IssuesPayload) event.getPayload();
-            String action = payload.getAction();
-            org.eclipse.egit.github.core.Issue issue = payload.getIssue();
-            main.append(' ');
-            main.append(action);
-            main.append(' ');
-            main.bold("issue " + issue.getNumber());
-            main.append(" on ");
-
+            action.render(main);
             repo.render(main);
 
+            IssuesPayload payload = (IssuesPayload) event.getPayload();
+            org.eclipse.egit.github.core.Issue issue = payload.getIssue();
             appendText(details, issue.getTitle());
+            String action = payload.getAction();
             String icon = null;
             if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_OPENED.equals(action))
                 icon = TypefaceUtils.ICON_ISSUE_OPEN;
@@ -272,6 +266,9 @@ public enum EventType {
                     eventType.comment = CommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());
                     eventType.issue = IssueFactory.create((IssueCommentPayload) event.getPayload());
+                }
+                if (event.getPayload() instanceof IssuesPayload) {
+                    eventType.action = ActionFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
                 }
                 return eventType;
             }
