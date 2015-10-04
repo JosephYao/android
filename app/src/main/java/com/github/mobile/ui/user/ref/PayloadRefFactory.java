@@ -9,12 +9,14 @@ import org.eclipse.egit.github.core.event.EventRepository;
 public class PayloadRefFactory {
 
     public static PayloadRef createFromCreatePayload(CreatePayload payload, EventRepository repo) {
-        if (payload.getRefType().equals("repository"))
-            return new RepositoryRef(payload.getRefType(),
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, payload.getRefType()));
+        String refType = payload.getRefType();
+
+        if (refType.equals("repository"))
+            return new RepositoryRef(refType,
+                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, refType));
         else
-            return new NonRepositoryRef(payload.getRefType(), payload.getRef(),
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, payload.getRefType()));
+            return new NonRepositoryRef(refType, payload.getRef(),
+                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, refType));
     }
 
     public static PayloadRef createFromDeletePayload(DeletePayload payload) {

@@ -14,9 +14,9 @@ public class GistAction implements Action {
     }
 
     @Override
-    public void render(StyledText main) {
-        renderAction(main);
-        renderGistId(main);
+    public void render(StyledText text) {
+        renderAction(text);
+        renderGistId(text);
     }
 
     @Override

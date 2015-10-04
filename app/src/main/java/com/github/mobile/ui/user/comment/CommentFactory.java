@@ -1,6 +1,6 @@
 package com.github.mobile.ui.user.comment;
 
-import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextNotEmpty;
+import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextEmpty;
 import android.text.TextUtils;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
@@ -11,10 +11,23 @@ public class CommentFactory {
     public static Comment createFromCommitCommentPayload(CommitCommentPayload payload) {
         org.eclipse.egit.github.core.CommitComment comment = payload.getComment();
 
-        if (comment == null || isTrimmedTextNotEmpty(comment.getBody()))
+        if (isCommentEmpty(comment))
             return new EmptyComment();
 
         return createBaseOnCommitId(comment.getBody(), comment.getCommitId());
+    }
+
+    public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
+        org.eclipse.egit.github.core.Comment comment = payload.getComment();
+
+        if (isCommentEmpty(comment))
+            return new EmptyComment();
+
+        return new NonEmptyComment(comment.getBody());
+    }
+
+    private static boolean isCommentEmpty(org.eclipse.egit.github.core.Comment comment) {
+        return comment == null || isTrimmedTextEmpty(comment.getBody());
     }
 
     private static Comment createBaseOnCommitId(String body, String commitId) {
@@ -36,12 +49,4 @@ public class CommentFactory {
         return commitId.length() <= 10;
     }
 
-    public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
-        org.eclipse.egit.github.core.Comment comment = payload.getComment();
-
-        if (comment == null || isTrimmedTextNotEmpty(comment.getBody()))
-            return new EmptyComment();
-
-        return new NonEmptyComment(comment.getBody());
-    }
 }

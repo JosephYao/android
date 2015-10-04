@@ -18,9 +18,11 @@ public class IssueFactory {
     }
 
     public static Issue createFromIssuesPayload(IssuesPayload payload) {
-        if (FactoryUtils.isTrimmedTextNotEmpty(payload.getIssue().getTitle()))
+        String title = payload.getIssue().getTitle();
+
+        if (FactoryUtils.isTrimmedTextEmpty(title))
             return new NoTitleIssue();
         else
-            return new TitleIssue(payload.getIssue().getTitle());
+            return new TitleIssue(title);
     }
 }

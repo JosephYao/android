@@ -21,12 +21,12 @@ public class IssuesAction implements Action {
     }
 
     @Override
-    public void render(StyledText main) {
-        main.append(' ');
-        main.append(action);
-        main.append(' ');
-        main.bold("issue " + issueNumber);
-        main.append(" on ");
+    public void render(StyledText text) {
+        text.append(' ');
+        text.append(action);
+        text.append(' ');
+        text.bold("issue " + issueNumber);
+        text.append(" on ");
     }
 
     @Override

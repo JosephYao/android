@@ -1,16 +1,18 @@
 package com.github.mobile.ui.user.download;
 
-import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextNotEmpty;
+import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextEmpty;
 
 import org.eclipse.egit.github.core.event.DownloadPayload;
 
 public class DownloadFactory {
 
     public static Download create(DownloadPayload payload) {
-        if (payload.getDownload() == null || isTrimmedTextNotEmpty(payload.getDownload().getName()))
+        org.eclipse.egit.github.core.Download download = payload.getDownload();
+
+        if (download == null || isTrimmedTextEmpty(download.getName()))
             return new EmptyDownload();
 
-        return new NonEmptyDownload(payload.getDownload().getName());
+        return new NonEmptyDownload(download.getName());
     }
 
 }

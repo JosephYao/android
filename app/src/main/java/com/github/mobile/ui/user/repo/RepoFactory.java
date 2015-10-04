@@ -6,13 +6,17 @@ import org.eclipse.egit.github.core.event.EventRepository;
 
 public class RepoFactory {
     public static Repo createRepoFromEventRepositoryAndRefType(EventRepository repo, String refType) {
-        if (repo == null || TextUtils.isEmpty(repo.getName()))
+        if (isRepoEmpty(repo))
             return new EmptyRepo();
 
         if (refType.equals("repository"))
             return new RepositoryRepo(repo.getName());
         else
             return new NonRepositoryRepo(repo.getName());
+    }
+
+    private static boolean isRepoEmpty(EventRepository repo) {
+        return repo == null || TextUtils.isEmpty(repo.getName());
     }
 
     public static Repo createRepoFromEventRepository(EventRepository repo) {
