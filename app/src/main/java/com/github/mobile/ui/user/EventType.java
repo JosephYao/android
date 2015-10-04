@@ -158,10 +158,9 @@ public enum EventType {
             user.render(main);
             action.render(main);
             repo.render(main);
+            issue.render(details);
 
             IssuesPayload payload = (IssuesPayload) event.getPayload();
-            org.eclipse.egit.github.core.Issue issue = payload.getIssue();
-            appendText(details, issue.getTitle());
             String action = payload.getAction();
             String icon = null;
             if (IconAndViewTextManager.ISSUES_PAYLOAD_ACTION_OPENED.equals(action))
@@ -269,6 +268,7 @@ public enum EventType {
                 }
                 if (event.getPayload() instanceof IssuesPayload) {
                     eventType.action = ActionFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
+                    eventType.issue = IssueFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
                 }
                 return eventType;
             }
