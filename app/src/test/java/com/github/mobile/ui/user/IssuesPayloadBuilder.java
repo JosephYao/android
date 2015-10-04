@@ -37,4 +37,9 @@ public class IssuesPayloadBuilder implements PayloadBuilder {
         this.action = action;
         return this;
     }
+
+    public IssuesPayloadBuilder withIssueNumber(int number) {
+        this.issueNumber = number;
+        return this;
+    }
 }

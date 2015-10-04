@@ -5,6 +5,7 @@ import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetails
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
@@ -16,7 +17,9 @@ import org.junit.Test;
 
 public class TestIssuesEvent {
 
+    public static final int ISSUE_NUMBER = 1;
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_issue_open() {
@@ -60,11 +63,8 @@ public class TestIssuesEvent {
 
     @Test
     public void actor_should_be_bold_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
-                        withPayload(new IssuesPayloadBuilder().defaultStubPayload()).
+                stubEvent(stubPayload()).
                         withLoginUserName("LoginUserNameForIssues").
                         build(),
                 mockMainStyledText,
@@ -73,11 +73,35 @@ public class TestIssuesEvent {
         verify(mockMainStyledText).bold("LoginUserNameForIssues");
     }
 
+    @Test
+    public void action_should_be_append_and_issue_number_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubPayload().
+                        withAction("action").
+                        withIssueNumber(ISSUE_NUMBER)).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText, times(2)).append(' ');
+        verify(mockMainStyledText).append("action");
+        verify(mockMainStyledText).bold("issue " + ISSUE_NUMBER);
+        verify(mockMainStyledText).append(" on ");
+    }
+
+    private IssuesPayloadBuilder stubPayload() {
+        return new IssuesPayloadBuilder().defaultStubPayload();
+    }
+
     private Event stubEventWithIssueAction(String action) {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
-                withPayload(new IssuesPayloadBuilder().defaultStubPayload().
-                        withAction(action)).
+        return stubEvent(stubPayload().
+                withAction(action)).
                 build();
+    }
+
+    private EventBuilder stubEvent(IssuesPayloadBuilder payloadBuilder) {
+        return new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
+                withPayload(payloadBuilder);
     }
 
 }
