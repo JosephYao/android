@@ -5,17 +5,17 @@ import com.github.mobile.ui.StyledText;
 public class CommitIdComment implements Comment {
 
     private final String commitId;
-    private final String body;
+    private final NonEmptyComment nonEmptyComment;
 
     public CommitIdComment(String body, String commitId) {
         this.commitId = commitId;
-        this.body = body;
+        nonEmptyComment = new NonEmptyComment(body);
     }
 
     @Override
     public void render(StyledText text) {
         appendCommitId(text);
-        new NonEmptyComment(body).render(text);
+        nonEmptyComment.render(text);
     }
 
     private void appendCommitId(StyledText text) {
