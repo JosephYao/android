@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.builder.EventBuilder;
+import com.github.mobile.ui.user.builder.IssuesPayloadBuilder;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
