@@ -16,9 +16,9 @@ import org.junit.Test;
 
 public class TestMemberEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).
-            withPayload(new MemberPayloadBuilder().defaultStubPayload());
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).withPayload(stubPayload());
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_add_member() {
@@ -32,8 +32,6 @@ public class TestMemberEvent {
 
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForMember").
@@ -43,5 +41,25 @@ public class TestMemberEvent {
 
         verify(mockMainStyledText).bold("LoginUserNameForMember");
         verify(mockMainStyledText).append(" added ");
+    }
+
+    @Test
+    public void member_and_repo_should_be_bold_and_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload().
+                                withMember("LoginMember")).
+                        withRepo("RepoForMemberAdd").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("LoginMember");
+        verify(mockMainStyledText).append(" as a collaborator to ");
+        verify(mockMainStyledText).bold("RepoForMemberAdd");
+    }
+
+    private MemberPayloadBuilder stubPayload() {
+        return new MemberPayloadBuilder().defaultStubPayload();
     }
 }
