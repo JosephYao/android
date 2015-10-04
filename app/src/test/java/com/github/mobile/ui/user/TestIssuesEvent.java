@@ -12,18 +12,43 @@ import org.junit.Test;
 
 public class TestIssuesEvent {
 
+    IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+
     @Test
     public void icon_should_be_issue_open() {
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
-                        withPayload(new IssuesPayloadBuilder().defaultStubPayload().
-                            withAction("opened")).
-                        build(),
+                stubEventWithIssueAction("opened"),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_ISSUE_OPEN, icon);
     }
+
+    @Test
+    public void icon_should_be_issue_reopen() {
+        String icon = iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEventWithIssueAction("reopened"),
+                stubMainStyledText(),
+                stubDetailsStyledText());
+
+        assertEquals(TypefaceUtils.ICON_ISSUE_REOPEN, icon);
+    }
+
+    @Test
+    public void icon_should_be_issue_close() {
+        String icon = iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEventWithIssueAction("closed"),
+                stubMainStyledText(),
+                stubDetailsStyledText());
+
+        assertEquals(TypefaceUtils.ICON_ISSUE_CLOSE, icon);
+    }
+
+    private Event stubEventWithIssueAction(String action) {
+        return new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
+                withPayload(new IssuesPayloadBuilder().defaultStubPayload().
+                        withAction(action)).
+                build();
+    }
+
 }
