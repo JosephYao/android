@@ -89,6 +89,18 @@ public class TestIssuesEvent {
         verify(mockMainStyledText).append(" on ");
     }
 
+    @Test
+    public void repo_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent(stubPayload()).
+                        withRepo("RepoForIssues").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForIssues");
+    }
+
     private IssuesPayloadBuilder stubPayload() {
         return new IssuesPayloadBuilder().defaultStubPayload();
     }
