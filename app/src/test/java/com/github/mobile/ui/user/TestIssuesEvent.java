@@ -3,6 +3,7 @@ package com.github.mobile.ui.user;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import com.github.mobile.ui.user.builder.EventBuilder;
 import com.github.mobile.util.TypefaceUtils;
@@ -44,6 +45,15 @@ public class TestIssuesEvent {
         assertEquals(TypefaceUtils.ICON_ISSUE_CLOSE, icon);
     }
 
+    @Test
+    public void icon_should_be_null_when_any_other_action() {
+        String icon = iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEventWithIssueAction("otherAction"),
+                stubMainStyledText(),
+                stubDetailsStyledText());
+
+        assertNull(icon);
+    }
     private Event stubEventWithIssueAction(String action) {
         return new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
                 withPayload(new IssuesPayloadBuilder().defaultStubPayload().
