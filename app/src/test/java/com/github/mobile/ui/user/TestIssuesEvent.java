@@ -20,6 +20,8 @@ import org.junit.Test;
 public class TestIssuesEvent {
 
     public static final int ISSUE_NUMBER = 1;
+    private final IssuesPayloadBuilder stubPayload = new IssuesPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -66,7 +68,7 @@ public class TestIssuesEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubPayload()).
+                stubEvent.
                         withLoginUserName("LoginUserNameForIssues").
                         build(),
                 mockMainStyledText,
@@ -78,9 +80,10 @@ public class TestIssuesEvent {
     @Test
     public void action_should_be_append_and_issue_number_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubPayload().
-                        withAction("action").
-                        withIssueNumber(ISSUE_NUMBER)).
+                stubEvent.
+                        withPayload(stubPayload.
+                                withAction("action").
+                                withIssueNumber(ISSUE_NUMBER)).
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -94,7 +97,7 @@ public class TestIssuesEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubPayload()).
+                stubEvent.
                         withRepo("RepoForIssues").
                         build(),
                 mockMainStyledText,
@@ -108,8 +111,9 @@ public class TestIssuesEvent {
         StyledText mockDetailsStyledText = mockDetailsStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent(stubPayload().
-                        withIssueTitle("IssueTitle")).
+                stubEvent.
+                        withPayload(stubPayload.
+                                withIssueTitle("IssueTitle")).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -117,19 +121,11 @@ public class TestIssuesEvent {
         verify(mockDetailsStyledText).append("IssueTitle");
     }
 
-    private IssuesPayloadBuilder stubPayload() {
-        return new IssuesPayloadBuilder().defaultStubPayload();
-    }
-
     private Event stubEventWithIssueAction(String action) {
-        return stubEvent(stubPayload().
-                withAction(action)).
+        return stubEvent.
+                withPayload(stubPayload.
+                        withAction(action)).
                 build();
-    }
-
-    private EventBuilder stubEvent(IssuesPayloadBuilder payloadBuilder) {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).
-                withPayload(payloadBuilder);
     }
 
 }

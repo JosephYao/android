@@ -18,8 +18,8 @@ import org.junit.Test;
 public class TestIssueCommentEvent {
 
     public static final int ISSUE_NUMBER = 1;
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUE_COMMENT).
-            withPayload(new IssueCommentPayloadBuilder().defaultStubPayload());
+    private final IssueCommentPayloadBuilder stubPayload = new IssueCommentPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUE_COMMENT).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -89,7 +89,7 @@ public class TestIssueCommentEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new IssueCommentPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                             withComment("IssueComment")).
                         build(),
                 stubMainStyledText(),
@@ -99,6 +99,6 @@ public class TestIssueCommentEvent {
     }
 
     private IssueCommentPayloadBuilder stubIssueCommentPayloadWithIssueNumber(int issueNumber) {
-        return new IssueCommentPayloadBuilder().withIssueNumber(issueNumber);
+        return stubPayload.withIssueNumber(issueNumber);
     }
 }

@@ -16,7 +16,9 @@ import org.junit.Test;
 
 public class TestMemberEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).withPayload(stubPayload());
+    private final MemberPayloadBuilder stubPayload = new MemberPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).withPayload(stubPayload);
+
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -47,7 +49,7 @@ public class TestMemberEvent {
     public void member_and_repo_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload().
+                        withPayload(stubPayload.
                                 withMember("LoginMember")).
                         withRepo("RepoForMemberAdd").
                         build(),
@@ -59,7 +61,4 @@ public class TestMemberEvent {
         verify(mockMainStyledText).bold("RepoForMemberAdd");
     }
 
-    private MemberPayloadBuilder stubPayload() {
-        return new MemberPayloadBuilder().defaultStubPayload();
-    }
 }

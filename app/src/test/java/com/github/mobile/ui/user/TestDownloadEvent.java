@@ -17,8 +17,8 @@ import org.junit.Test;
 
 public class TestDownloadEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_DOWNLOAD).
-            withPayload(new DownloadPayloadBuilder().defaultStubPayload());
+    private final DownloadPayloadBuilder stubPayload = new DownloadPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_DOWNLOAD).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -54,7 +54,7 @@ public class TestDownloadEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent
-                        .withPayload(new DownloadPayloadBuilder().defaultStubPayload().
+                        .withPayload(stubPayload.
                             withDownload("Download"))
                         .build(),
                 stubMainStyledText(),

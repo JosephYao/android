@@ -16,8 +16,8 @@ import org.junit.Test;
 
 public class TestFollowEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FOLLOW).
-            withPayload(new FollowPayloadBuilder().defaultStubPayload());
+    private final FollowPayloadBuilder stubPayload = new FollowPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FOLLOW).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -36,7 +36,7 @@ public class TestFollowEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new FollowPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                                 withTarget("Target")).
                         withLoginUserName("LoginUserNameForFollow").
                         build(),

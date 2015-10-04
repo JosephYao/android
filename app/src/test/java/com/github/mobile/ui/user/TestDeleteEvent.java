@@ -17,9 +17,10 @@ import org.junit.Test;
 public class TestDeleteEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-    EventBuilder stubEvent = new EventBuilder().
+    private final DeletePayloadBuilder stubPayload = new DeletePayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().
             defaultStubEventFor(Event.TYPE_DELETE).
-            withPayload(new DeletePayloadBuilder().defaultStubPayload());
+            withPayload(stubPayload);
     StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
@@ -49,7 +50,7 @@ public class TestDeleteEvent {
     public void payload_ref_type_and_ref_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new DeletePayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                                 withRefType("RefType").
                                 withRef("Ref")).
                         build(),

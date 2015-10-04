@@ -16,8 +16,8 @@ import org.junit.Test;
 
 public class TestGistEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).
-            withPayload(new GistPayloadBuilder().defaultStubPayload());
+    private final GistPayloadBuilder stubPayload = new GistPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -48,7 +48,7 @@ public class TestGistEvent {
     public void create_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                                 withAction("create")).
                         build(),
                 mockMainStyledText,
@@ -61,7 +61,7 @@ public class TestGistEvent {
     public void update_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                                 withAction("update")).
                         build(),
                 mockMainStyledText,
@@ -74,7 +74,7 @@ public class TestGistEvent {
     public void other_action_should_be_appended_to_main_without_change() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                                 withAction("otherAction")).
                         build(),
                 mockMainStyledText,
@@ -87,7 +87,7 @@ public class TestGistEvent {
     public void gist_id_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(new GistPayloadBuilder().defaultStubPayload().
+                        withPayload(stubPayload.
                             withGistId("GistId")).
                         build(),
                 mockMainStyledText,
