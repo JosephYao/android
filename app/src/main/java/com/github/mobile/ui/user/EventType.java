@@ -203,19 +203,11 @@ public enum EventType {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
             user.render(main);
+            action.render(main);
+            repo.render(main);
 
             PullRequestPayload payload = (PullRequestPayload) event.getPayload();
             String action = payload.getAction();
-            if ("synchronize".equals(action))
-                action = "updated";
-            main.append(' ');
-            main.append(action);
-            main.append(' ');
-            main.bold("pull request " + payload.getNumber());
-            main.append(" on ");
-
-            repo.render(main);
-
             if ("opened".equals(action) || "closed".equals(action)) {
                 PullRequest request = payload.getPullRequest();
                 if (request != null) {
@@ -296,6 +288,8 @@ public enum EventType {
                 }
                 if (event.getPayload() instanceof MemberPayload)
                     eventType.member = UserFactory.create(((MemberPayload) event.getPayload()).getMember());
+                if (event.getPayload() instanceof PullRequestPayload)
+                    eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload)event.getPayload());
                 return eventType;
             }
 
