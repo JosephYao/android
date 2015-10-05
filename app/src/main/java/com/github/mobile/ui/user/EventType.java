@@ -185,7 +185,13 @@ public enum EventType {
     PublicEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatPublic(event, main, details);
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
+            user.render(main);
+            main.append(" open sourced repository ");
+            repo.render(main);
             return null;
         }
     },
