@@ -87,4 +87,16 @@ public class TestPullRequestEvent {
         verify(mockMainStyledText).bold("pull request " + PAYLOAD_NUMBER);
         verify(mockMainStyledText).append(" on ");
     }
+
+    @Test
+    public void repo_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withRepo("RepoForPullRequest").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForPullRequest");
+    }
 }
