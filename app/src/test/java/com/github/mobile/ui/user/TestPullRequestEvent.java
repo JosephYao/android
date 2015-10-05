@@ -20,6 +20,7 @@ public class TestPullRequestEvent {
     private final PullRequestPayloadBuilder stubPayload = new PullRequestPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_pull_request() {
@@ -34,8 +35,6 @@ public class TestPullRequestEvent {
 
     @Test
     public void actor_should_be_bold_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForPullRequest").
@@ -48,8 +47,6 @@ public class TestPullRequestEvent {
 
     @Test
     public void action_should_be_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(stubPayload.
@@ -60,5 +57,19 @@ public class TestPullRequestEvent {
 
         verify(mockMainStyledText, times(2)).append(' ');
         verify(mockMainStyledText).append("action");
+    }
+
+    @Test
+    public void synchronize_action_should_be_changed_to_updated_and_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withAction("synchronize")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText, times(2)).append(' ');
+        verify(mockMainStyledText).append("updated");
     }
 }
