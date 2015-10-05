@@ -26,6 +26,7 @@ import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
+import org.eclipse.egit.github.core.event.MemberPayload;
 
 /**
  * Created by twer on 3/22/15.
@@ -169,7 +170,13 @@ public enum EventType {
     MemberEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatAddMember(event, main, details);
+            user.render(main);
+            main.append(" added ");
+            org.eclipse.egit.github.core.User member = ((MemberPayload) event.getPayload()).getMember();
+            if (member != null)
+                main.bold(member.getLogin());
+            main.append(" as a collaborator to ");
+            repo.render(main);
             return TypefaceUtils.ICON_ADD_MEMBER;
         }
     },

@@ -239,7 +239,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatIssues(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_member_then_icon_should_be_add_member_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
