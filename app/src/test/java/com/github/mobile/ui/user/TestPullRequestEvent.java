@@ -23,6 +23,7 @@ public class TestPullRequestEvent {
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_pull_request() {
@@ -50,9 +51,7 @@ public class TestPullRequestEvent {
     @Test
     public void action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withPayload(stubPayload.
-                                withAction("action")).
+                stubEventWithAction("action").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -64,9 +63,7 @@ public class TestPullRequestEvent {
     @Test
     public void synchronize_action_should_be_changed_to_updated_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withPayload(stubPayload.
-                                withAction("synchronize")).
+                stubEventWithAction("synchronize").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -103,8 +100,6 @@ public class TestPullRequestEvent {
 
     @Test
     public void pull_request_title_should_be_appended_to_detail_when_action_is_opened() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(stubPayload.
@@ -116,4 +111,25 @@ public class TestPullRequestEvent {
 
         verify(mockDetailsStyledText).append("title");
     }
+
+    @Test
+    public void pull_request_title_should_be_appended_to_detail_when_action_is_closed() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withAction("closed").
+                                withPullRequestTitle("title")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("title");
+    }
+
+    private EventBuilder stubEventWithAction(String action) {
+        return stubEvent.
+                withPayload(stubPayload.
+                        withAction(action));
+    }
+
 }
