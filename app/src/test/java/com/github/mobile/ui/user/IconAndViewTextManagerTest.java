@@ -275,7 +275,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatPublic(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_pull_request_then_icon_should_be_pull_request_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();

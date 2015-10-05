@@ -1,5 +1,7 @@
 package com.github.mobile.ui.user;
 
+import android.text.TextUtils;
+
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -17,6 +19,7 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
+import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -27,6 +30,7 @@ import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
+import org.eclipse.egit.github.core.event.PullRequestPayload;
 
 /**
  * Created by twer on 3/22/15.
@@ -198,7 +202,28 @@ public enum EventType {
     PullRequestEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatPullRequest(event, main, details);
+            user.render(main);
+
+            PullRequestPayload payload = (PullRequestPayload) event.getPayload();
+            String action = payload.getAction();
+            if ("synchronize".equals(action))
+                action = "updated";
+            main.append(' ');
+            main.append(action);
+            main.append(' ');
+            main.bold("pull request " + payload.getNumber());
+            main.append(" on ");
+
+            repo.render(main);
+
+            if ("opened".equals(action) || "closed".equals(action)) {
+                PullRequest request = payload.getPullRequest();
+                if (request != null) {
+                    String title = request.getTitle();
+                    if (!TextUtils.isEmpty(title))
+                        details.append(title);
+                }
+            }
             return TypefaceUtils.ICON_PULL_REQUEST;
         }
     },
