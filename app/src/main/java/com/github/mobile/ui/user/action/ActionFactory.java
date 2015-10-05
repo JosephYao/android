@@ -15,9 +15,9 @@ public class ActionFactory {
     }
 
     public static Action createFromPullRequestPayload(PullRequestPayload payload) {
-        String action = payload.getAction();
-        if ("synchronize".equals(action))
-            action = "updated";
-        return new PullRequestAction(action, payload.getNumber());
+        if ("synchronize".equals(payload.getAction()))
+            return new PullRequestAction("updated", payload.getNumber());
+
+        return new PullRequestAction(payload.getAction(), payload.getNumber());
     }
 }
