@@ -8,11 +8,13 @@ import org.eclipse.egit.github.core.event.PullRequestPayload;
 
 public class PullRequestPayloadBuilder implements PayloadBuilder {
     private String action;
+    private int number;
 
     @Override
     public EventPayload build() {
         PullRequestPayload stubPayload = mock(PullRequestPayload.class);
         when(stubPayload.getAction()).thenReturn(action);
+        when(stubPayload.getNumber()).thenReturn(number);
         return stubPayload;
     }
 
@@ -22,6 +24,11 @@ public class PullRequestPayloadBuilder implements PayloadBuilder {
 
     public PullRequestPayloadBuilder withAction(String action) {
         this.action = action;
+        return this;
+    }
+
+    public PullRequestPayloadBuilder withNumber(int number) {
+        this.number = number;
         return this;
     }
 }

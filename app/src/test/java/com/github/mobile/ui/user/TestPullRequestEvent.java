@@ -17,6 +17,7 @@ import org.junit.Test;
 
 public class TestPullRequestEvent {
 
+    public static final int PAYLOAD_NUMBER = 1;
     private final PullRequestPayloadBuilder stubPayload = new PullRequestPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
@@ -71,5 +72,19 @@ public class TestPullRequestEvent {
 
         verify(mockMainStyledText, times(2)).append(' ');
         verify(mockMainStyledText).append("updated");
+    }
+
+    @Test
+    public void payload_number_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withNumber(PAYLOAD_NUMBER)).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("pull request " + PAYLOAD_NUMBER);
+        verify(mockMainStyledText).append(" on ");
     }
 }
