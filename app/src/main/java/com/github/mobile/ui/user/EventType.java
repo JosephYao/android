@@ -170,11 +170,13 @@ public enum EventType {
     MemberEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main);
+        }
+
+        private String generate(StyledText main) {
             user.render(main);
             main.append(" added ");
-            org.eclipse.egit.github.core.User member = ((MemberPayload) event.getPayload()).getMember();
-            if (member != null)
-                main.bold(member.getLogin());
+            member.render(main);
             main.append(" as a collaborator to ");
             repo.render(main);
             return TypefaceUtils.ICON_ADD_MEMBER;
@@ -231,6 +233,7 @@ public enum EventType {
     protected User target;
     protected Action action;
     protected Issue issue;
+    protected User member;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -260,6 +263,8 @@ public enum EventType {
                     eventType.action = ActionFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
                     eventType.issue = IssueFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
                 }
+                if (event.getPayload() instanceof MemberPayload)
+                    eventType.member = UserFactory.create(((MemberPayload) event.getPayload()).getMember());
                 return eventType;
             }
 
