@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
@@ -98,5 +99,21 @@ public class TestPullRequestEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("RepoForPullRequest");
+    }
+
+    @Test
+    public void pull_request_title_should_be_appended_to_detail_when_action_is_opened() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withAction("opened").
+                                withPullRequestTitle("title")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("title");
     }
 }
