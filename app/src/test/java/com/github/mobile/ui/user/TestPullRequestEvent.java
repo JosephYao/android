@@ -4,6 +4,7 @@ import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainSty
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
@@ -16,8 +17,8 @@ import org.junit.Test;
 
 public class TestPullRequestEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).
-            withPayload(new PullRequestPayloadBuilder().defaultStubPayload());
+    private final PullRequestPayloadBuilder stubPayload = new PullRequestPayloadBuilder().defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -43,5 +44,21 @@ public class TestPullRequestEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserNameForPullRequest");
+    }
+
+    @Test
+    public void action_should_be_appended_to_main() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withAction("action")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText, times(2)).append(' ');
+        verify(mockMainStyledText).append("action");
     }
 }
