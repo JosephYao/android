@@ -49,27 +49,25 @@ public class TestCommitCommentEvent {
     }
 
     @Test
-    public void comment_id_should_be_appended_to_details_without_change_when_comment_id_is_10_characters_long() {
+    public void commit_id_should_be_appended_to_details_without_change_when_commit_id_is_10_characters_long() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
-                        withCommitId("10chlongId")).
+                stubEventWithCommitId("10chlongId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
+        verifyTextAppendedToDetails("10chlongId");
     }
 
     @Test
-    public void comment_id_should_be_trimmed_and_appended_to_details_when_comment_id_is_longer_than_10_characters() {
+    public void commit_id_should_be_trimmed_and_appended_to_details_when_commit_id_is_longer_than_10_characters() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
-                        withCommitId("longerthan10charId")).
+                stubEventWithCommitId("longerthan10charId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
+        verifyTextAppendedToDetails("longerthan");
     }
 
     @Test
@@ -84,12 +82,16 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).append("comment");
     }
 
-    private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
+    private void verifyTextAppendedToDetails(String commitId) {
         verify(mockDetailsStyledText).append("Comment in");
         verify(mockDetailsStyledText).append(' ');
-        verify(mockDetailsStyledText).monospace(text3);
+        verify(mockDetailsStyledText).monospace(commitId);
         verify(mockDetailsStyledText).append(':');
         verify(mockDetailsStyledText).append('\n');
+    }
+
+    private EventBuilder stubEventWithCommitId(String commitId) {
+        return stubEvent.withPayload(stubPayload.withCommitId(commitId));
     }
 
 }

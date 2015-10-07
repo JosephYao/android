@@ -60,7 +60,7 @@ public class TestPullRequestReviewComment {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
+        verifyTextAppendedToDetails("10chlongId");
     }
 
     @Test
@@ -71,7 +71,7 @@ public class TestPullRequestReviewComment {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
+        verifyTextAppendedToDetails("longerthan");
     }
 
     @Test
@@ -86,10 +86,10 @@ public class TestPullRequestReviewComment {
         verify(mockDetailsStyledText).append("comment");
     }
 
-    private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
+    private void verifyTextAppendedToDetails(String commitId) {
         verify(mockDetailsStyledText).append("Comment in");
         verify(mockDetailsStyledText).append(' ');
-        verify(mockDetailsStyledText).monospace(text3);
+        verify(mockDetailsStyledText).monospace(commitId);
         verify(mockDetailsStyledText).append(':');
         verify(mockDetailsStyledText).append('\n');
     }
