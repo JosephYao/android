@@ -293,7 +293,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatPullRequest(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_pull_request_review_comment_then_icon_should_be_comment_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
