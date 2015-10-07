@@ -1,7 +1,5 @@
 package com.github.mobile.ui.user;
 
-import android.text.TextUtils;
-
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -11,6 +9,7 @@ import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
 import com.github.mobile.ui.user.issue.IssueFactory;
+import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -19,7 +18,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.PullRequest;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -202,20 +200,14 @@ public enum EventType {
     PullRequestEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
             user.render(main);
             action.render(main);
             repo.render(main);
-
-            PullRequestPayload payload = (PullRequestPayload) event.getPayload();
-            String action = payload.getAction();
-            if ("opened".equals(action) || "closed".equals(action)) {
-                PullRequest request = payload.getPullRequest();
-                if (request != null) {
-                    String title = request.getTitle();
-                    if (!TextUtils.isEmpty(title))
-                        details.append(title);
-                }
-            }
+            pullrequest.render(details);
             return TypefaceUtils.ICON_PULL_REQUEST;
         }
     },
@@ -257,6 +249,7 @@ public enum EventType {
     protected Action action;
     protected Issue issue;
     protected User member;
+    protected com.github.mobile.ui.user.pullrequest.PullRequest pullrequest;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -288,8 +281,10 @@ public enum EventType {
                 }
                 if (event.getPayload() instanceof MemberPayload)
                     eventType.member = UserFactory.create(((MemberPayload) event.getPayload()).getMember());
-                if (event.getPayload() instanceof PullRequestPayload)
-                    eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload)event.getPayload());
+                if (event.getPayload() instanceof PullRequestPayload) {
+                    eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload());
+                    eventType.pullrequest = PullRequestFactory.create((PullRequestPayload) event.getPayload());
+                }
                 return eventType;
             }
 
