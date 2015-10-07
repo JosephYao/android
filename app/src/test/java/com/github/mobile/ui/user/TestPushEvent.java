@@ -16,8 +16,9 @@ import org.junit.Test;
 
 public class TestPushEvent {
 
+    private final PushPayloadBuilder stubPayload = new PushPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PUSH).
-            withPayload(new PushPayloadBuilder().defaultStubPayload());
+            withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -43,5 +44,20 @@ public class TestPushEvent {
 
         verify(mockMainStyledText).bold("LoginUserNameForPush");
         verify(mockMainStyledText).append(" pushed to ");
+    }
+
+    @Test
+    public void ref_should_be_bold_and_appended_to_main() {
+        StyledText mockMainStyledText = mockMainStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withPayload(stubPayload.
+                        withRef("RefForPush")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RefForPush");
+        verify(mockMainStyledText).append(" at ");
     }
 }

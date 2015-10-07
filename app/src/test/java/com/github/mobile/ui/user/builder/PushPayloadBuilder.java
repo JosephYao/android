@@ -20,4 +20,9 @@ public class PushPayloadBuilder implements PayloadBuilder {
         when(stubPayload.getRef()).thenReturn(ref);
         return stubPayload;
     }
+
+    public PushPayloadBuilder withRef(String ref) {
+        this.ref = ref;
+        return this;
+    }
 }
