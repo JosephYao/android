@@ -29,6 +29,7 @@ import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
+import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 /**
  * Created by twer on 3/22/15.
@@ -214,7 +215,10 @@ public enum EventType {
     PullRequestReviewCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatReviewComment(event, main, details);
+            user.render(main);
+            main.append(" commented on ");
+            repo.render(main);
+            comment.render(details);
             return TypefaceUtils.ICON_COMMENT;
         }
     },
@@ -260,8 +264,8 @@ public enum EventType {
                     eventType.payloadRef = PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
                             event.getRepo());
                 if (event.getPayload() instanceof CommitCommentPayload)
-                    eventType.comment = CommentFactory.createFromCommitCommentPayload(
-                            (CommitCommentPayload) event.getPayload());
+                    eventType.comment = CommentFactory.createFromCommitComment(((CommitCommentPayload) event
+                            .getPayload()).getComment());
                 if (event.getPayload() instanceof DeletePayload)
                     eventType.payloadRef = PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
                 if (event.getPayload() instanceof DownloadPayload)
@@ -285,6 +289,9 @@ public enum EventType {
                     eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload());
                     eventType.pullrequest = PullRequestFactory.create((PullRequestPayload) event.getPayload());
                 }
+                if (event.getPayload() instanceof PullRequestReviewCommentPayload)
+                    eventType.comment = CommentFactory.createFromCommitComment(((PullRequestReviewCommentPayload)
+                            event.getPayload()).getComment());
                 return eventType;
             }
 
