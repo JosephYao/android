@@ -9,12 +9,14 @@ import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
     private String commitId;
+    private String comment;
 
     @Override
     public EventPayload build() {
         PullRequestReviewCommentPayload stubPayload = mock(PullRequestReviewCommentPayload.class);
         CommitComment stubComment = mock(CommitComment.class);
         when(stubComment.getCommitId()).thenReturn(commitId);
+        when(stubComment.getBody()).thenReturn(comment);
         when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
@@ -26,6 +28,11 @@ public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
 
     public PullRequestReviewCommentPayloadBuilder withCommitId(String commitId) {
         this.commitId = commitId;
+        return this;
+    }
+
+    public PullRequestReviewCommentPayloadBuilder withComment(String comment) {
+        this.comment = comment;
         return this;
     }
 }

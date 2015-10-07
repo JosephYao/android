@@ -74,6 +74,18 @@ public class TestPullRequestReviewComment {
         verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
     }
 
+    @Test
+    public void comment_should_be_appended_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withPayload(stubPayload.
+                        withComment("comment")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("comment");
+    }
+
     private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
         verify(mockDetailsStyledText).append("Comment in");
         verify(mockDetailsStyledText).append(' ');
