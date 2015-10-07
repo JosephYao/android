@@ -15,7 +15,7 @@ public class CommentFactory {
 
         CommentBody body = createBody(comment);
 
-        if (comment == null || TextUtils.isEmpty(commitId))
+        if (isCommitIdEmpty(comment))
             return new NonCommitIdComment(body);
 
         if (isShortId(commitId))
@@ -24,20 +24,15 @@ public class CommentFactory {
         return new CommitIdComment(body, truncatedOf(commitId));
     }
 
-    private static CommentBody createBody(CommitComment comment) {
-        if (comment == null || isTrimmedTextEmpty(comment.getBody()))
-            return new EmptyCommentBody();
-
-        return new NonEmptyCommentBody(comment.getBody());
-    }
-
     public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
         org.eclipse.egit.github.core.Comment comment = payload.getComment();
 
-        if (isCommentEmpty(comment))
-            return new EmptyComment(new EmptyCommentBody());
+        CommentBody body = createBody(comment);
 
-        return new NonCommitIdComment(new NonEmptyCommentBody(comment.getBody()));
+        if (isCommentEmpty(comment))
+            return new NonCommitIdComment(body);
+
+        return new NonCommitIdComment(body);
     }
 
     private static boolean isCommentEmpty(org.eclipse.egit.github.core.Comment comment) {
@@ -50,6 +45,17 @@ public class CommentFactory {
 
     private static boolean isShortId(String commitId) {
         return commitId.length() <= 10;
+    }
+
+    private static boolean isCommitIdEmpty(CommitComment comment) {
+        return comment == null || TextUtils.isEmpty(comment.getCommitId());
+    }
+
+    private static CommentBody createBody(org.eclipse.egit.github.core.Comment comment) {
+        if (isCommentEmpty(comment))
+            return new EmptyCommentBody();
+
+        return new NonEmptyCommentBody(comment.getBody());
     }
 
 }
