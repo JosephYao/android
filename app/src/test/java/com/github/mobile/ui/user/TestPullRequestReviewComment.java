@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
@@ -16,21 +17,21 @@ import org.junit.Test;
 
 public class TestPullRequestReviewComment {
 
+    private final PullRequestReviewCommentPayloadBuilder stubPayload = new PullRequestReviewCommentPayloadBuilder()
+            .defaultStubPayload();
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event
+            .TYPE_PULL_REQUEST_REVIEW_COMMENT).
+            withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().build(),
+                stubEvent.build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_COMMENT, icon);
-    }
-
-    private EventBuilder stubEvent() {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST_REVIEW_COMMENT).
-                withPayload(new PullRequestReviewCommentPayloadBuilder().defaultStubPayload());
     }
 
     @Test
@@ -38,7 +39,7 @@ public class TestPullRequestReviewComment {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
+                stubEvent.
                         withLoginUserName("LoginUserNameForPullRequestReviewComment").
                         withRepo("RepoForPullRequestReviewComment").
                         build(),
@@ -48,5 +49,28 @@ public class TestPullRequestReviewComment {
         verify(mockMainStyledText).bold("LoginUserNameForPullRequestReviewComment");
         verify(mockMainStyledText).append(" commented on ");
         verify(mockMainStyledText).bold("RepoForPullRequestReviewComment");
+    }
+
+    @Test
+    public void commit_comment_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.
+                                withCommitId("10chlongId")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
+    }
+
+    private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
+        verify(mockDetailsStyledText).append("Comment in");
+        verify(mockDetailsStyledText).append(' ');
+        verify(mockDetailsStyledText).monospace(text3);
+        verify(mockDetailsStyledText).append(':');
+        verify(mockDetailsStyledText).append('\n');
     }
 }
