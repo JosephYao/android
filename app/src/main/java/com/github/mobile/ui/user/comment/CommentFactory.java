@@ -11,10 +11,28 @@ public class CommentFactory {
     public static Comment createFromCommitCommentPayload(CommitCommentPayload payload) {
         org.eclipse.egit.github.core.CommitComment comment = payload.getComment();
 
-        if (isCommentEmpty(comment))
+        if (comment == null)
             return new EmptyComment();
 
-        return createBaseOnCommitId(comment.getBody(), comment.getCommitId());
+        String body = comment.getBody();
+        String commitId = comment.getCommitId();
+        if (TextUtils.isEmpty(commitId))
+            if (isTrimmedTextEmpty(body))
+                return new EmptyComment();
+            else
+                return new NonEmptyComment(body);
+
+        if (isShortId(commitId)) {
+            if (isTrimmedTextEmpty(body))
+                return new NonBobyCommitIdComment(commitId);
+            else
+                return new CommitIdComment(body, commitId);
+        }
+
+        if (isTrimmedTextEmpty(body))
+            return new NonBobyCommitIdComment(truncatedOf(commitId));
+        else
+            return new CommitIdComment(body, truncatedOf(commitId));
     }
 
     public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
@@ -28,17 +46,6 @@ public class CommentFactory {
 
     private static boolean isCommentEmpty(org.eclipse.egit.github.core.Comment comment) {
         return comment == null || isTrimmedTextEmpty(comment.getBody());
-    }
-
-    private static Comment createBaseOnCommitId(String body, String commitId) {
-        if (TextUtils.isEmpty(commitId))
-            return new NonEmptyComment(body);
-
-        if (isShortId(commitId)) {
-            return new CommitIdComment(body, commitId);
-        }
-
-        return new CommitIdComment(body, truncatedOf(commitId));
     }
 
     private static String truncatedOf(String commitId) {

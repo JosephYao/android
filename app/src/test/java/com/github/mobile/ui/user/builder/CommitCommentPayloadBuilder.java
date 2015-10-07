@@ -16,7 +16,6 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
     public CommitCommentPayloadBuilder defaultStubPayload() {
         this.commitId = "commitId";
-        this.comment = "comment";
         return this;
     }
 
