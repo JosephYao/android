@@ -15,7 +15,7 @@ import com.github.mobile.util.TypefaceUtils;
 import org.eclipse.egit.github.core.event.Event;
 import org.junit.Test;
 
-public class TestPullRequestReviewComment {
+public class TestPullRequestReviewCommentEvent {
 
     private final PullRequestReviewCommentPayloadBuilder stubPayload = new PullRequestReviewCommentPayloadBuilder()
             .defaultStubPayload();
