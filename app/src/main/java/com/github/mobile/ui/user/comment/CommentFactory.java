@@ -3,6 +3,7 @@ package com.github.mobile.ui.user.comment;
 import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextEmpty;
 import android.text.TextUtils;
 
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
@@ -10,38 +11,33 @@ public class CommentFactory {
 
     public static Comment createFromCommitCommentPayload(CommitCommentPayload payload) {
         org.eclipse.egit.github.core.CommitComment comment = payload.getComment();
-
-        if (comment == null)
-            return new EmptyComment();
-
-        String body = comment.getBody();
         String commitId = comment.getCommitId();
-        if (TextUtils.isEmpty(commitId))
-            if (isTrimmedTextEmpty(body))
-                return new EmptyComment();
-            else
-                return new NonEmptyComment(body);
 
-        if (isShortId(commitId)) {
-            if (isTrimmedTextEmpty(body))
-                return new NonBobyCommitIdComment(commitId);
-            else
-                return new CommitIdComment(body, commitId);
-        }
+        CommentBody body = createBody(comment);
 
-        if (isTrimmedTextEmpty(body))
-            return new NonBobyCommitIdComment(truncatedOf(commitId));
-        else
-            return new CommitIdComment(body, truncatedOf(commitId));
+        if (comment == null || TextUtils.isEmpty(commitId))
+            return new NonCommitIdComment(body);
+
+        if (isShortId(commitId))
+            return new CommitIdComment(body, commitId);
+
+        return new CommitIdComment(body, truncatedOf(commitId));
+    }
+
+    private static CommentBody createBody(CommitComment comment) {
+        if (comment == null || isTrimmedTextEmpty(comment.getBody()))
+            return new EmptyCommentBody();
+
+        return new NonEmptyCommentBody(comment.getBody());
     }
 
     public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
         org.eclipse.egit.github.core.Comment comment = payload.getComment();
 
         if (isCommentEmpty(comment))
-            return new EmptyComment();
+            return new EmptyComment(new EmptyCommentBody());
 
-        return new NonEmptyComment(comment.getBody());
+        return new NonCommitIdComment(new NonEmptyCommentBody(comment.getBody()));
     }
 
     private static boolean isCommentEmpty(org.eclipse.egit.github.core.Comment comment) {

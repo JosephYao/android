@@ -2,16 +2,16 @@ package com.github.mobile.ui.user.comment;
 
 import com.github.mobile.ui.StyledText;
 
-public class NonEmptyComment implements Comment {
-    private final String body;
+public class NonCommitIdComment implements Comment {
+    private final CommentBody body;
 
-    public NonEmptyComment(String body) {
+    public NonCommitIdComment(CommentBody body) {
         this.body = body;
     }
 
     @Override
     public void render(StyledText text) {
-        text.append(body.trim());
+        body.render(text);
     }
 
 }
