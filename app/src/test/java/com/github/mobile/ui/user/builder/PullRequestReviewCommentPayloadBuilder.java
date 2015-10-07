@@ -14,9 +14,10 @@ public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
     @Override
     public EventPayload build() {
         PullRequestReviewCommentPayload stubPayload = mock(PullRequestReviewCommentPayload.class);
-        CommitComment stubComment = mock(CommitComment.class);
-        when(stubComment.getCommitId()).thenReturn(commitId);
-        when(stubComment.getBody()).thenReturn(comment);
+        CommitComment stubComment = new CommitCommentBuilder().defaultStubComment().
+                withComment(comment).
+                withCommitId(commitId).
+                build();
         when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
