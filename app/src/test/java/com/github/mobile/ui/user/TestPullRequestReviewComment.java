@@ -23,6 +23,7 @@ public class TestPullRequestReviewComment {
             .TYPE_PULL_REQUEST_REVIEW_COMMENT).
             withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_comment() {
@@ -52,18 +53,25 @@ public class TestPullRequestReviewComment {
     }
 
     @Test
-    public void commit_comment_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
+    public void commit_id_should_be_appended_to_details_without_change_when_commit_id_is_10_characters_long() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withPayload(stubPayload.
-                                withCommitId("10chlongId")).
+                stubEventWithCommitId("10chlongId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
         verifyTextAppendedToDetails(mockDetailsStyledText, "10chlongId");
+    }
+
+    @Test
+    public void commit_id_should_be_trimmed_and_appended_to_details_when_commit_id_is_longer_than_10_characters() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEventWithCommitId("longerthan10charId").
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verifyTextAppendedToDetails(mockDetailsStyledText, "longerthan");
     }
 
     private void verifyTextAppendedToDetails(StyledText mockDetailsStyledText, String text3) {
@@ -73,4 +81,9 @@ public class TestPullRequestReviewComment {
         verify(mockDetailsStyledText).append(':');
         verify(mockDetailsStyledText).append('\n');
     }
+
+    private EventBuilder stubEventWithCommitId(String commitId) {
+        return stubEvent.withPayload(stubPayload.withCommitId(commitId));
+    }
+
 }
