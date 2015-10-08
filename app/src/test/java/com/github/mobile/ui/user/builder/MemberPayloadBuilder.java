@@ -8,23 +8,19 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 
 public class MemberPayloadBuilder implements PayloadBuilder {
+    private UserBuilder userBuilder;
     private String memberLogin;
 
     @Override
     public EventPayload build() {
         MemberPayload stubPayload = mock(MemberPayload.class);
-        User stubUser = stubUser();
+        User stubUser = userBuilder.withLoginUserName(memberLogin).build();
         when(stubPayload.getMember()).thenReturn(stubUser);
         return stubPayload;
     }
 
-    private User stubUser() {
-        User stubUser = mock(User.class);
-        when(stubUser.getLogin()).thenReturn(memberLogin);
-        return stubUser;
-    }
-
     public MemberPayloadBuilder defaultStubPayload() {
+        userBuilder = new UserBuilder().defaultStubUser();
         return this;
     }
 

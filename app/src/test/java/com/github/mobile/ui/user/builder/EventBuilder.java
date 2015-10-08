@@ -10,6 +10,7 @@ import org.eclipse.egit.github.core.event.EventRepository;
 
 public class EventBuilder {
 
+    private UserBuilder userBuilder;
     private String loginUserName;
     private String repo;
     private PayloadBuilder payloadBuilder;
@@ -18,6 +19,7 @@ public class EventBuilder {
     public EventBuilder defaultStubEventFor(String type) {
         this.type = type;
         this.payloadBuilder = new CommitCommentPayloadBuilder().defaultStubPayload();
+        this.userBuilder = new UserBuilder().defaultStubUser();
         return this;
     }
 
@@ -29,7 +31,7 @@ public class EventBuilder {
          * this local variable is needed, DO NOT inline it, otherwise test code will fail. Please see http://stackoverflow.com/a/26319364 for more details.
          * Same for stubPayload and stubRepo.
          */
-        User stubUser = stubUser();
+        User stubUser = userBuilder.withLoginUserName(loginUserName).build();
         when(stubEvent.getActor()).thenReturn(stubUser);
 
         EventPayload stubPayload = payloadBuilder.build();
@@ -38,12 +40,6 @@ public class EventBuilder {
         EventRepository stubRepo = stubRepo();
         when(stubEvent.getRepo()).thenReturn(stubRepo);
         return stubEvent;
-    }
-
-    private User stubUser() {
-        User stubUser = mock(User.class);
-        when(stubUser.getLogin()).thenReturn(loginUserName);
-        return stubUser;
     }
 
     private EventRepository stubRepo() {
