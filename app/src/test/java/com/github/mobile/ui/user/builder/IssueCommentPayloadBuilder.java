@@ -10,29 +10,24 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
 public class IssueCommentPayloadBuilder implements PayloadBuilder {
+    private IssueBuilder issueBuilder;
     private Integer issueNumber;
     private boolean withPullRequest;
     private String comment;
-    private CommentBuilder<Comment> commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
+    private CommentBuilder<Comment> commentBuilder;
 
     @Override
     public EventPayload build() {
         IssueCommentPayload stubPayload = mock(IssueCommentPayload.class);
-        Issue stubIssue = stubIssue();
+        Issue stubIssue = issueBuilder.withNumber(issueNumber).build();
+        addStubPullRequestAsNeeded(stubIssue);
         when(stubPayload.getIssue()).thenReturn(stubIssue);
         Comment stubComment = commentBuilder.withComment(comment).build();
         when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
 
-    private Issue stubIssue() {
-        Issue stubIssue = mock(Issue.class);
-        when(stubIssue.getNumber()).thenReturn(issueNumber);
-        stubPullRequest(stubIssue);
-        return stubIssue;
-    }
-
-    private void stubPullRequest(Issue stubIssue) {
+    private void addStubPullRequestAsNeeded(Issue stubIssue) {
         if (withPullRequest) {
             PullRequest stubPullRequest = mock(PullRequest.class);
             when(stubPullRequest.getHtmlUrl()).thenReturn("HtmlUrl");
@@ -41,6 +36,8 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     }
 
     public IssueCommentPayloadBuilder defaultStubPayload() {
+        issueBuilder = new IssueBuilder().defaultStubIssue();
+        commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
         this.withPullRequest = false;
         this.issueNumber = 1;
         return this;
