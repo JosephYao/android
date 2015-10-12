@@ -10,21 +10,18 @@ import org.eclipse.egit.github.core.event.IssuesPayload;
 public class IssuesPayloadBuilder implements PayloadBuilder {
     private IssueBuilder issueBuilder;
     private String action;
-    private Integer issueNumber;
-    private String issueTitle;
 
     @Override
     public EventPayload build() {
         IssuesPayload stubPayload = mock(IssuesPayload.class);
         when(stubPayload.getAction()).thenReturn(action);
-        Issue stubIssue = issueBuilder.withNumber(issueNumber).withTitle(issueTitle).build();
+        Issue stubIssue = issueBuilder.build();
         when(stubPayload.getIssue()).thenReturn(stubIssue);
         return stubPayload;
     }
 
     public IssuesPayloadBuilder defaultStubPayload() {
-        issueBuilder = new IssueBuilder().defaultStubIssue();
-        this.issueNumber = 100;
+        issueBuilder = new IssueBuilder().defaultStubIssue().withNumber(100);
         return this;
     }
 
@@ -34,12 +31,12 @@ public class IssuesPayloadBuilder implements PayloadBuilder {
     }
 
     public IssuesPayloadBuilder withIssueNumber(int number) {
-        this.issueNumber = number;
+        issueBuilder.withNumber(number);
         return this;
     }
 
     public IssuesPayloadBuilder withIssueTitle(String title) {
-        this.issueTitle = title;
+        issueBuilder.withTitle(title);
         return this;
     }
 }
