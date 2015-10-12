@@ -142,8 +142,25 @@ public class TestPushEvent {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
+        verifyMessageAppended("message without new line");
+    }
+
+    private void verifyMessageAppended(String text2) {
         verify(mockDetailsStyledText).append(' ');
-        verify(mockDetailsStyledText).append("message without new line");
+        verify(mockDetailsStyledText).append(text2);
+    }
+
+    @Test
+    public void message_with_new_line_should_be_truncated_and_appended_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitMessage("first line" + "\n" + "second line")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verifyMessageAppended("first line");
     }
 
     private Event stubEventWithRef(String ref) {
