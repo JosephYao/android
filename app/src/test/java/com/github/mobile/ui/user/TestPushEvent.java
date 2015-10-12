@@ -48,9 +48,7 @@ public class TestPushEvent {
     @Test
     public void ref_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
-                        withRef("RefForPush")).
-                        build(),
+                stubEventWithRef("RefForPush"),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
@@ -60,13 +58,29 @@ public class TestPushEvent {
     @Test
     public void ref_should_be_truncated_when_start_with_refs_heads() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
-                        withRef("refs/heads/" + "RestOfRef")).
-                        build(),
+                stubEventWithRef("RestOfRef"),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
         verifyRefBoldAndAppend("RestOfRef", " at ");
+    }
+
+    @Test
+    public void repo_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withRepo("RepoForPush").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForPush");
+    }
+
+    private Event stubEventWithRef(String ref) {
+        return stubEvent.withPayload(stubPayload.
+                withRef("refs/heads/" + ref)).
+                build();
     }
 
     private void verifyRefBoldAndAppend(String refForPush, String text) {
