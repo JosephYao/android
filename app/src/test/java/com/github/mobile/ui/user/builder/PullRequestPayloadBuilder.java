@@ -10,25 +10,20 @@ import org.eclipse.egit.github.core.event.PullRequestPayload;
 public class PullRequestPayloadBuilder implements PayloadBuilder {
     private String action;
     private int number;
-    private String title;
+    private PullRequestBuilder pullRequestBuilder;
 
     @Override
     public EventPayload build() {
         PullRequestPayload stubPayload = mock(PullRequestPayload.class);
         when(stubPayload.getAction()).thenReturn(action);
         when(stubPayload.getNumber()).thenReturn(number);
-        PullRequest stubPullRequest = stubPullRequest();
+        PullRequest stubPullRequest = pullRequestBuilder.build();
         when(stubPayload.getPullRequest()).thenReturn(stubPullRequest);
         return stubPayload;
     }
 
-    private PullRequest stubPullRequest() {
-        PullRequest stubPullRequest = mock(PullRequest.class);
-        when(stubPullRequest.getTitle()).thenReturn(title);
-        return stubPullRequest;
-    }
-
     public PullRequestPayloadBuilder defaultStubPayload() {
+        pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
         return this;
     }
 
@@ -43,7 +38,7 @@ public class PullRequestPayloadBuilder implements PayloadBuilder {
     }
 
     public PullRequestPayloadBuilder withPullRequestTitle(String title) {
-        this.title = title;
+        pullRequestBuilder.withTitle(title);
         return this;
     }
 }
