@@ -9,12 +9,11 @@ import org.eclipse.egit.github.core.event.MemberPayload;
 
 public class MemberPayloadBuilder implements PayloadBuilder {
     private UserBuilder userBuilder;
-    private String memberLogin;
 
     @Override
     public EventPayload build() {
         MemberPayload stubPayload = mock(MemberPayload.class);
-        User stubUser = userBuilder.withLoginUserName(memberLogin).build();
+        User stubUser = userBuilder.build();
         when(stubPayload.getMember()).thenReturn(stubUser);
         return stubPayload;
     }
@@ -25,7 +24,7 @@ public class MemberPayloadBuilder implements PayloadBuilder {
     }
 
     public MemberPayloadBuilder withMember(String loginUserName) {
-        this.memberLogin = loginUserName;
+        userBuilder.withLoginUserName(loginUserName);
         return this;
     }
 }
