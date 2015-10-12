@@ -11,7 +11,6 @@ import org.eclipse.egit.github.core.event.EventRepository;
 public class EventBuilder {
 
     private UserBuilder userBuilder;
-    private String loginUserName;
     private String repo;
     private PayloadBuilder payloadBuilder;
     private String type;
@@ -31,7 +30,7 @@ public class EventBuilder {
          * this local variable is needed, DO NOT inline it, otherwise test code will fail. Please see http://stackoverflow.com/a/26319364 for more details.
          * Same for stubPayload and stubRepo.
          */
-        User stubUser = userBuilder.withLoginUserName(loginUserName).build();
+        User stubUser = userBuilder.build();
         when(stubEvent.getActor()).thenReturn(stubUser);
 
         EventPayload stubPayload = payloadBuilder.build();
@@ -54,7 +53,7 @@ public class EventBuilder {
     }
 
     public EventBuilder withLoginUserName(String loginUserName) {
-        this.loginUserName = loginUserName;
+        userBuilder.withLoginUserName(loginUserName);
         return this;
     }
 
