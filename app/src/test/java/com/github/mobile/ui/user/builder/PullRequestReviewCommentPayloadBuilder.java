@@ -8,32 +8,28 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
-    private String commitId;
-    private String comment;
+    private CommitCommentBuilder commitCommentBuilder;
 
     @Override
     public EventPayload build() {
         PullRequestReviewCommentPayload stubPayload = mock(PullRequestReviewCommentPayload.class);
-        CommitComment stubComment = new CommitCommentBuilder().defaultStubComment().
-                withComment(comment).
-                withCommitId(commitId).
-                build();
+        CommitComment stubComment = commitCommentBuilder.build();
         when(stubPayload.getComment()).thenReturn(stubComment);
         return stubPayload;
     }
 
     public PullRequestReviewCommentPayloadBuilder defaultStubPayload() {
-        this.commitId = "commitId";
+        commitCommentBuilder = new CommitCommentBuilder().defaultStubComment().withCommitId("commitId");
         return this;
     }
 
     public PullRequestReviewCommentPayloadBuilder withCommitId(String commitId) {
-        this.commitId = commitId;
+        commitCommentBuilder.withCommitId(commitId);
         return this;
     }
 
     public PullRequestReviewCommentPayloadBuilder withComment(String comment) {
-        this.comment = comment;
+        commitCommentBuilder.withComment(comment);
         return this;
     }
 }
