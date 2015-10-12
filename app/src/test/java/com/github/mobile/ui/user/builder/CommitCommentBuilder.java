@@ -5,15 +5,16 @@ import static org.mockito.Mockito.when;
 import org.eclipse.egit.github.core.CommitComment;
 
 public class CommitCommentBuilder {
-    private String comment;
     private String commitId;
+    private CommentBuilder<CommitComment> commentBuilder;
 
     public CommitCommentBuilder defaultStubComment() {
+        commentBuilder = new CommentBuilder<>(CommitComment.class).defaultStubComment();
         return this;
     }
 
     public CommitCommentBuilder withComment(String comment) {
-        this.comment = comment;
+        commentBuilder.withComment(comment);
         return this;
     }
 
@@ -23,9 +24,7 @@ public class CommitCommentBuilder {
     }
 
     public CommitComment build() {
-        CommitComment stubComment = new CommentBuilder<>(CommitComment.class).defaultStubComment().
-                withComment(comment).
-                build();
+        CommitComment stubComment = commentBuilder.build();
         when(stubComment.getCommitId()).thenReturn(commitId);
         return stubComment;
     }
