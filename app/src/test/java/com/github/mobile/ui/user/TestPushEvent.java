@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
@@ -75,6 +76,21 @@ public class TestPushEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("RepoForPush");
+    }
+
+    @Test
+    public void one_new_commit_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                            withOneCommit()).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("1 new commit");
     }
 
     private Event stubEventWithRef(String ref) {
