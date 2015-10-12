@@ -12,39 +12,40 @@ import org.eclipse.egit.github.core.event.IssueCommentPayload;
 public class IssueCommentPayloadBuilder implements PayloadBuilder {
     private IssueBuilder issueBuilder;
     private Integer issueNumber;
-    private boolean withPullRequest;
     private String comment;
     private CommentBuilder<Comment> commentBuilder;
+    private PullRequestBuilder pullRequestBuilder;
 
     @Override
     public EventPayload build() {
         IssueCommentPayload stubPayload = mock(IssueCommentPayload.class);
-        Issue stubIssue = issueBuilder.withNumber(issueNumber).build();
-        addStubPullRequestAsNeeded(stubIssue);
-        when(stubPayload.getIssue()).thenReturn(stubIssue);
-        Comment stubComment = commentBuilder.withComment(comment).build();
-        when(stubPayload.getComment()).thenReturn(stubComment);
+        stubIssueAndPullRequest(stubPayload);
+        stubComment(stubPayload);
         return stubPayload;
     }
 
-    private void addStubPullRequestAsNeeded(Issue stubIssue) {
-        if (withPullRequest) {
-            PullRequest stubPullRequest = mock(PullRequest.class);
-            when(stubPullRequest.getHtmlUrl()).thenReturn("HtmlUrl");
-            when(stubIssue.getPullRequest()).thenReturn(stubPullRequest);
-        }
+    private void stubComment(IssueCommentPayload stubPayload) {
+        Comment stubComment = commentBuilder.withComment(comment).build();
+        when(stubPayload.getComment()).thenReturn(stubComment);
+    }
+
+    private void stubIssueAndPullRequest(IssueCommentPayload stubPayload) {
+        Issue stubIssue = issueBuilder.withNumber(issueNumber).build();
+        PullRequest stubPullRequest = pullRequestBuilder.withHtmlUrl("HtmlUrl").build();
+        when(stubIssue.getPullRequest()).thenReturn(stubPullRequest);
+        when(stubPayload.getIssue()).thenReturn(stubIssue);
     }
 
     public IssueCommentPayloadBuilder defaultStubPayload() {
         issueBuilder = new IssueBuilder().defaultStubIssue();
         commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
-        this.withPullRequest = false;
+        pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
         this.issueNumber = 1;
         return this;
     }
 
     public IssueCommentPayloadBuilder withPullRequest() {
-        this.withPullRequest = true;
+        pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
         return this;
     }
 
@@ -54,7 +55,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     }
 
     public IssueCommentPayloadBuilder withOutPullRequest() {
-        this.withPullRequest = false;
+        pullRequestBuilder = new NullPullRequestBuilder();
         return this;
     }
 
