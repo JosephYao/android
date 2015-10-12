@@ -9,32 +9,27 @@ import org.eclipse.egit.github.core.event.EventPayload;
 
 public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
-    private final CommitCommentBuilder commitCommentBuilder = new CommitCommentBuilder().defaultStubComment();
-    private String commitId;
-    private String comment;
+    private CommitCommentBuilder commitCommentBuilder;
 
     public CommitCommentPayloadBuilder defaultStubPayload() {
-        this.commitId = "commitId";
+        commitCommentBuilder = new CommitCommentBuilder().defaultStubComment().withCommitId("commitId");
         return this;
     }
 
     public EventPayload build() {
         CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
-        CommitComment stubComment = commitCommentBuilder.
-                withComment(comment).
-                withCommitId(commitId).
-                build();
+        CommitComment stubComment = commitCommentBuilder.build();
         when(stubCommitCommentPayload.getComment()).thenReturn(stubComment);
         return stubCommitCommentPayload;
     }
 
     public CommitCommentPayloadBuilder withCommitId(String commitId) {
-        this.commitId = commitId;
+        commitCommentBuilder.withCommitId(commitId);
         return this;
     }
 
     public CommitCommentPayloadBuilder withComment(String comment) {
-        this.comment = comment;
+        commitCommentBuilder.withComment(comment);
         return this;
     }
 }
