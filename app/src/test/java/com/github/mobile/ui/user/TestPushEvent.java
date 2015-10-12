@@ -54,7 +54,24 @@ public class TestPushEvent {
                 mockMainStyledText,
                 stubDetailsStyledText());
 
-        verify(mockMainStyledText).bold("RefForPush");
-        verify(mockMainStyledText).append(" at ");
+        verifyRefBoldAndAppend("RefForPush", " at ");
     }
+
+    @Test
+    public void ref_should_be_truncated_when_start_with_refs_heads() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withPayload(stubPayload.
+                        withRef("refs/heads/" + "RestOfRef")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verifyRefBoldAndAppend("RestOfRef", " at ");
+    }
+
+    private void verifyRefBoldAndAppend(String refForPush, String text) {
+        verify(mockMainStyledText).bold(refForPush);
+        verify(mockMainStyledText).append(text);
+    }
+
 }
