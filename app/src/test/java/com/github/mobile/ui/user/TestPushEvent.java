@@ -22,6 +22,7 @@ public class TestPushEvent {
             withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_push() {
@@ -80,8 +81,6 @@ public class TestPushEvent {
 
     @Test
     public void one_new_commit_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(stubPayload.defaultStubPayload().
@@ -95,8 +94,6 @@ public class TestPushEvent {
 
     @Test
     public void two_new_commits_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(stubPayload.defaultStubPayload().
@@ -107,6 +104,19 @@ public class TestPushEvent {
 
         verify(mockDetailsStyledText).append("2");
         verify(mockDetailsStyledText).append(" new commits");
+    }
+
+    @Test
+    public void sha_should_be_monospace_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitSha("len<=7")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).monospace("len<=7");
     }
 
     private Event stubEventWithRef(String ref) {
