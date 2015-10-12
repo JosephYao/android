@@ -116,7 +116,7 @@ public class TestPushEvent {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verify(mockDetailsStyledText).monospace("len<=7");
+        verifyShaMonospace("len<=7");
     }
 
     @Test
@@ -129,7 +129,21 @@ public class TestPushEvent {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
-        verify(mockDetailsStyledText).monospace("longerT");
+        verifyShaMonospace("longerT");
+    }
+
+    @Test
+    public void message_without_new_line_should_be_appended_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitMessage("message without new line")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append(' ');
+        verify(mockDetailsStyledText).append("message without new line");
     }
 
     private Event stubEventWithRef(String ref) {
@@ -141,6 +155,11 @@ public class TestPushEvent {
     private void verifyRefBoldAndAppend(String refForPush, String text) {
         verify(mockMainStyledText).bold(refForPush);
         verify(mockMainStyledText).append(text);
+    }
+
+    private void verifyShaMonospace(String text2) {
+        verify(mockDetailsStyledText).append('\n');
+        verify(mockDetailsStyledText).monospace(text2);
     }
 
 }

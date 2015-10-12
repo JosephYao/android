@@ -14,10 +14,13 @@ public class PushPayloadBuilder implements PayloadBuilder {
     private String ref;
     private int commitCount;
     private String commitSha;
+    private String commitMessage;
 
     public PushPayloadBuilder defaultStubPayload() {
         this.ref = "ref";
         commitSha = "Sha";
+        commitMessage = "Message";
+        commitCount = 0;
         return this;
     }
 
@@ -33,7 +36,7 @@ public class PushPayloadBuilder implements PayloadBuilder {
     private Commit stubCommit() {
         Commit stubCommit = mock(Commit.class);
         when(stubCommit.getSha()).thenReturn(commitSha);
-        when(stubCommit.getMessage()).thenReturn("Message");
+        when(stubCommit.getMessage()).thenReturn(commitMessage);
         return stubCommit;
     }
 
@@ -50,6 +53,12 @@ public class PushPayloadBuilder implements PayloadBuilder {
     public PushPayloadBuilder withCommitSha(String sha) {
         commitCount = 1;
         commitSha = sha;
+        return this;
+    }
+
+    public PushPayloadBuilder withCommitMessage(String message) {
+        commitCount = 1;
+        commitMessage = message;
         return this;
     }
 }
