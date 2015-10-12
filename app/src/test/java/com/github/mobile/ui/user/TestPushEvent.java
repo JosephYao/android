@@ -169,6 +169,24 @@ public class TestPushEvent {
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
+        verifyOnlyMaximumCommitsAppendedToDetails();
+    }
+
+    @Test
+    public void fourth_commit_should_not_be_appended_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitMessage("MessageForPush").
+                                withNumberOfCommits(4)).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verifyOnlyMaximumCommitsAppendedToDetails();
+    }
+
+    private void verifyOnlyMaximumCommitsAppendedToDetails() {
         verify(mockDetailsStyledText, times(3)).append("MessageForPush");
     }
 
