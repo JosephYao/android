@@ -20,6 +20,7 @@ public class TestPushEvent {
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PUSH).
             withPayload(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_push() {
@@ -33,8 +34,6 @@ public class TestPushEvent {
 
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserNameForPush").
@@ -48,8 +47,6 @@ public class TestPushEvent {
 
     @Test
     public void ref_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.withPayload(stubPayload.
                         withRef("RefForPush")).
