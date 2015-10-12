@@ -3,7 +3,7 @@ package com.github.mobile.ui.user.builder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.egit.github.core.Commit;
@@ -23,7 +23,7 @@ public class PushPayloadBuilder implements PayloadBuilder {
     public EventPayload build() {
         PushPayload stubPayload = mock(PushPayload.class);
         when(stubPayload.getRef()).thenReturn(ref);
-        List<Commit> commits = Arrays.asList(stubCommit());
+        List<Commit> commits = Collections.nCopies(commitCount, stubCommit());
         when(stubPayload.getCommits()).thenReturn(commits);
         return stubPayload;
     }
@@ -40,8 +40,9 @@ public class PushPayloadBuilder implements PayloadBuilder {
         return this;
     }
 
-    public PushPayloadBuilder withOneCommit() {
-        commitCount = 1;
+    public PushPayloadBuilder withNumberOfCommits(int number) {
+        commitCount = number;
         return this;
     }
+
 }

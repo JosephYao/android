@@ -1,6 +1,7 @@
 package com.github.mobile.ui.user.builder;
 
 import static org.mockito.Matchers.anyChar;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,7 @@ public class StyledTextDataMother {
     public static StyledText mockDetailsStyledText() {
         StyledText mock = mock(StyledText.class);
         when(mock.append(anyChar())).thenReturn(mock);
+        when(mock.append(anyString())).thenReturn(mock);
         return mock;
     }
 

@@ -85,12 +85,28 @@ public class TestPushEvent {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withPayload(stubPayload.defaultStubPayload().
-                            withOneCommit()).
+                                withNumberOfCommits(1)).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
         verify(mockDetailsStyledText).append("1 new commit");
+    }
+
+    @Test
+    public void two_new_commits_should_be_appended_to_details() {
+        StyledText mockDetailsStyledText = mockDetailsStyledText();
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withNumberOfCommits(2)).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).append("2");
+        verify(mockDetailsStyledText).append(" new commits");
     }
 
     private Event stubEventWithRef(String ref) {
