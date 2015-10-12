@@ -9,12 +9,11 @@ import org.eclipse.egit.github.core.event.FollowPayload;
 
 public class FollowPayloadBuilder implements PayloadBuilder {
     private UserBuilder userBuilder;
-    private String target;
 
     @Override
     public EventPayload build() {
         FollowPayload stubPayload = mock(FollowPayload.class);
-        User stubUser = userBuilder.withLoginUserName(target).build();
+        User stubUser = userBuilder.build();
         when(stubPayload.getTarget()).thenReturn(stubUser);
         return stubPayload;
     }
@@ -25,7 +24,7 @@ public class FollowPayloadBuilder implements PayloadBuilder {
     }
 
     public FollowPayloadBuilder withTarget(String target) {
-        this.target = target;
+        userBuilder.withLoginUserName(target);
         return this;
     }
 }
