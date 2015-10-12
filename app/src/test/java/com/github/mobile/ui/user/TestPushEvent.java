@@ -119,6 +119,19 @@ public class TestPushEvent {
         verify(mockDetailsStyledText).monospace("len<=7");
     }
 
+    @Test
+    public void sha_longer_than_7_should_be_truncated_and_monospace_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitSha("longerThan7")).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText).monospace("longerT");
+    }
+
     private Event stubEventWithRef(String ref) {
         return stubEvent.withPayload(stubPayload.
                 withRef("refs/heads/" + ref)).
