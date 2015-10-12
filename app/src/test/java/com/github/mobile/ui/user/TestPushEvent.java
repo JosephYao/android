@@ -5,6 +5,7 @@ import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainSty
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.mobile.ui.StyledText;
@@ -83,8 +84,7 @@ public class TestPushEvent {
     public void one_new_commit_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
-                                withNumberOfCommits(1)).
+                        withPayload(stubPayloadWithOneCommit()).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -110,7 +110,7 @@ public class TestPushEvent {
     public void sha_should_be_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        withPayload(stubPayloadWithOneCommit().
                                 withCommitSha("len<=7")).
                         build(),
                 stubMainStyledText(),
@@ -123,7 +123,7 @@ public class TestPushEvent {
     public void sha_longer_than_7_should_be_truncated_and_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        withPayload(stubPayloadWithOneCommit().
                                 withCommitSha("longerThan7")).
                         build(),
                 stubMainStyledText(),
@@ -136,7 +136,7 @@ public class TestPushEvent {
     public void message_without_new_line_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        withPayload(stubPayloadWithOneCommit().
                                 withCommitMessage("message without new line")).
                         build(),
                 stubMainStyledText(),
@@ -145,22 +145,41 @@ public class TestPushEvent {
         verifyMessageAppended("message without new line");
     }
 
-    private void verifyMessageAppended(String text2) {
-        verify(mockDetailsStyledText).append(' ');
-        verify(mockDetailsStyledText).append(text2);
-    }
-
     @Test
     public void message_with_new_line_should_be_truncated_and_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        withPayload(stubPayloadWithOneCommit().
                                 withCommitMessage("first line" + "\n" + "second line")).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
         verifyMessageAppended("first line");
+    }
+
+    @Test
+    public void maximum_three_commits_should_be_all_appended_to_details() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withPayload(stubPayload.defaultStubPayload().
+                                withCommitMessage("MessageForPush").
+                                withNumberOfCommits(3)).
+                        build(),
+                stubMainStyledText(),
+                mockDetailsStyledText);
+
+        verify(mockDetailsStyledText, times(3)).append("MessageForPush");
+    }
+
+    private PushPayloadBuilder stubPayloadWithOneCommit() {
+        return stubPayload.defaultStubPayload().
+                withNumberOfCommits(1);
+    }
+
+    private void verifyMessageAppended(String text2) {
+        verify(mockDetailsStyledText).append(' ');
+        verify(mockDetailsStyledText).append(text2);
     }
 
     private Event stubEventWithRef(String ref) {

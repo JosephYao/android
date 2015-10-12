@@ -51,13 +51,11 @@ public class PushPayloadBuilder implements PayloadBuilder {
     }
 
     public PushPayloadBuilder withCommitSha(String sha) {
-        commitCount = 1;
         commitSha = sha;
         return this;
     }
 
     public PushPayloadBuilder withCommitMessage(String message) {
-        commitCount = 1;
         commitMessage = message;
         return this;
     }
