@@ -1,5 +1,8 @@
 package com.github.mobile.ui.user;
 
+import static com.github.kevinsawicki.wishlist.ViewUpdater.FORMAT_INT;
+import android.text.TextUtils;
+
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -18,6 +21,9 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
+import java.util.List;
+
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -30,7 +36,7 @@ import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
-
+import org.eclipse.egit.github.core.event.PushPayload;
 /**
  * Created by twer on 3/22/15.
  */
@@ -229,7 +235,57 @@ public enum EventType {
     PushEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatPush(event, main, details);
+            user.render(main);
+
+            main.append(" pushed to ");
+            PushPayload payload = (PushPayload) event.getPayload();
+            String ref = payload.getRef();
+            if (ref.startsWith("refs/heads/"))
+                ref = ref.substring(11);
+            main.bold(ref);
+            main.append(" at ");
+
+            repo.render(main);
+
+            final List<Commit> commits = payload.getCommits();
+            int size = commits != null ? commits.size() : -1;
+            if (size > 0) {
+                if (size != 1)
+                    details.append(FORMAT_INT.format(size)).append(" new commits");
+                else
+                    details.append("1 new commit");
+
+                int max = 3;
+                int appended = 0;
+                for (Commit commit : commits) {
+                    if (commit == null)
+                        continue;
+
+                    String sha = commit.getSha();
+                    if (TextUtils.isEmpty(sha))
+                        continue;
+
+                    details.append('\n');
+                    if (sha.length() > 7)
+                        details.monospace(sha.substring(0, 7));
+                    else
+                        details.monospace(sha);
+
+                    String message = commit.getMessage();
+                    if (!TextUtils.isEmpty(message)) {
+                        details.append(' ');
+                        int newline = message.indexOf('\n');
+                        if (newline > 0)
+                            details.append(message.subSequence(0, newline));
+                        else
+                            details.append(message);
+                    }
+
+                    appended++;
+                    if (appended == max)
+                        break;
+                }
+            }
             return TypefaceUtils.ICON_PUSH;
         }
     },

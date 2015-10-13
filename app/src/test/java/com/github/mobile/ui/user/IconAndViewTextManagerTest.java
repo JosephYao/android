@@ -311,7 +311,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatReviewComment(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_push_then_icon_should_be_push_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
