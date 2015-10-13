@@ -236,17 +236,12 @@ public enum EventType {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
             user.render(main);
-
             main.append(" pushed to ");
-            PushPayload payload = (PushPayload) event.getPayload();
-            String ref = payload.getRef();
-            if (ref.startsWith("refs/heads/"))
-                ref = ref.substring(11);
-            main.bold(ref);
+            payloadRef.render(main);
             main.append(" at ");
-
             repo.render(main);
 
+            PushPayload payload = (PushPayload) event.getPayload();
             final List<Commit> commits = payload.getCommits();
             int size = commits != null ? commits.size() : -1;
             if (size > 0) {
@@ -287,6 +282,13 @@ public enum EventType {
                 }
             }
             return TypefaceUtils.ICON_PUSH;
+        }
+
+        private void boldAndAppendRef(StyledText main, PushPayload payload) {
+            String ref = payload.getRef();
+            if (ref.startsWith("refs/heads/"))
+                ref = ref.substring(11);
+            main.bold(ref);
         }
     },
     TeamAddEvent {
@@ -352,6 +354,8 @@ public enum EventType {
                 if (event.getPayload() instanceof PullRequestReviewCommentPayload)
                     eventType.comment = CommentFactory.createFromCommitComment(((PullRequestReviewCommentPayload)
                             event.getPayload()).getComment());
+                if (event.getPayload() instanceof PushPayload)
+                    eventType.payloadRef = PayloadRefFactory.createFromPushPayload((PushPayload)event.getPayload());
                 return eventType;
             }
 
