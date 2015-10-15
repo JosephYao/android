@@ -240,56 +240,63 @@ public enum EventType {
             payloadRef.render(main);
             main.append(" at ");
             repo.render(main);
-
-            PushPayload payload = (PushPayload) event.getPayload();
-            final List<Commit> commits = payload.getCommits();
-            int size = commits != null ? commits.size() : -1;
-            if (size > 0) {
-                if (size != 1)
-                    details.append(FORMAT_INT.format(size)).append(" new commits");
-                else
-                    details.append("1 new commit");
-
-                int max = 3;
-                int appended = 0;
-                for (Commit commit : commits) {
-                    if (commit == null)
-                        continue;
-
-                    String sha = commit.getSha();
-                    if (TextUtils.isEmpty(sha))
-                        continue;
-
-                    details.append('\n');
-                    if (sha.length() > 7)
-                        details.monospace(sha.substring(0, 7));
-                    else
-                        details.monospace(sha);
-
-                    String message = commit.getMessage();
-                    if (!TextUtils.isEmpty(message)) {
-                        details.append(' ');
-                        int newline = message.indexOf('\n');
-                        if (newline > 0)
-                            details.append(message.subSequence(0, newline));
-                        else
-                            details.append(message);
-                    }
-
-                    appended++;
-                    if (appended == max)
-                        break;
-                }
-            }
+            renderCommits(event, details);
             return TypefaceUtils.ICON_PUSH;
         }
 
-        private void boldAndAppendRef(StyledText main, PushPayload payload) {
-            String ref = payload.getRef();
-            if (ref.startsWith("refs/heads/"))
-                ref = ref.substring(11);
-            main.bold(ref);
+        private void renderCommits(Event event, StyledText details) {
+            PushPayload payload = (PushPayload) event.getPayload();
+            final List<Commit> commits = payload.getCommits();
+            if (commits != null && commits.size() > 0) {
+                renderNumberOfCommits(details, commits.size());
+                renderDetailOfCommits(details, commits);
+            }
         }
+
+        private void renderDetailOfCommits(StyledText details, List<Commit> commits) {
+            int max = 3;
+            int appended = 0;
+            for (Commit commit : commits) {
+                renderDetailOfCommit(details, commit);
+
+                appended++;
+                if (appended == max)
+                    return;
+            }
+        }
+
+        private void renderDetailOfCommit(StyledText details, Commit commit) {
+            if (commit == null)
+                return;
+
+            String sha = commit.getSha();
+            if (TextUtils.isEmpty(sha))
+                return;
+
+            details.append('\n');
+            if (sha.length() > 7)
+                details.monospace(sha.substring(0, 7));
+            else
+                details.monospace(sha);
+
+            String message = commit.getMessage();
+            if (!TextUtils.isEmpty(message)) {
+                details.append(' ');
+                int newline = message.indexOf('\n');
+                if (newline > 0)
+                    details.append(message.subSequence(0, newline));
+                else
+                    details.append(message);
+            }
+        }
+
+        private void renderNumberOfCommits(StyledText details, int size) {
+            if (size != 1)
+                details.append(FORMAT_INT.format(size)).append(" new commits");
+            else
+                details.append("1 new commit");
+        }
+
     },
     TeamAddEvent {
         @Override
