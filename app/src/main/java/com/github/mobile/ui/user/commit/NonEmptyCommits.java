@@ -19,16 +19,16 @@ public class NonEmptyCommits implements Commits {
 
     @Override
     public void render(StyledText text) {
-        renderNumberOfCommits(text, commits.size());
-        renderDetailOfCommits(text, commits);
+        renderNumberOfCommits(text);
+        renderDetailOfCommits(text);
     }
 
-    private void renderDetailOfCommits(StyledText details, List<Commit> commits) {
-        for (int index = 0; index < countOfCommitToRender(commits); index++)
+    private void renderDetailOfCommits(StyledText details) {
+        for (int index = 0; index < countOfCommitToRender(); index++)
             renderDetailOfCommit(details, commits.get(index));
     }
 
-    private int countOfCommitToRender(List<Commit> commits) {
+    private int countOfCommitToRender() {
         return Math.min(commits.size(), MAX_COMMIT_TO_RENDER);
     }
 
@@ -57,9 +57,9 @@ public class NonEmptyCommits implements Commits {
         }
     }
 
-    private void renderNumberOfCommits(StyledText details, int size) {
-        if (size != 1)
-            details.append(FORMAT_INT.format(size)).append(" new commits");
+    private void renderNumberOfCommits(StyledText details) {
+        if (commits.size() != 1)
+            details.append(FORMAT_INT.format(commits.size())).append(" new commits");
         else
             details.append("1 new commit");
     }
