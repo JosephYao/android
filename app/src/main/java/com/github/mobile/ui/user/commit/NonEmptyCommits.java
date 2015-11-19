@@ -10,6 +10,7 @@ import java.util.List;
 import org.eclipse.egit.github.core.Commit;
 
 public class NonEmptyCommits implements Commits {
+    public static final int MAX_COMMIT_TO_RENDER = 3;
     private final List<Commit> commits;
 
     public NonEmptyCommits(List<Commit> commits) {
@@ -23,15 +24,12 @@ public class NonEmptyCommits implements Commits {
     }
 
     private void renderDetailOfCommits(StyledText details, List<Commit> commits) {
-        int max = 3;
-        int appended = 0;
-        for (Commit commit : commits) {
-            renderDetailOfCommit(details, commit);
+        for (int index = 0; index < countOfCommitToRender(commits); index++)
+            renderDetailOfCommit(details, commits.get(index));
+    }
 
-            appended++;
-            if (appended == max)
-                return;
-        }
+    private int countOfCommitToRender(List<Commit> commits) {
+        return Math.min(commits.size(), MAX_COMMIT_TO_RENDER);
     }
 
     private void renderDetailOfCommit(StyledText details, Commit commit) {
