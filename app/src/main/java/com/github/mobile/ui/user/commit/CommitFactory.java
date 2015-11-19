@@ -1,5 +1,8 @@
 package com.github.mobile.ui.user.commit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.egit.github.core.event.PushPayload;
 
 public class CommitFactory {
@@ -7,6 +10,10 @@ public class CommitFactory {
         if (payload.getCommits() == null || payload.getCommits().size() == 0)
             return new EmptyCommits();
 
-        return new NonEmptyCommits(payload.getCommits());
+        List<Commit> commits = new ArrayList<>();
+        for (org.eclipse.egit.github.core.Commit commit : payload.getCommits())
+            commits.add(new NonEmptyCommit(commit));
+
+        return new NonEmptyCommits(commits);
     }
 }
