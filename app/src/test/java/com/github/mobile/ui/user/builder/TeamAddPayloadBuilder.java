@@ -13,9 +13,11 @@ public class TeamAddPayloadBuilder implements PayloadBuilder {
     @Override
     public EventPayload build() {
         TeamAddPayload stubPayload = mock(TeamAddPayload.class);
-        User stubUser = mock(User.class);
-        when(stubUser.getLogin()).thenReturn(this.userName);
-        when(stubPayload.getUser()).thenReturn(stubUser);
+        if (this.userName != null) {
+            User stubUser = mock(User.class);
+            when(stubUser.getLogin()).thenReturn(this.userName);
+            when(stubPayload.getUser()).thenReturn(stubUser);
+        }
         return stubPayload;
     }
 

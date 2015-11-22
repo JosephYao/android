@@ -34,7 +34,7 @@ public class TestTeamAddEvent {
     }
 
     @Test
-    public void actor_should_be_bold_to_main() {
+    public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
                         withLoginUserName("LoginUserForTeamAdd").build(),
@@ -54,5 +54,19 @@ public class TestTeamAddEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("PayloadUserForTeamAdd");
+        verify(mockMainStyledText).append(" to team");
     }
+
+    @Test
+    public void repo_name_should_be_bold_to_main_if_payload_user_is_empty_and_repo_name_exists() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withRepo("Repos/RepoForTeamAdd").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForTeamAdd");
+        verify(mockMainStyledText).append(" to team");
+    }
+
 }
