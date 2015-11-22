@@ -16,8 +16,9 @@ import org.junit.Test;
 
 public class TestTeamAddEvent {
 
+    private final TeamAddPayloadBuilder stubPayload = new TeamAddPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_TEAM_ADD).
-            withPayload(new TeamAddPayloadBuilder().defaultStubPayload()).
+            withPayload(stubPayload).
             withRepo("RepoForTeamAdd");
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
@@ -41,5 +42,17 @@ public class TestTeamAddEvent {
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).bold("LoginUserForTeamAdd");
+        verify(mockMainStyledText).append(" added ");
+    }
+
+    @Test
+    public void payload_user_should_be_bold_to_main_if_not_empty() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withPayload(stubPayload.
+                        withUser("PayloadUserForTeamAdd")).build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("PayloadUserForTeamAdd");
     }
 }
