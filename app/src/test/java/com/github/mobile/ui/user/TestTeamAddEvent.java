@@ -1,9 +1,12 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.mockMainStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
 import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
+import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.builder.EventBuilder;
 import com.github.mobile.ui.user.builder.TeamAddPayloadBuilder;
 import com.github.mobile.util.TypefaceUtils;
@@ -13,17 +16,30 @@ import org.junit.Test;
 
 public class TestTeamAddEvent {
 
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_TEAM_ADD).
+            withPayload(new TeamAddPayloadBuilder().defaultStubPayload()).
+            withRepo("RepoForTeamAdd");
+    IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
+
     @Test
     public void icon_should_be_add_member() {
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor(Event.TYPE_TEAM_ADD).
-                        withPayload(new TeamAddPayloadBuilder().defaultStubPayload()).
-                        withRepo("RepoForTeamAdd").build(),
+                stubEvent.build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
         assertEquals(TypefaceUtils.ICON_ADD_MEMBER, icon);
+    }
+
+    @Test
+    public void actor_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.
+                        withLoginUserName("LoginUserForTeamAdd").build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("LoginUserForTeamAdd");
     }
 }
