@@ -69,4 +69,15 @@ public class TestTeamAddEvent {
         verify(mockMainStyledText).append(" to team");
     }
 
+    @Test
+    public void nothing_should_be_bold_to_main_if_payload_user_is_empty_and_no_repo_name_exists() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withRepo("NoRepoNameExists").
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append(" to team");
+    }
+
 }
