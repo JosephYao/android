@@ -80,4 +80,17 @@ public class TestTeamAddEvent {
         verify(mockMainStyledText).append(" to team");
     }
 
+    @Test
+    public void non_empty_team_name_should_be_appended_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent.withPayload(stubPayload.
+                        withTeam("TeamName")).
+                        build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).append(' ');
+        verify(mockMainStyledText).bold("TeamName");
+    }
+
 }
