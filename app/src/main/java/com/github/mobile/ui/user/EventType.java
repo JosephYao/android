@@ -1,5 +1,7 @@
 package com.github.mobile.ui.user;
 
+import android.text.TextUtils;
+
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -20,11 +22,13 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
+import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventRepository;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
@@ -33,6 +37,8 @@ import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
+import org.eclipse.egit.github.core.event.TeamAddPayload;
+
 /**
  * Created by twer on 3/22/15.
  */
@@ -58,7 +64,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             main.append(" created ");
             payloadRef.render(main);
             return TypefaceUtils.ICON_CREATE;
@@ -72,7 +78,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            user.render(main);
+            actor.render(main);
             payloadRef.render(main);
             repo.render(main);
             return TypefaceUtils.ICON_DELETE;
@@ -97,7 +103,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            user.render(main);
+            actor.render(main);
             main.append(" started following ");
             target.render(main);
             return TypefaceUtils.ICON_FOLLOW;
@@ -123,7 +129,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            user.render(main);
+            actor.render(main);
             main.append(' ');
             action.render(main);
             return action.getIcon();
@@ -148,7 +154,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             main.append(" commented on ");
             issue.render(main);
             repo.render(main);
@@ -165,7 +171,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             action.render(main);
             repo.render(main);
             issue.render(details);
@@ -179,7 +185,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            user.render(main);
+            actor.render(main);
             main.append(" added ");
             member.render(main);
             main.append(" as a collaborator to ");
@@ -194,7 +200,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main) {
-            user.render(main);
+            actor.render(main);
             main.append(" open sourced repository ");
             repo.render(main);
             return null;
@@ -207,7 +213,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             action.render(main);
             repo.render(main);
             pullrequest.render(details);
@@ -221,7 +227,7 @@ public enum EventType {
         }
 
         private String generate(StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             main.append(" commented on ");
             repo.render(main);
             comment.render(details);
@@ -231,7 +237,7 @@ public enum EventType {
     PushEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            user.render(main);
+            actor.render(main);
             main.append(" pushed to ");
             payloadRef.render(main);
             main.append(" at ");
@@ -244,8 +250,45 @@ public enum EventType {
     TeamAddEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatTeamAdd(event, main, details);
+            actor.render(main);
+
+            TeamAddPayload payload = (TeamAddPayload) event.getPayload();
+
+            main.append(" added ");
+
+            org.eclipse.egit.github.core.User user = payload.getUser();
+            if (user != null)
+                boldUser(main, user);
+            else
+                boldRepoName(main, event);
+
+            main.append(" to team");
+
+            Team team = payload.getTeam();
+            String teamName = team != null ? team.getName() : null;
+            if (teamName != null)
+                main.append(' ').bold(teamName);
             return TypefaceUtils.ICON_ADD_MEMBER;
+        }
+
+        private StyledText boldUser(final StyledText text, final org.eclipse.egit.github.core.User user) {
+            if (user != null)
+                text.bold(user.getLogin());
+            return text;
+        }
+
+        private StyledText boldRepoName(final StyledText text,
+                final Event event) {
+            EventRepository repo = event.getRepo();
+            if (repo != null) {
+                String name = repo.getName();
+                if (!TextUtils.isEmpty(name)) {
+                    int slash = name.indexOf('/');
+                    if (slash != -1 && slash + 1 < name.length())
+                        text.bold(name.substring(slash + 1));
+                }
+            }
+            return text;
         }
     },
     WatchEvent {
@@ -256,7 +299,7 @@ public enum EventType {
         }
     };
 
-    protected User user;
+    protected User actor;
     protected PayloadRef payloadRef;
     protected Repo repo;
     protected Comment comment;
@@ -271,7 +314,7 @@ public enum EventType {
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
             if (event.getType().equals(eventType.name())) {
-                eventType.user = UserFactory.create(event.getActor());
+                eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
                 if (event.getPayload() instanceof CreatePayload)
                     eventType.payloadRef = PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
@@ -318,7 +361,7 @@ public enum EventType {
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
 
     protected void renderUserActOnRepo(StyledText main, String action) {
-        user.render(main);
+        actor.render(main);
         main.append(action);
         repo.render(main);
     }
