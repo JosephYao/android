@@ -10,13 +10,11 @@ import com.github.mobile.ui.StyledText;
 public class StyledTextDataMother {
 
     public static StyledText mockMainStyledText() {
-        StyledText mock = mock(StyledText.class);
-        when(mock.append(anyChar())).thenReturn(mock);
-        return mock;
+        return mockDetailsStyledText();
     }
 
     public static StyledText stubMainStyledText() {
-        return mockMainStyledText();
+        return mockDetailsStyledText();
     }
 
     public static StyledText mockDetailsStyledText() {
