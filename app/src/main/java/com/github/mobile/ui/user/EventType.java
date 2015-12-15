@@ -1,8 +1,8 @@
 package com.github.mobile.ui.user;
 
-import android.text.TextUtils;
-
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.target.Target;
+import com.github.mobile.ui.target.TargetFactory;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
@@ -28,7 +28,6 @@ import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.EventRepository;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
@@ -251,19 +250,13 @@ public enum EventType {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
             actor.render(main);
-
-            TeamAddPayload payload = (TeamAddPayload) event.getPayload();
-
             main.append(" added ");
 
-            org.eclipse.egit.github.core.User user = payload.getUser();
-            if (user != null)
-                boldUser(main, user);
-            else
-                boldRepoName(main, event);
+            realTarget.render(main);
 
             main.append(" to team");
 
+            TeamAddPayload payload = (TeamAddPayload) event.getPayload();
             Team team = payload.getTeam();
             String teamName = team != null ? team.getName() : null;
             if (teamName != null)
@@ -271,25 +264,6 @@ public enum EventType {
             return TypefaceUtils.ICON_ADD_MEMBER;
         }
 
-        private StyledText boldUser(final StyledText text, final org.eclipse.egit.github.core.User user) {
-            if (user != null)
-                text.bold(user.getLogin());
-            return text;
-        }
-
-        private StyledText boldRepoName(final StyledText text,
-                final Event event) {
-            EventRepository repo = event.getRepo();
-            if (repo != null) {
-                String name = repo.getName();
-                if (!TextUtils.isEmpty(name)) {
-                    int slash = name.indexOf('/');
-                    if (slash != -1 && slash + 1 < name.length())
-                        text.bold(name.substring(slash + 1));
-                }
-            }
-            return text;
-        }
     },
     WatchEvent {
         @Override
@@ -310,6 +284,7 @@ public enum EventType {
     protected User member;
     protected com.github.mobile.ui.user.pullrequest.PullRequest pullrequest;
     protected Commits commits;
+    protected Target realTarget;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -351,6 +326,9 @@ public enum EventType {
                 if (event.getPayload() instanceof PushPayload) {
                     eventType.payloadRef = PayloadRefFactory.createFromPushPayload((PushPayload) event.getPayload());
                     eventType.commits = CommitFactory.createCommits((PushPayload) event.getPayload());
+                }
+                if (event.getPayload() instanceof TeamAddPayload) {
+                    eventType.realTarget = TargetFactory.create((TeamAddPayload) event.getPayload(), event);
                 }
                 return eventType;
             }
