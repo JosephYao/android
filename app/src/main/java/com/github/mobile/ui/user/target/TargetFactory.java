@@ -1,4 +1,4 @@
-package com.github.mobile.ui.target;
+package com.github.mobile.ui.user.target;
 
 import com.github.mobile.ui.user.user.UserFactory;
 

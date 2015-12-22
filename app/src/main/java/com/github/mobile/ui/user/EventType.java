@@ -1,8 +1,8 @@
 package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
-import com.github.mobile.ui.target.Target;
-import com.github.mobile.ui.target.TargetFactory;
+import com.github.mobile.ui.user.target.Target;
+import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
