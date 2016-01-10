@@ -8,6 +8,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.github.mobile.BuildConfig;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.builder.CreatePayloadBuilder;
 import com.github.mobile.ui.user.builder.EventBuilder;
@@ -15,7 +16,12 @@ import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class TestCreateEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);

@@ -6,13 +6,19 @@ import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainSty
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
+import com.github.mobile.BuildConfig;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.user.builder.EventBuilder;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class TestGollumEvent {
 
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GOLLUM);
