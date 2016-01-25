@@ -104,7 +104,7 @@ public enum EventType {
         private String generate(StyledText main) {
             actor.render(main);
             main.append(" started following ");
-            target.render(main);
+            followTarget.render(main);
             return TypefaceUtils.ICON_FOLLOW;
         }
 
@@ -252,7 +252,7 @@ public enum EventType {
             actor.render(main);
             main.append(" added ");
 
-            realTarget.render(main);
+            target.render(main);
 
             main.append(" to team");
 
@@ -278,13 +278,13 @@ public enum EventType {
     protected Repo repo;
     protected Comment comment;
     protected Download download;
-    protected User target;
+    protected User followTarget;
     protected Action action;
     protected Issue issue;
     protected User member;
     protected com.github.mobile.ui.user.pullrequest.PullRequest pullrequest;
     protected Commits commits;
-    protected Target realTarget;
+    protected Target target;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -302,7 +302,7 @@ public enum EventType {
                 if (event.getPayload() instanceof DownloadPayload)
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
-                    eventType.target = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
+                    eventType.followTarget = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)
                     eventType.action = ActionFactory.createFromGistPayload((GistPayload) event.getPayload());
                 if (event.getPayload() instanceof IssueCommentPayload) {
@@ -328,7 +328,7 @@ public enum EventType {
                     eventType.commits = CommitFactory.createCommits((PushPayload) event.getPayload());
                 }
                 if (event.getPayload() instanceof TeamAddPayload) {
-                    eventType.realTarget = TargetFactory.create((TeamAddPayload) event.getPayload(), event);
+                    eventType.target = TargetFactory.create((TeamAddPayload) event.getPayload(), event);
                 }
                 return eventType;
             }
