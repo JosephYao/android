@@ -1,8 +1,7 @@
 package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
-import com.github.mobile.ui.user.target.Target;
-import com.github.mobile.ui.user.target.TargetFactory;
+import com.github.mobile.ui.team.TeamFactory;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
@@ -18,11 +17,12 @@ import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
+import com.github.mobile.ui.user.target.Target;
+import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.Team;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
@@ -236,6 +236,10 @@ public enum EventType {
     PushEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
+            return generate(main, details);
+        }
+
+        private String generate(StyledText main, StyledText details) {
             actor.render(main);
             main.append(" pushed to ");
             payloadRef.render(main);
@@ -251,16 +255,9 @@ public enum EventType {
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
             actor.render(main);
             main.append(" added ");
-
             target.render(main);
-
             main.append(" to team");
-
-            TeamAddPayload payload = (TeamAddPayload) event.getPayload();
-            Team team = payload.getTeam();
-            String teamName = team != null ? team.getName() : null;
-            if (teamName != null)
-                main.append(' ').bold(teamName);
+            team.render(main);
             return TypefaceUtils.ICON_ADD_MEMBER;
         }
 
@@ -285,6 +282,7 @@ public enum EventType {
     protected com.github.mobile.ui.user.pullrequest.PullRequest pullrequest;
     protected Commits commits;
     protected Target target;
+    protected com.github.mobile.ui.team.Team team;
 
     public static EventType createInstance(Event event) {
         for(EventType eventType : values())
@@ -329,6 +327,7 @@ public enum EventType {
                 }
                 if (event.getPayload() instanceof TeamAddPayload) {
                     eventType.target = TargetFactory.create((TeamAddPayload) event.getPayload(), event);
+                    eventType.team = TeamFactory.create((TeamAddPayload) event.getPayload());
                 }
                 return eventType;
             }
