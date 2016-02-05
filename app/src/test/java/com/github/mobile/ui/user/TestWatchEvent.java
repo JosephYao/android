@@ -47,4 +47,16 @@ public class TestWatchEvent {
         verify(mockMainStyledText).bold("LoginUserNameForWatch");
         verify(mockMainStyledText).append(" starred ");
     }
+
+    @Test
+    public void repo_should_be_bold_to_main() {
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                stubEvent
+                        .withRepo("RepoForWatch")
+                        .build(),
+                mockMainStyledText,
+                stubDetailsStyledText());
+
+        verify(mockMainStyledText).bold("RepoForWatch");
+    }
 }
