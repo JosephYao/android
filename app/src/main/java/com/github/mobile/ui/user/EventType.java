@@ -265,7 +265,9 @@ public enum EventType {
     WatchEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            iconAndViewTextManager.formatWatch(event, main, details);
+            actor.render(main);
+            main.append(" starred ");
+            repo.render(main);
             return TypefaceUtils.ICON_STAR;
         }
     };

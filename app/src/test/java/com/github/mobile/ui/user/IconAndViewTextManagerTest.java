@@ -329,7 +329,7 @@ public class IconAndViewTextManagerTest {
         verify(spyIconAndViewTextManager).formatPush(event, null, null);
     }
 
-    @Test
+    @Ignore @Test
     public void when_event_type_is_watch_then_icon_should_be_star_and_its_text_should_be_formatted() throws Exception {
         // Arrange
         Event event = new Event();
