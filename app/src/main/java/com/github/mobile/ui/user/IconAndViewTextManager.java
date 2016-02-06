@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.github.kevinsawicki.wishlist.ViewUtils;
 import com.github.mobile.core.issue.IssueUtils;
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.event.CommitCommentEvent;
 import com.github.mobile.util.TimeUtils;
 
 import java.util.List;
@@ -404,6 +405,8 @@ public class IconAndViewTextManager {
     }
 
     String setIconAndFormatStyledText(Event event, StyledText main, StyledText details) {
+        if (event.getType().equals(Event.TYPE_COMMIT_COMMENT))
+            return new CommitCommentEvent(event).generate(main, details);
 
         return EventType.createInstance(event).generateIconAndFormatStyledText(this, event, main, details);
     }
