@@ -5,6 +5,8 @@ import com.github.mobile.ui.user.EventType;
 import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
+import com.github.mobile.ui.user.download.Download;
+import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -13,6 +15,7 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
+import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
@@ -24,6 +27,8 @@ public class UserEventFactory {
             return new CreateUserEvent(actor(event), payloadRef(event));
         case Event.TYPE_DELETE:
             return new DeleteUserEvent(actor(event), payloadRef(event), repo(event));
+        case Event.TYPE_DOWNLOAD:
+            return new DownloadUserEvent(actor(event), repo(event), download(event));
         default:
             return new UserEvent() {
                 @Override
@@ -32,6 +37,11 @@ public class UserEventFactory {
                 }
             };
         }
+    }
+
+    private static Download download(Event event) {
+        return DownloadFactory.create((DownloadPayload) event
+                .getPayload());
     }
 
     private static PayloadRef payloadRef(Event event) {

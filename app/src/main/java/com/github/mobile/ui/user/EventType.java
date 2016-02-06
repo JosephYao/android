@@ -9,7 +9,6 @@ import com.github.mobile.ui.user.comment.CommentFactory;
 import com.github.mobile.ui.user.commit.CommitFactory;
 import com.github.mobile.ui.user.commit.Commits;
 import com.github.mobile.ui.user.download.Download;
-import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
 import com.github.mobile.ui.user.issue.IssueFactory;
 import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
@@ -23,7 +22,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
@@ -40,18 +38,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    DownloadEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main, details);
-        }
-
-        private String generate(StyledText main, StyledText details) {
-            renderUserActOnRepo(main, " uploaded a file to ");
-            download.render(details);
-            return TypefaceUtils.ICON_UPLOAD;
-        }
-    },
     FollowEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -248,8 +234,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof DownloadPayload)
-                    eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
                     eventType.followTarget = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)

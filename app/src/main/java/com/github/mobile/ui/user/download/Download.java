@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.download;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Download {
-
-    void render(StyledText text);
+public interface Download extends Display{
 }
