@@ -39,6 +39,8 @@ public class UserEventFactory {
             return new ForkUserEvent(actor(event), repo(event));
         case Event.TYPE_GIST:
             return new GistUserEvent(actor(event), action(event));
+        case Event.TYPE_GOLLUM:
+            return new GollumUserEvent(actor(event), repo(event));
         default:
             return new UserEvent() {
                 @Override

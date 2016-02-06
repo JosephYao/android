@@ -36,18 +36,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    GollumEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            renderUserActOnRepo(main, " updated the wiki in ");
-            return TypefaceUtils.ICON_WIKI;
-        }
-
-    },
     IssueCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -226,11 +214,5 @@ public enum EventType {
     }
 
     public abstract String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details);
-
-    protected void renderUserActOnRepo(StyledText main, String action) {
-        actor.render(main);
-        main.append(action);
-        repo.render(main);
-    }
 
 }
