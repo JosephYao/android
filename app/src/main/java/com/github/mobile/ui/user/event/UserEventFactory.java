@@ -32,6 +32,8 @@ public class UserEventFactory {
             return new DownloadUserEvent(actor(event), repo(event), download(event));
         case Event.TYPE_FOLLOW:
             return new FollowUserEvent(actor(event), target(event));
+        case Event.TYPE_FORK:
+            return new ForkUserEvent(actor(event), repo(event));
         default:
             return new UserEvent() {
                 @Override

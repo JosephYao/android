@@ -37,18 +37,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    ForkEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            renderUserActOnRepo(main, " forked repository ");
-            return TypefaceUtils.ICON_FORK;
-        }
-
-    },
     GistEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
