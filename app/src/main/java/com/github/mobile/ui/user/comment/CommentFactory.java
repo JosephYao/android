@@ -4,9 +4,18 @@ import static com.github.mobile.ui.user.FactoryUtils.isTrimmedTextEmpty;
 import android.text.TextUtils;
 
 import org.eclipse.egit.github.core.CommitComment;
+import org.eclipse.egit.github.core.event.CommitCommentPayload;
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
 public class CommentFactory {
+
+    public static Comment create(Event event) {
+        if (event.getPayload() instanceof IssueCommentPayload)
+            return createFromIssueCommentPayload((IssueCommentPayload) event.getPayload());
+
+        return createFromCommitComment(((CommitCommentPayload)event.getPayload()).getComment());
+    }
 
     public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
         return new NonCommitIdComment(createBody(payload.getComment()));

@@ -18,7 +18,6 @@ import com.github.mobile.ui.user.repo.RepoFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
@@ -29,7 +28,7 @@ public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
         switch (event.getType()) {
         case Event.TYPE_COMMIT_COMMENT:
-            return new CommitCommentUserEvent(commitComment(event), actor(event), repo(event));
+            return new CommitCommentUserEvent(comment(event), actor(event), repo(event));
         case Event.TYPE_CREATE:
             return new CreateUserEvent(actor(event), payloadRef(event));
         case Event.TYPE_DELETE:
@@ -57,7 +56,7 @@ public class UserEventFactory {
     }
 
     private static Comment comment(Event event) {
-        return CommentFactory.createFromIssueCommentPayload((IssueCommentPayload) event.getPayload());
+        return CommentFactory.create(event);
     }
 
     private static Issue issue(Event event) {
@@ -87,9 +86,5 @@ public class UserEventFactory {
 
     private static User actor(Event event) {
         return UserFactory.create(event.getActor());
-    }
-
-    private static Comment commitComment(Event event) {
-        return CommentFactory.createFromCommitComment(((CommitCommentPayload) event.getPayload()).getComment());
     }
 }
