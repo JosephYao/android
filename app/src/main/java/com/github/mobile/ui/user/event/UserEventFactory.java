@@ -9,6 +9,8 @@ import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
+import com.github.mobile.ui.user.issue.Issue;
+import com.github.mobile.ui.user.issue.IssueFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -21,6 +23,7 @@ import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
+import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -41,6 +44,8 @@ public class UserEventFactory {
             return new GistUserEvent(actor(event), action(event));
         case Event.TYPE_GOLLUM:
             return new GollumUserEvent(actor(event), repo(event));
+        case Event.TYPE_ISSUE_COMMENT:
+            return new IssueCommentUserEvent(actor(event), issue(event), repo(event), comment(event));
         default:
             return new UserEvent() {
                 @Override
@@ -49,6 +54,14 @@ public class UserEventFactory {
                 }
             };
         }
+    }
+
+    private static Comment comment(Event event) {
+        return CommentFactory.createFromIssueCommentPayload((IssueCommentPayload) event.getPayload());
+    }
+
+    private static Issue issue(Event event) {
+        return IssueFactory.create((IssueCommentPayload) event.getPayload());
     }
 
     private static Action action(Event event) {

@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.issue;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Issue {
-
-    void render(StyledText text);
+public interface Issue extends Display {
 }
