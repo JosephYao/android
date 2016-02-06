@@ -23,7 +23,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
@@ -37,19 +36,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    GistEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            actor.render(main);
-            main.append(' ');
-            action.render(main);
-            return action.getIcon();
-        }
-    },
     GollumEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -207,8 +193,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof GistPayload)
-                    eventType.action = ActionFactory.createFromGistPayload((GistPayload) event.getPayload());
                 if (event.getPayload() instanceof IssueCommentPayload) {
                     eventType.comment = CommentFactory.createFromIssueCommentPayload((IssueCommentPayload)
                             event.getPayload());

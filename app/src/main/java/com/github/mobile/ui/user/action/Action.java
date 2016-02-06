@@ -1,9 +1,7 @@
 package com.github.mobile.ui.user.action;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Action {
-
-    void render(StyledText text);
+public interface Action extends Display {
     String getIcon();
 }
