@@ -5,19 +5,24 @@ import com.github.mobile.ui.user.EventType;
 import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
+import com.github.mobile.ui.user.ref.PayloadRef;
+import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
+import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
-        if (event.getType().equals(Event.TYPE_COMMIT_COMMENT)) {
+        if (event.getType().equals(Event.TYPE_COMMIT_COMMENT))
             return new CommitCommentUserEvent(commitComment(event), actor(event), repo(event));
-        }
+
+        if (event.getType().equals(Event.TYPE_CREATE))
+            return new CreateUserEvent(actor(event), payloadRef(event));
 
         return new UserEvent() {
             @Override
@@ -25,6 +30,11 @@ public class UserEventFactory {
                 return EventType.createInstance(event).generateIconAndFormatStyledText(iconAndViewTextManager, event, main, details);
             }
         };
+    }
+
+    private static PayloadRef payloadRef(Event event) {
+        return PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
+                event.getRepo());
     }
 
     private static Repo repo(Event event) {

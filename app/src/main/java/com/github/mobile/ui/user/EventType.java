@@ -43,20 +43,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    CreateEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main, details);
-        }
-
-        private String generate(StyledText main, StyledText details) {
-            actor.render(main);
-            main.append(" created ");
-            payloadRef.render(main);
-            return TypefaceUtils.ICON_CREATE;
-        }
-
-    },
     DeleteEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
