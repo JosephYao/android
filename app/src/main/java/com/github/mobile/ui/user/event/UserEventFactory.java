@@ -14,6 +14,7 @@ import com.github.mobile.ui.user.user.UserFactory;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.CreatePayload;
+import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
@@ -24,12 +25,19 @@ public class UserEventFactory {
         if (event.getType().equals(Event.TYPE_CREATE))
             return new CreateUserEvent(actor(event), payloadRef(event));
 
+        if (event.getType().equals(Event.TYPE_DELETE))
+            return new DeleteUserEvent(actor(event), payloadRefFromDeletePayload(event), repo(event));
+
         return new UserEvent() {
             @Override
             public String generate(StyledText main, StyledText details) {
                 return EventType.createInstance(event).generateIconAndFormatStyledText(iconAndViewTextManager, event, main, details);
             }
         };
+    }
+
+    private static PayloadRef payloadRefFromDeletePayload(Event event) {
+        return PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
     }
 
     private static PayloadRef payloadRef(Event event) {
