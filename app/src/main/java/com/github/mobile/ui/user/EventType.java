@@ -43,19 +43,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    CommitCommentEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main, details);
-        }
-
-        private String generate(StyledText main, StyledText details) {
-            renderUserActOnRepo(main, " commented on ");
-            comment.render(details);
-            return TypefaceUtils.ICON_COMMENT;
-        }
-
-    },
     CreateEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
