@@ -23,9 +23,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
-import org.eclipse.egit.github.core.event.CreatePayload;
-import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
@@ -251,14 +248,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof CreatePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
-                            event.getRepo());
-                if (event.getPayload() instanceof CommitCommentPayload)
-                    eventType.comment = CommentFactory.createFromCommitComment(((CommitCommentPayload) event
-                            .getPayload()).getComment());
-                if (event.getPayload() instanceof DeletePayload)
-                    eventType.payloadRef = PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
                 if (event.getPayload() instanceof DownloadPayload)
                     eventType.download = DownloadFactory.create((DownloadPayload) event.getPayload());
                 if (event.getPayload() instanceof FollowPayload)
