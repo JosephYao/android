@@ -23,7 +23,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
@@ -38,20 +37,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    FollowEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            actor.render(main);
-            main.append(" started following ");
-            followTarget.render(main);
-            return TypefaceUtils.ICON_FOLLOW;
-        }
-
-    },
     ForkEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -234,8 +219,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof FollowPayload)
-                    eventType.followTarget = UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
                 if (event.getPayload() instanceof GistPayload)
                     eventType.action = ActionFactory.createFromGistPayload((GistPayload) event.getPayload());
                 if (event.getPayload() instanceof IssueCommentPayload) {

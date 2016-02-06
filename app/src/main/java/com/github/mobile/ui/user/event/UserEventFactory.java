@@ -17,6 +17,7 @@ import com.github.mobile.ui.user.user.UserFactory;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.FollowPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -29,6 +30,8 @@ public class UserEventFactory {
             return new DeleteUserEvent(actor(event), payloadRef(event), repo(event));
         case Event.TYPE_DOWNLOAD:
             return new DownloadUserEvent(actor(event), repo(event), download(event));
+        case Event.TYPE_FOLLOW:
+            return new FollowUserEvent(actor(event), actorFromFollowPayload(event));
         default:
             return new UserEvent() {
                 @Override
@@ -37,6 +40,10 @@ public class UserEventFactory {
                 }
             };
         }
+    }
+
+    private static User actorFromFollowPayload(Event event) {
+        return UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
     }
 
     private static Download download(Event event) {
