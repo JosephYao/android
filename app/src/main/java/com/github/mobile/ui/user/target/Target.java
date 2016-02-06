@@ -1,9 +1,6 @@
 package com.github.mobile.ui.user.target;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Target {
-
-    void render(StyledText text);
-
+public interface Target extends Display {
 }
