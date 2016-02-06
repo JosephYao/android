@@ -31,7 +31,7 @@ public class UserEventFactory {
         case Event.TYPE_DOWNLOAD:
             return new DownloadUserEvent(actor(event), repo(event), download(event));
         case Event.TYPE_FOLLOW:
-            return new FollowUserEvent(actor(event), actorFromFollowPayload(event));
+            return new FollowUserEvent(actor(event), target(event));
         default:
             return new UserEvent() {
                 @Override
@@ -42,7 +42,7 @@ public class UserEventFactory {
         }
     }
 
-    private static User actorFromFollowPayload(Event event) {
+    private static User target(Event event) {
         return UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
     }
 
