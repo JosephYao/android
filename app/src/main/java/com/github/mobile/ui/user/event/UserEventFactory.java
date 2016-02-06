@@ -13,8 +13,6 @@ import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
-import org.eclipse.egit.github.core.event.CreatePayload;
-import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
@@ -26,7 +24,7 @@ public class UserEventFactory {
             return new CreateUserEvent(actor(event), payloadRef(event));
 
         if (event.getType().equals(Event.TYPE_DELETE))
-            return new DeleteUserEvent(actor(event), payloadRefFromDeletePayload(event), repo(event));
+            return new DeleteUserEvent(actor(event), payloadRef(event), repo(event));
 
         return new UserEvent() {
             @Override
@@ -36,13 +34,8 @@ public class UserEventFactory {
         };
     }
 
-    private static PayloadRef payloadRefFromDeletePayload(Event event) {
-        return PayloadRefFactory.createFromDeletePayload((DeletePayload) event.getPayload());
-    }
-
     private static PayloadRef payloadRef(Event event) {
-        return PayloadRefFactory.createFromCreatePayload((CreatePayload) event.getPayload(),
-                event.getRepo());
+        return PayloadRefFactory.createFromEvent(event);
     }
 
     private static Repo repo(Event event) {

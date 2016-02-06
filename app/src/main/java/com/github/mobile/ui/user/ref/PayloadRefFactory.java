@@ -4,10 +4,18 @@ import com.github.mobile.ui.user.repo.RepoFactory;
 
 import org.eclipse.egit.github.core.event.CreatePayload;
 import org.eclipse.egit.github.core.event.DeletePayload;
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventRepository;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 public class PayloadRefFactory {
+
+    public static PayloadRef createFromEvent(Event event) {
+        if (event.getPayload() instanceof CreatePayload)
+            return createFromCreatePayload((CreatePayload) event.getPayload(), event.getRepo());
+
+        return createFromDeletePayload((DeletePayload) event.getPayload());
+    }
 
     public static PayloadRef createFromCreatePayload(CreatePayload payload, EventRepository repo) {
         String refType = payload.getRefType();
