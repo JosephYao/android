@@ -12,7 +12,7 @@ import com.github.mobile.util.TypefaceUtils;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
 
-public class CommitCommentEvent {
+public class CommitCommentEvent implements UserEvent {
     private Comment comment;
     private User actor;
     private Repo repo;
@@ -23,6 +23,7 @@ public class CommitCommentEvent {
         repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
     }
 
+    @Override
     public String generate(StyledText main, StyledText details) {
         renderUserActOnRepo(main, " commented on ");
         comment.render(details);
