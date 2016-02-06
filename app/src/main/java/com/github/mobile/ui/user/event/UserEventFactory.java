@@ -17,21 +17,21 @@ import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
-        if (event.getType().equals(Event.TYPE_COMMIT_COMMENT))
+        switch (event.getType()) {
+        case Event.TYPE_COMMIT_COMMENT:
             return new CommitCommentUserEvent(commitComment(event), actor(event), repo(event));
-
-        if (event.getType().equals(Event.TYPE_CREATE))
+        case Event.TYPE_CREATE:
             return new CreateUserEvent(actor(event), payloadRef(event));
-
-        if (event.getType().equals(Event.TYPE_DELETE))
+        case Event.TYPE_DELETE:
             return new DeleteUserEvent(actor(event), payloadRef(event), repo(event));
-
-        return new UserEvent() {
-            @Override
-            public String generate(StyledText main, StyledText details) {
-                return EventType.createInstance(event).generateIconAndFormatStyledText(iconAndViewTextManager, event, main, details);
-            }
-        };
+        default:
+            return new UserEvent() {
+                @Override
+                public String generate(StyledText main, StyledText details) {
+                    return EventType.createInstance(event).generateIconAndFormatStyledText(iconAndViewTextManager, event, main, details);
+                }
+            };
+        }
     }
 
     private static PayloadRef payloadRef(Event event) {
