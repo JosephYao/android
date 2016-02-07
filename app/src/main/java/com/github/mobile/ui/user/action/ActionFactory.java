@@ -11,7 +11,10 @@ public class ActionFactory {
         if (event.getPayload() instanceof GistPayload)
             return createFromGistPayload((GistPayload)event.getPayload());
 
-        return createFromIssuesPayload((IssuesPayload) event.getPayload());
+        if (event.getPayload() instanceof IssuesPayload)
+            return createFromIssuesPayload((IssuesPayload) event.getPayload());
+
+        return createFromPullRequestPayload((PullRequestPayload) event.getPayload());
     }
 
     public static Action createFromGistPayload(GistPayload payload) {

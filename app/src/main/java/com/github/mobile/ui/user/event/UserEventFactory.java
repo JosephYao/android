@@ -11,6 +11,7 @@ import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
 import com.github.mobile.ui.user.issue.IssueFactory;
+import com.github.mobile.ui.user.pullrequest.PullRequest;
 import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
@@ -53,7 +54,7 @@ public class UserEventFactory {
         case Event.TYPE_PUBLIC:
             return new PublicUserEvent(actor(event), repo(event));
         case Event.TYPE_PULL_REQUEST:
-            return new PullRequestUserEvent(actor(event), ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload()), repo(event), PullRequestFactory.create((PullRequestPayload) event.getPayload()));
+            return new PullRequestUserEvent(actor(event), action(event), repo(event), pullRequest(event));
         default:
             return new UserEvent() {
                 @Override
@@ -62,6 +63,10 @@ public class UserEventFactory {
                 }
             };
         }
+    }
+
+    private static PullRequest pullRequest(Event event) {
+        return PullRequestFactory.create((PullRequestPayload) event.getPayload());
     }
 
     private static User member(Event event) {
