@@ -47,7 +47,7 @@ public class UserEventFactory {
         case Event.TYPE_ISSUES:
             return new IssuesUserEvent(actor(event), action(event), repo(event), issue(event));
         case Event.TYPE_MEMBER:
-            return new MemberUserEvent(actor(event), UserFactory.create(((MemberPayload) event.getPayload()).getMember()), repo(event));
+            return new MemberUserEvent(actor(event), member(event), repo(event));
         default:
             return new UserEvent() {
                 @Override
@@ -56,6 +56,10 @@ public class UserEventFactory {
                 }
             };
         }
+    }
+
+    private static User member(Event event) {
+        return UserFactory.create(((MemberPayload) event.getPayload()).getMember());
     }
 
     private static Comment comment(Event event) {
