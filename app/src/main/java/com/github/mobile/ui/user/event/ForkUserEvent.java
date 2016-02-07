@@ -7,9 +7,9 @@ import com.github.mobile.util.TypefaceUtils;
 
 public class ForkUserEvent extends DisplaysUserEvent {
     public ForkUserEvent(User actor, Repo repo) {
+        super(TypefaceUtils.ICON_FORK);
         addDisplayToMain(actor);
         addDisplayToMain(new TextDisplay(" forked repository "));
         addDisplayToMain(repo);
-        setIcon(TypefaceUtils.ICON_FORK);
     }
 }

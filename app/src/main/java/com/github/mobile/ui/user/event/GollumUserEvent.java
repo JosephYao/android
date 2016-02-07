@@ -7,9 +7,9 @@ import com.github.mobile.util.TypefaceUtils;
 
 public class GollumUserEvent extends DisplaysUserEvent {
     public GollumUserEvent(User actor, Repo repo) {
+        super(TypefaceUtils.ICON_WIKI);
         addDisplayToMain(actor);
         addDisplayToMain(new TextDisplay(" updated the wiki in "));
         addDisplayToMain(repo);
-        setIcon(TypefaceUtils.ICON_WIKI);
     }
 }

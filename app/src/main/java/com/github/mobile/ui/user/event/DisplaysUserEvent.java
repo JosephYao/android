@@ -9,7 +9,11 @@ import java.util.List;
 public class DisplaysUserEvent implements UserEvent {
     private final List<Display> displaysToMain = new ArrayList<>();
     private final List<Display> displaysToDetails = new ArrayList<>();
-    private String icon;
+    private final String icon;
+
+    public DisplaysUserEvent(String icon) {
+        this.icon = icon;
+    }
 
     @Override
     public String generate(StyledText main, StyledText details) {
@@ -24,10 +28,6 @@ public class DisplaysUserEvent implements UserEvent {
 
     public void addDisplayToDetails(Display display) {
         displaysToDetails.add(display);
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     private void renderDisplaysToDetails(StyledText details) {

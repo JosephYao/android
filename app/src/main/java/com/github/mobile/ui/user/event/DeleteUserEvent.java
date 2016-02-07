@@ -7,9 +7,9 @@ import com.github.mobile.util.TypefaceUtils;
 
 public class DeleteUserEvent extends DisplaysUserEvent {
     public DeleteUserEvent(User actor, PayloadRef payloadRef, Repo repo) {
+        super(TypefaceUtils.ICON_DELETE);
         addDisplayToMain(actor);
         addDisplayToMain(payloadRef);
         addDisplayToMain(repo);
-        setIcon(TypefaceUtils.ICON_DELETE);
     }
 }

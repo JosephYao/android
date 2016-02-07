@@ -8,10 +8,10 @@ import com.github.mobile.util.TypefaceUtils;
 
 public class DownloadUserEvent extends DisplaysUserEvent {
     public DownloadUserEvent(User actor, Repo repo, Download download) {
+        super(TypefaceUtils.ICON_UPLOAD);
         addDisplayToMain(actor);
         addDisplayToMain(new TextDisplay(" uploaded a file to "));
         addDisplayToMain(repo);
         addDisplayToDetails(download);
-        setIcon(TypefaceUtils.ICON_UPLOAD);
     }
 }

@@ -9,11 +9,11 @@ import com.github.mobile.util.TypefaceUtils;
 public class CommitCommentUserEvent extends DisplaysUserEvent {
 
     public CommitCommentUserEvent(Comment comment, User actor, Repo repo) {
+        super(TypefaceUtils.ICON_COMMENT);
         addDisplayToMain(actor);
         addDisplayToMain(new TextDisplay(" commented on "));
         addDisplayToMain(repo);
         addDisplayToDetails(comment);
-        setIcon(TypefaceUtils.ICON_COMMENT);
     }
 
 }

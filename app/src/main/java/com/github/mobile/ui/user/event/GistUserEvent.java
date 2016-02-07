@@ -6,9 +6,9 @@ import com.github.mobile.ui.user.user.User;
 
 public class GistUserEvent extends DisplaysUserEvent {
     public GistUserEvent(User actor, Action action) {
+        super(action.getIcon());
         addDisplayToMain(actor);
         addDisplayToMain(new CharDisplay(' '));
         addDisplayToMain(action);
-        setIcon(action.getIcon());
     }
 }
