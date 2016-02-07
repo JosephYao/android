@@ -23,6 +23,7 @@ import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
+import org.eclipse.egit.github.core.event.IssuesPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -45,6 +46,8 @@ public class UserEventFactory {
             return new GollumUserEvent(actor(event), repo(event));
         case Event.TYPE_ISSUE_COMMENT:
             return new IssueCommentUserEvent(actor(event), issue(event), repo(event), comment(event));
+        case Event.TYPE_ISSUES:
+            return new IssuesUserEvent(actor(event), ActionFactory.createFromIssuesPayload((IssuesPayload) event.getPayload()), repo(event), IssueFactory.createFromIssuesPayload((IssuesPayload) event.getPayload()));
         default:
             return new UserEvent() {
                 @Override

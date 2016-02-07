@@ -10,7 +10,6 @@ import com.github.mobile.ui.user.commit.CommitFactory;
 import com.github.mobile.ui.user.commit.Commits;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.issue.Issue;
-import com.github.mobile.ui.user.issue.IssueFactory;
 import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
@@ -23,7 +22,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
@@ -35,20 +33,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    IssuesEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main, details);
-        }
-
-        private String generate(StyledText main, StyledText details) {
-            actor.render(main);
-            action.render(main);
-            repo.render(main);
-            issue.render(details);
-            return action.getIcon();
-        }
-    },
     MemberEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -163,10 +147,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof IssuesPayload) {
-                    eventType.action = ActionFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
-                    eventType.issue = IssueFactory.createFromIssuesPayload((IssuesPayload) event.getPayload());
-                }
                 if (event.getPayload() instanceof MemberPayload)
                     eventType.member = UserFactory.create(((MemberPayload) event.getPayload()).getMember());
                 if (event.getPayload() instanceof PullRequestPayload) {
