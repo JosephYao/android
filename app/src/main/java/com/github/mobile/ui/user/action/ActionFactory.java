@@ -1,10 +1,18 @@
 package com.github.mobile.ui.user.action;
 
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.GistPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 
 public class ActionFactory {
+
+    public static Action create(Event event) {
+        if (event.getPayload() instanceof GistPayload)
+            return createFromGistPayload((GistPayload)event.getPayload());
+
+        return createFromIssuesPayload((IssuesPayload) event.getPayload());
+    }
 
     public static Action createFromGistPayload(GistPayload payload) {
         return new GistAction(payload.getAction(), payload.getGist().getId());
