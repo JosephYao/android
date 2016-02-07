@@ -11,6 +11,7 @@ import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
 import com.github.mobile.ui.user.issue.IssueFactory;
+import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -22,6 +23,7 @@ import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
+import org.eclipse.egit.github.core.event.PullRequestPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -50,6 +52,8 @@ public class UserEventFactory {
             return new MemberUserEvent(actor(event), member(event), repo(event));
         case Event.TYPE_PUBLIC:
             return new PublicUserEvent(actor(event), repo(event));
+        case Event.TYPE_PULL_REQUEST:
+            return new PullRequestUserEvent(actor(event), ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload()), repo(event), PullRequestFactory.create((PullRequestPayload) event.getPayload()));
         default:
             return new UserEvent() {
                 @Override

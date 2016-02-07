@@ -3,14 +3,12 @@ package com.github.mobile.ui.user;
 import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.team.TeamFactory;
 import com.github.mobile.ui.user.action.Action;
-import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
 import com.github.mobile.ui.user.commit.CommitFactory;
 import com.github.mobile.ui.user.commit.Commits;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.issue.Issue;
-import com.github.mobile.ui.user.pullrequest.PullRequestFactory;
 import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
@@ -22,7 +20,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.event.TeamAddPayload;
@@ -32,20 +29,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    PullRequestEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main, details);
-        }
-
-        private String generate(StyledText main, StyledText details) {
-            actor.render(main);
-            action.render(main);
-            repo.render(main);
-            pullrequest.render(details);
-            return TypefaceUtils.ICON_PULL_REQUEST;
-        }
-    },
     PullRequestReviewCommentEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -118,10 +101,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof PullRequestPayload) {
-                    eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload());
-                    eventType.pullrequest = PullRequestFactory.create((PullRequestPayload) event.getPayload());
-                }
                 if (event.getPayload() instanceof PullRequestReviewCommentPayload)
                     eventType.comment = CommentFactory.createFromCommitComment(((PullRequestReviewCommentPayload)
                             event.getPayload()).getComment());

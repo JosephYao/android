@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.pullrequest;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface PullRequest {
-
-    void render(StyledText text);
+public interface PullRequest extends Display {
 }
