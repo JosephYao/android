@@ -32,19 +32,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    PublicEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            actor.render(main);
-            main.append(" open sourced repository ");
-            repo.render(main);
-            return null;
-        }
-    },
     PullRequestEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {

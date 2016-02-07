@@ -48,6 +48,8 @@ public class UserEventFactory {
             return new IssuesUserEvent(actor(event), action(event), repo(event), issue(event));
         case Event.TYPE_MEMBER:
             return new MemberUserEvent(actor(event), member(event), repo(event));
+        case Event.TYPE_PUBLIC:
+            return new PublicUserEvent(actor(event), repo(event));
         default:
             return new UserEvent() {
                 @Override
