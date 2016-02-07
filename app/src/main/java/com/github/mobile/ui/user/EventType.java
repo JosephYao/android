@@ -22,7 +22,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
@@ -33,21 +32,6 @@ import org.eclipse.egit.github.core.event.TeamAddPayload;
  */
 public enum EventType {
 
-    MemberEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            return generate(main);
-        }
-
-        private String generate(StyledText main) {
-            actor.render(main);
-            main.append(" added ");
-            member.render(main);
-            main.append(" as a collaborator to ");
-            repo.render(main);
-            return TypefaceUtils.ICON_ADD_MEMBER;
-        }
-    },
     PublicEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -147,8 +131,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof MemberPayload)
-                    eventType.member = UserFactory.create(((MemberPayload) event.getPayload()).getMember());
                 if (event.getPayload() instanceof PullRequestPayload) {
                     eventType.action = ActionFactory.createFromPullRequestPayload((PullRequestPayload) event.getPayload());
                     eventType.pullrequest = PullRequestFactory.create((PullRequestPayload) event.getPayload());

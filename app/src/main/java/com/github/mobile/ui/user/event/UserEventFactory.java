@@ -21,6 +21,7 @@ import com.github.mobile.ui.user.user.UserFactory;
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
+import org.eclipse.egit.github.core.event.MemberPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -45,6 +46,8 @@ public class UserEventFactory {
             return new IssueCommentUserEvent(actor(event), issue(event), repo(event), comment(event));
         case Event.TYPE_ISSUES:
             return new IssuesUserEvent(actor(event), action(event), repo(event), issue(event));
+        case Event.TYPE_MEMBER:
+            return new MemberUserEvent(actor(event), UserFactory.create(((MemberPayload) event.getPayload()).getMember()), repo(event));
         default:
             return new UserEvent() {
                 @Override
