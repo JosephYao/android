@@ -113,7 +113,7 @@ public class UserEventFactory {
     }
 
     private static Repo repo(Event event) {
-        return RepoFactory.createRepoFromEventRepository(event.getRepo());
+        return RepoFactory.createNonRepositoryRepo(event);
     }
 
     private static User actor(Event event) {

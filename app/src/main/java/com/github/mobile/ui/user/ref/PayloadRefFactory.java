@@ -24,11 +24,9 @@ public class PayloadRefFactory {
         String refType = payload.getRefType();
 
         if (refType.equals("repository"))
-            return new RepositoryRef(refType,
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, refType));
+            return new RepositoryRef(refType, RepoFactory.createRepoFromRefType(repo, refType));
         else
-            return new NonRepositoryRef(refType, payload.getRef(),
-                    RepoFactory.createRepoFromEventRepositoryAndRefType(repo, refType));
+            return new NonRepositoryRef(refType, payload.getRef(), RepoFactory.createRepoFromRefType(repo, refType));
     }
 
     public static PayloadRef createFromDeletePayload(DeletePayload payload) {

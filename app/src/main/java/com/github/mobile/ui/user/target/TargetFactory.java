@@ -12,7 +12,7 @@ public class TargetFactory {
         if (event.getPayload() instanceof TeamAddPayload && user(event) != null)
             return UserFactory.create(user(event));
 
-        return RepoFactory.createRepoFromEventRepositoryAndRefType(event.getRepo(), "repository");
+        return RepoFactory.createRepositoryRepo(event);
     }
 
     private static User user(Event event) {

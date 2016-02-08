@@ -2,10 +2,11 @@ package com.github.mobile.ui.user.repo;
 
 import android.text.TextUtils;
 
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.EventRepository;
 
 public class RepoFactory {
-    public static Repo createRepoFromEventRepositoryAndRefType(EventRepository repo, String refType) {
+    public static Repo createRepoFromRefType(EventRepository repo, String refType) {
         if (isRepoEmpty(repo))
             return new EmptyRepo();
 
@@ -19,10 +20,11 @@ public class RepoFactory {
         return repo == null || TextUtils.isEmpty(repo.getName());
     }
 
-    public static Repo createRepoFromEventRepository(EventRepository repo) {
-        if (repo == null)
-            return new EmptyRepo();
+    public static Repo createNonRepositoryRepo(Event event) {
+        return createRepoFromRefType(event.getRepo(), "not a repository");
+    }
 
-        return new NonRepositoryRepo(repo.getName());
+    public static Repo createRepositoryRepo(Event event) {
+        return createRepoFromRefType(event.getRepo(), "repository");
     }
 }
