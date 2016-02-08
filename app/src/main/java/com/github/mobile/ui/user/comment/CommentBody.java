@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.comment;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface CommentBody {
-
-    void render(StyledText text);
+public interface CommentBody extends Display {
 }
