@@ -1,7 +1,6 @@
 package com.github.mobile.ui.team;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Team {
-    void render(StyledText text);
+public interface Team extends Display {
 }

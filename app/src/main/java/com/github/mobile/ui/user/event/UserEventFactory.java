@@ -1,6 +1,7 @@
 package com.github.mobile.ui.user.event;
 
 import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.team.TeamFactory;
 import com.github.mobile.ui.user.EventType;
 import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.action.Action;
@@ -18,6 +19,7 @@ import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
+import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
@@ -27,6 +29,7 @@ import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
+import org.eclipse.egit.github.core.event.TeamAddPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -61,6 +64,8 @@ public class UserEventFactory {
             return new PullRequestReviewCommentUserEvent(actor(event), repo(event), comment(event));
         case Event.TYPE_PUSH:
             return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event.getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
+        case Event.TYPE_TEAM_ADD:
+            return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), TeamFactory.create((TeamAddPayload) event.getPayload()));
         default:
             return new UserEvent() {
                 @Override

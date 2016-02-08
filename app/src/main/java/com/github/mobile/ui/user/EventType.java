@@ -1,7 +1,6 @@
 package com.github.mobile.ui.user;
 
 import com.github.mobile.ui.StyledText;
-import com.github.mobile.ui.team.TeamFactory;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.commit.Commits;
@@ -11,31 +10,17 @@ import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
 import com.github.mobile.ui.user.target.Target;
-import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.TeamAddPayload;
 
 /**
  * Created by twer on 3/22/15.
  */
 public enum EventType {
 
-    TeamAddEvent {
-        @Override
-        public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
-            actor.render(main);
-            main.append(" added ");
-            target.render(main);
-            main.append(" to team");
-            team.render(main);
-            return TypefaceUtils.ICON_ADD_MEMBER;
-        }
-
-    },
     WatchEvent {
         @Override
         public String generateIconAndFormatStyledText(IconAndViewTextManager iconAndViewTextManager, Event event, StyledText main, StyledText details) {
@@ -65,10 +50,6 @@ public enum EventType {
             if (event.getType().equals(eventType.name())) {
                 eventType.actor = UserFactory.create(event.getActor());
                 eventType.repo = RepoFactory.createRepoFromEventRepository(event.getRepo());
-                if (event.getPayload() instanceof TeamAddPayload) {
-                    eventType.target = TargetFactory.create((TeamAddPayload) event.getPayload(), event);
-                    eventType.team = TeamFactory.create((TeamAddPayload) event.getPayload());
-                }
                 return eventType;
             }
 
