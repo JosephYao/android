@@ -7,8 +7,8 @@ import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
-import com.github.mobile.ui.user.commit.CommitsFactory;
 import com.github.mobile.ui.user.commit.Commits;
+import com.github.mobile.ui.user.commit.CommitsFactory;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
@@ -26,8 +26,6 @@ import com.github.mobile.ui.user.user.UserFactory;
 
 import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.FollowPayload;
-import org.eclipse.egit.github.core.event.MemberPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -88,7 +86,7 @@ public class UserEventFactory {
     }
 
     private static User member(Event event) {
-        return UserFactory.create(((MemberPayload) event.getPayload()).getMember());
+        return UserFactory.createMember(event);
     }
 
     private static Comment comment(Event event) {
@@ -104,7 +102,7 @@ public class UserEventFactory {
     }
 
     private static User followee(Event event) {
-        return UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
+        return UserFactory.createFollowee(event);
     }
 
     private static Download download(Event event) {
@@ -121,6 +119,6 @@ public class UserEventFactory {
     }
 
     private static User actor(Event event) {
-        return UserFactory.create(event.getActor());
+        return UserFactory.createActor(event);
     }
 }
