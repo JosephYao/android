@@ -2,10 +2,12 @@ package com.github.mobile.ui.user.pullrequest;
 
 import android.text.TextUtils;
 
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
 
 public class PullRequestFactory {
-    public static PullRequest create(PullRequestPayload payload) {
+    public static PullRequest create(Event event) {
+        PullRequestPayload payload = (PullRequestPayload) event.getPayload();
         org.eclipse.egit.github.core.PullRequest request = payload.getPullRequest();
         String action = payload.getAction();
 

@@ -28,9 +28,6 @@ import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
-import org.eclipse.egit.github.core.event.PullRequestPayload;
-import org.eclipse.egit.github.core.event.PushPayload;
-import org.eclipse.egit.github.core.event.TeamAddPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -75,19 +72,19 @@ public class UserEventFactory {
     }
 
     private static Target target(Event event) {
-        return TargetFactory.create((TeamAddPayload) event.getPayload(), event);
+        return TargetFactory.create(event);
     }
 
     private static Team team(Event event) {
-        return TeamFactory.create((TeamAddPayload) event.getPayload());
+        return TeamFactory.create(event);
     }
 
     private static Commits commits(Event event) {
-        return CommitFactory.createCommits((PushPayload) event.getPayload());
+        return CommitFactory.create(event);
     }
 
     private static PullRequest pullRequest(Event event) {
-        return PullRequestFactory.create((PullRequestPayload) event.getPayload());
+        return PullRequestFactory.create(event);
     }
 
     private static User member(Event event) {

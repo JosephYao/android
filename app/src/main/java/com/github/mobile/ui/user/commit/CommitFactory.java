@@ -5,10 +5,12 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 public class CommitFactory {
-    public static Commits createCommits(PushPayload payload) {
+    public static Commits create(Event event) {
+        PushPayload payload = (PushPayload)event.getPayload();
         if (payload.getCommits() == null || payload.getCommits().size() == 0)
             return new EmptyCommits();
 
