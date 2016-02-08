@@ -10,11 +10,14 @@ import org.eclipse.egit.github.core.event.PushPayload;
 
 public class PayloadRefFactory {
 
-    public static PayloadRef createFromEvent(Event event) {
+    public static PayloadRef create(Event event) {
         if (event.getPayload() instanceof CreatePayload)
             return createFromCreatePayload((CreatePayload) event.getPayload(), event.getRepo());
 
-        return createFromDeletePayload((DeletePayload) event.getPayload());
+        if (event.getPayload() instanceof DeletePayload)
+            return createFromDeletePayload((DeletePayload) event.getPayload());
+
+        return createFromPushPayload((PushPayload) event.getPayload());
     }
 
     public static PayloadRef createFromCreatePayload(CreatePayload payload, EventRepository repo) {

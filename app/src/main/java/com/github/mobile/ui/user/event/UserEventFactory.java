@@ -61,8 +61,7 @@ public class UserEventFactory {
         case Event.TYPE_PULL_REQUEST_REVIEW_COMMENT:
             return new PullRequestReviewCommentUserEvent(actor(event), repo(event), comment(event));
         case Event.TYPE_PUSH:
-            return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event
-                    .getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
+            return new PushUserEvent(actor(event), payloadRef(event), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
         case Event.TYPE_TEAM_ADD:
             return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), TeamFactory.create((TeamAddPayload) event.getPayload()));
         case Event.TYPE_WATCH:
@@ -102,7 +101,7 @@ public class UserEventFactory {
     }
 
     private static PayloadRef payloadRef(Event event) {
-        return PayloadRefFactory.createFromEvent(event);
+        return PayloadRefFactory.create(event);
     }
 
     private static Repo repo(Event event) {
