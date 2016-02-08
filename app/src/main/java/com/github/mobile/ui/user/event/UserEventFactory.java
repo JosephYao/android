@@ -66,6 +66,8 @@ public class UserEventFactory {
             return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event.getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
         case Event.TYPE_TEAM_ADD:
             return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), TeamFactory.create((TeamAddPayload) event.getPayload()));
+        case Event.TYPE_WATCH:
+            return new WatchUserEvent(actor(event), repo(event));
         default:
             return new UserEvent() {
                 @Override
