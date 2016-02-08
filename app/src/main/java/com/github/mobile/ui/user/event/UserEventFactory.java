@@ -25,6 +25,7 @@ import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
+import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -55,6 +56,8 @@ public class UserEventFactory {
             return new PublicUserEvent(actor(event), repo(event));
         case Event.TYPE_PULL_REQUEST:
             return new PullRequestUserEvent(actor(event), action(event), repo(event), pullRequest(event));
+        case Event.TYPE_PULL_REQUEST_REVIEW_COMMENT:
+            return new PullRequestReviewCommentUserEvent(actor(event), repo(event), CommentFactory.createFromCommitComment(((PullRequestReviewCommentPayload)event.getPayload()).getComment()));
         default:
             return new UserEvent() {
                 @Override
