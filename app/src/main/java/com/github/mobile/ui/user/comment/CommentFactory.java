@@ -7,6 +7,7 @@ import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
+import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 public class CommentFactory {
 
@@ -14,7 +15,10 @@ public class CommentFactory {
         if (event.getPayload() instanceof IssueCommentPayload)
             return createFromIssueCommentPayload((IssueCommentPayload) event.getPayload());
 
-        return createFromCommitComment(((CommitCommentPayload)event.getPayload()).getComment());
+        if (event.getPayload() instanceof CommitCommentPayload)
+            return createFromCommitComment(((CommitCommentPayload)event.getPayload()).getComment());
+        else
+            return createFromCommitComment(((PullRequestReviewCommentPayload)event.getPayload()).getComment());
     }
 
     public static Comment createFromIssueCommentPayload(IssueCommentPayload payload) {
