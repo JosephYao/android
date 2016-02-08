@@ -7,6 +7,7 @@ import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
+import com.github.mobile.ui.user.commit.CommitFactory;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
@@ -25,6 +26,7 @@ import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.FollowPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 import org.eclipse.egit.github.core.event.PullRequestPayload;
+import org.eclipse.egit.github.core.event.PushPayload;
 
 public class UserEventFactory {
     public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
@@ -57,6 +59,8 @@ public class UserEventFactory {
             return new PullRequestUserEvent(actor(event), action(event), repo(event), pullRequest(event));
         case Event.TYPE_PULL_REQUEST_REVIEW_COMMENT:
             return new PullRequestReviewCommentUserEvent(actor(event), repo(event), comment(event));
+        case Event.TYPE_PUSH:
+            return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event.getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
         default:
             return new UserEvent() {
                 @Override

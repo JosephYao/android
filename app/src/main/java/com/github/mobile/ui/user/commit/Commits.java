@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.commit;
 
-import com.github.mobile.ui.StyledText;
+import com.github.mobile.ui.user.display.Display;
 
-public interface Commits {
-
-    void render(StyledText text);
+public interface Commits extends Display {
 }
