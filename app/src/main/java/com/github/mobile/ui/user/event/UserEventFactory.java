@@ -1,5 +1,6 @@
 package com.github.mobile.ui.user.event;
 
+import com.github.mobile.ui.team.Team;
 import com.github.mobile.ui.team.TeamFactory;
 import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.action.Action;
@@ -7,6 +8,7 @@ import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
 import com.github.mobile.ui.user.commit.CommitFactory;
+import com.github.mobile.ui.user.commit.Commits;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
 import com.github.mobile.ui.user.issue.Issue;
@@ -61,14 +63,22 @@ public class UserEventFactory {
         case Event.TYPE_PULL_REQUEST_REVIEW_COMMENT:
             return new PullRequestReviewCommentUserEvent(actor(event), repo(event), comment(event));
         case Event.TYPE_PUSH:
-            return new PushUserEvent(actor(event), payloadRef(event), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
+            return new PushUserEvent(actor(event), payloadRef(event), repo(event), commits(event));
         case Event.TYPE_TEAM_ADD:
-            return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), TeamFactory.create((TeamAddPayload) event.getPayload()));
+            return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), team(event));
         case Event.TYPE_WATCH:
             return new WatchUserEvent(actor(event), repo(event));
         default:
             throw new IllegalStateException(event.getType() + "is not implemented.");
         }
+    }
+
+    private static Team team(Event event) {
+        return TeamFactory.create((TeamAddPayload) event.getPayload());
+    }
+
+    private static Commits commits(Event event) {
+        return CommitFactory.createCommits((PushPayload) event.getPayload());
     }
 
     private static PullRequest pullRequest(Event event) {
