@@ -7,7 +7,7 @@ import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
 import com.github.mobile.ui.user.comment.CommentFactory;
-import com.github.mobile.ui.user.commit.CommitFactory;
+import com.github.mobile.ui.user.commit.CommitsFactory;
 import com.github.mobile.ui.user.commit.Commits;
 import com.github.mobile.ui.user.download.Download;
 import com.github.mobile.ui.user.download.DownloadFactory;
@@ -80,7 +80,7 @@ public class UserEventFactory {
     }
 
     private static Commits commits(Event event) {
-        return CommitFactory.create(event);
+        return CommitsFactory.create(event);
     }
 
     private static PullRequest pullRequest(Event event) {
