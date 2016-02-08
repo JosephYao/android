@@ -1,18 +1,40 @@
 package com.github.mobile.ui.user;
 
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubDetailsStyledText;
+import static com.github.mobile.ui.user.builder.StyledTextDataMother.stubMainStyledText;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
+import com.github.mobile.BuildConfig;
+import com.github.mobile.ui.user.builder.EventBuilder;
 import com.github.mobile.util.TypefaceUtils;
 
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class IconAndViewTextManagerTest {
+
+    @Test(expected = IllegalStateException.class)
+    public void not_implemented_event_type() {
+        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+
+        iconAndViewTextManager.setIconAndFormatStyledText(
+                new EventBuilder().defaultStubEventFor("not implemented").build(),
+                stubMainStyledText(),
+                stubDetailsStyledText());
+
+        fail();
+    }
 
     @Ignore @Test
     public void when_event_type_is_commit_comment_then_icon_should_be_comment_and_its_text_should_be_formatted() throws Exception {

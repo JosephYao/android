@@ -1,8 +1,6 @@
 package com.github.mobile.ui.user.event;
 
-import com.github.mobile.ui.StyledText;
 import com.github.mobile.ui.team.TeamFactory;
-import com.github.mobile.ui.user.EventType;
 import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
@@ -63,18 +61,14 @@ public class UserEventFactory {
         case Event.TYPE_PULL_REQUEST_REVIEW_COMMENT:
             return new PullRequestReviewCommentUserEvent(actor(event), repo(event), comment(event));
         case Event.TYPE_PUSH:
-            return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event.getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
+            return new PushUserEvent(actor(event), PayloadRefFactory.createFromPushPayload((PushPayload) event
+                    .getPayload()), repo(event), CommitFactory.createCommits((PushPayload) event.getPayload()));
         case Event.TYPE_TEAM_ADD:
             return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), TeamFactory.create((TeamAddPayload) event.getPayload()));
         case Event.TYPE_WATCH:
             return new WatchUserEvent(actor(event), repo(event));
         default:
-            return new UserEvent() {
-                @Override
-                public String generate(StyledText main, StyledText details) {
-                    return EventType.createInstance(event).generateIconAndFormatStyledText(iconAndViewTextManager, event, main, details);
-                }
-            };
+            throw new IllegalStateException(event.getType() + "is not implemented.");
         }
     }
 
