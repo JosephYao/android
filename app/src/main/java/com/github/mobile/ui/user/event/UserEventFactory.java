@@ -24,7 +24,6 @@ import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
 
-import org.eclipse.egit.github.core.event.DownloadPayload;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
@@ -106,8 +105,7 @@ public class UserEventFactory {
     }
 
     private static Download download(Event event) {
-        return DownloadFactory.create((DownloadPayload) event
-                .getPayload());
+        return DownloadFactory.create(event);
     }
 
     private static PayloadRef payloadRef(Event event) {
