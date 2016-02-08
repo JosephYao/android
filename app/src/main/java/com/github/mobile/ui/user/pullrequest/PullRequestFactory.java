@@ -8,15 +8,16 @@ import org.eclipse.egit.github.core.event.PullRequestPayload;
 public class PullRequestFactory {
     public static PullRequest create(Event event) {
         PullRequestPayload payload = (PullRequestPayload) event.getPayload();
-        org.eclipse.egit.github.core.PullRequest request = payload.getPullRequest();
-        String action = payload.getAction();
 
-        if (("opened".equals(action) || "closed".equals(action)) &&
-                isPullRequestNotEmpty(request)) {
-            return new TitlePullRequest(request.getTitle());
+        if (isActionOpenedOrClosed(payload.getAction()) && isPullRequestNotEmpty(payload.getPullRequest())) {
+            return new TitlePullRequest(payload.getPullRequest().getTitle());
         }
 
         return new NonTitlePullRequest();
+    }
+
+    private static boolean isActionOpenedOrClosed(String action) {
+        return "opened".equals(action) || "closed".equals(action);
     }
 
     private static boolean isPullRequestNotEmpty(org.eclipse.egit.github.core.PullRequest request) {
