@@ -19,6 +19,7 @@ import com.github.mobile.ui.user.ref.PayloadRef;
 import com.github.mobile.ui.user.ref.PayloadRefFactory;
 import com.github.mobile.ui.user.repo.Repo;
 import com.github.mobile.ui.user.repo.RepoFactory;
+import com.github.mobile.ui.user.target.Target;
 import com.github.mobile.ui.user.target.TargetFactory;
 import com.github.mobile.ui.user.user.User;
 import com.github.mobile.ui.user.user.UserFactory;
@@ -43,7 +44,7 @@ public class UserEventFactory {
         case Event.TYPE_DOWNLOAD:
             return new DownloadUserEvent(actor(event), repo(event), download(event));
         case Event.TYPE_FOLLOW:
-            return new FollowUserEvent(actor(event), target(event));
+            return new FollowUserEvent(actor(event), followee(event));
         case Event.TYPE_FORK:
             return new ForkUserEvent(actor(event), repo(event));
         case Event.TYPE_GIST:
@@ -65,12 +66,16 @@ public class UserEventFactory {
         case Event.TYPE_PUSH:
             return new PushUserEvent(actor(event), payloadRef(event), repo(event), commits(event));
         case Event.TYPE_TEAM_ADD:
-            return new TeamAddUserEvent(actor(event), TargetFactory.create((TeamAddPayload) event.getPayload(), event), team(event));
+            return new TeamAddUserEvent(actor(event), target(event), team(event));
         case Event.TYPE_WATCH:
             return new WatchUserEvent(actor(event), repo(event));
         default:
             throw new IllegalStateException(event.getType() + "is not implemented.");
         }
+    }
+
+    private static Target target(Event event) {
+        return TargetFactory.create((TeamAddPayload) event.getPayload(), event);
     }
 
     private static Team team(Event event) {
@@ -101,7 +106,7 @@ public class UserEventFactory {
         return ActionFactory.create(event);
     }
 
-    private static User target(Event event) {
+    private static User followee(Event event) {
         return UserFactory.create(((FollowPayload) event.getPayload()).getTarget());
     }
 
