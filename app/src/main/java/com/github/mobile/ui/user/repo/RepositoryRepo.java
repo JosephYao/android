@@ -11,7 +11,7 @@ public class RepositoryRepo implements Repo {
 
     @Override
     public void render(StyledText text) {
-        if (hasNoSlashAndSlashAsLastChar())
+        if (hasSlashAndNotLastChar())
             text.bold(repositoryName());
     }
 
@@ -19,8 +19,8 @@ public class RepositoryRepo implements Repo {
         return name.substring(slashPos() + 1);
     }
 
-    private boolean hasNoSlashAndSlashAsLastChar() {
-        return slashPos() != -1 && slashPos() + 1 < name.length();
+    private boolean hasSlashAndNotLastChar() {
+        return slashPos() + 1 < name.length();
     }
 
     private int slashPos() {
