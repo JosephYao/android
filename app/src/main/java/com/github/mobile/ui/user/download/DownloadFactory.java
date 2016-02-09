@@ -12,8 +12,8 @@ public class DownloadFactory {
 
         if (download == null || isTrimmedTextEmpty(download.getName()))
             return new EmptyDownload();
-
-        return new NonEmptyDownload(download.getName());
+        else
+            return new NonEmptyDownload(download.getName());
     }
 
 }
