@@ -39,6 +39,6 @@ public class IconAndViewTextManager {
     }
 
     String setIconAndFormatStyledText(Event event, StyledText main, StyledText details) {
-        return UserEventFactory.create(event, this).generate(main, details);
+        return UserEventFactory.create(event).generate(main, details);
     }
 }

@@ -2,7 +2,6 @@ package com.github.mobile.ui.user.event;
 
 import com.github.mobile.ui.team.Team;
 import com.github.mobile.ui.team.TeamFactory;
-import com.github.mobile.ui.user.IconAndViewTextManager;
 import com.github.mobile.ui.user.action.Action;
 import com.github.mobile.ui.user.action.ActionFactory;
 import com.github.mobile.ui.user.comment.Comment;
@@ -27,7 +26,7 @@ import com.github.mobile.ui.user.user.UserFactory;
 import org.eclipse.egit.github.core.event.Event;
 
 public class UserEventFactory {
-    public static UserEvent create(final Event event, final IconAndViewTextManager iconAndViewTextManager) {
+    public static UserEvent create(final Event event) {
         switch (event.getType()) {
         case Event.TYPE_COMMIT_COMMENT:
             return new CommitCommentUserEvent(comment(event), actor(event), repo(event));
@@ -64,7 +63,7 @@ public class UserEventFactory {
         case Event.TYPE_WATCH:
             return new WatchUserEvent(actor(event), repo(event));
         default:
-            throw new IllegalStateException(event.getType() + "is not implemented.");
+            throw new IllegalStateException(event.getType() + " is not implemented.");
         }
     }
 
