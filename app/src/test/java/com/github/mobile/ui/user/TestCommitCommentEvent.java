@@ -24,15 +24,14 @@ import org.robolectric.annotation.Config;
 public class TestCommitCommentEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-    private EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT);
-    private CommitCommentPayloadBuilder stubPayload = new CommitCommentPayloadBuilder().defaultStubPayload();
+
     private final StyledText mockMainStyledText = mockMainStyledText();
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                stubEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -42,7 +41,7 @@ public class TestCommitCommentEvent {
     @Test
     public void actor_commented_on_repo_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent
+                stubEvent()
                         .withLoginUserName("LoginUserName")
                         .withRepo("Repo")
                         .build(),
@@ -79,7 +78,7 @@ public class TestCommitCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
+                stubEvent().withPayload(stubPayload().
                         withComment("comment")).
                         build(),
                 stubMainStyledText(),
@@ -96,8 +95,16 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).append('\n');
     }
 
+    private EventBuilder stubEvent() {
+        return new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT);
+    }
+
+    private CommitCommentPayloadBuilder stubPayload() {
+        return new CommitCommentPayloadBuilder().defaultStubPayload();
+    }
+
     private EventBuilder stubEventWithCommitId(String commitId) {
-        return stubEvent.withPayload(stubPayload.withCommitId(commitId));
+        return stubEvent().withPayload(stubPayload().withCommitId(commitId));
     }
 
 }
