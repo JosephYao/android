@@ -6,9 +6,9 @@ public class NonEmptyCommit implements Commit {
     private final CommitSha commitSha;
     private final CommitMessage commitMessage;
 
-    public NonEmptyCommit(String sha, String message) {
-        this.commitSha = new CommitSha(sha);
-        this.commitMessage = new CommitMessage(message);
+    public NonEmptyCommit(CommitSha commitSha, CommitMessage commitMessage) {
+        this.commitSha = commitSha;
+        this.commitMessage = commitMessage;
     }
 
     @Override
