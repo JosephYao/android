@@ -1,7 +1,5 @@
 package com.github.mobile.ui.user.commit;
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class CommitsFactory {
     private static List<Commit> commitsFrom(List<org.eclipse.egit.github.core.Commit> payloadCommits) {
         List<Commit> commits = new ArrayList<>();
         for (org.eclipse.egit.github.core.Commit payloadCommit : payloadCommits)
-            commits.add(commitFrom(payloadCommit));
+            commits.add(CommitFactory.create(payloadCommit));
         return commits;
     }
 
@@ -31,17 +29,4 @@ public class CommitsFactory {
         return payloadCommits == null || payloadCommits.size() == 0;
     }
 
-    private static Commit commitFrom(org.eclipse.egit.github.core.Commit commit) {
-        if (commit == null || TextUtils.isEmpty(commit.getSha()))
-            return new EmptyCommit();
-        else
-            return new NonEmptyCommit(new CommitSha(commit.getSha()), commitMessage(commit));
-    }
-
-    private static CommitMessage commitMessage(org.eclipse.egit.github.core.Commit commit) {
-        if (TextUtils.isEmpty(commit.getMessage()))
-            return new EmptyCommitMessage();
-
-        return new NonEmptyCommitMessage(commit.getMessage());
-    }
 }
