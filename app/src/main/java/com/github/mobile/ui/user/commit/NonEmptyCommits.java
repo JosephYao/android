@@ -7,7 +7,7 @@ import com.github.mobile.ui.StyledText;
 import java.util.List;
 
 public class NonEmptyCommits implements Commits {
-    public static final int MAX_COMMIT_TO_RENDER = 3;
+    private static final int MAX_COMMIT_TO_RENDER = 3;
     private final List<Commit> commits;
 
     public NonEmptyCommits(List<Commit> commits) {
@@ -20,19 +20,27 @@ public class NonEmptyCommits implements Commits {
         renderDetailOfCommits(text);
     }
 
-    private void renderDetailOfCommits(StyledText details) {
+    private void renderDetailOfCommits(StyledText text) {
         for (int index = 0; index < countOfCommitToRender(); index++)
-            commits.get(index).render(details);
+            commits.get(index).render(text);
     }
 
     private int countOfCommitToRender() {
         return Math.min(commits.size(), MAX_COMMIT_TO_RENDER);
     }
 
-    private void renderNumberOfCommits(StyledText details) {
-        if (commits.size() != 1)
-            details.append(FORMAT_INT.format(commits.size())).append(" new commits");
+    private void renderNumberOfCommits(StyledText text) {
+        if (commits.size() > 1)
+            renderNumberOfCommitsMoreThanOne(text);
         else
-            details.append("1 new commit");
+            renderNumberOfOneCommit(text);
+    }
+
+    private StyledText renderNumberOfOneCommit(StyledText text) {
+        return text.append("1 new commit");
+    }
+
+    private StyledText renderNumberOfCommitsMoreThanOne(StyledText text) {
+        return text.append(FORMAT_INT.format(commits.size())).append(" new commits");
     }
 }

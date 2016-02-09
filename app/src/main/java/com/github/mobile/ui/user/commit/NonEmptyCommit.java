@@ -5,17 +5,19 @@ import android.text.TextUtils;
 import com.github.mobile.ui.StyledText;
 
 public class NonEmptyCommit implements Commit {
+    private static final char LINE_DELIMITER = '\n';
+    private static final int TRUNCATED_POS = 7;
     private final String sha;
     private final String message;
 
-    public NonEmptyCommit(org.eclipse.egit.github.core.Commit commit) {
-        sha = commit.getSha();
-        message = commit.getMessage();
+    public NonEmptyCommit(String sha, String message) {
+        this.sha = sha;
+        this.message = message;
     }
 
     @Override
     public void render(StyledText text) {
-        text.append('\n');
+        text.append(LINE_DELIMITER);
         appendSha(text);
         appendMessage(text);
     }
@@ -44,13 +46,14 @@ public class NonEmptyCommit implements Commit {
     }
 
     private int indexOfLineDelimiter() {
-        return message.indexOf('\n');
+        return message.indexOf(LINE_DELIMITER);
     }
 
     private void appendSha(StyledText text) {
-        if (sha.length() > 7)
-            text.monospace(sha.substring(0, 7));
-        else
-            text.monospace(sha);
+        text.monospace(truncatedSha());
+    }
+
+    private String truncatedSha() {
+        return sha.substring(0, Math.min(TRUNCATED_POS, sha.length()));
     }
 }
