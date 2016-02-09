@@ -25,14 +25,13 @@ import org.robolectric.annotation.Config;
 public class TestCreateEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-    private final CreatePayloadBuilder stubPayload = new CreatePayloadBuilder().defaultStubPayload();
-    private EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_CREATE).withPayload(stubPayload);
+
     private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_create() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                stubEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -42,7 +41,7 @@ public class TestCreateEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                stubEvent().
                         withLoginUserName("LoginUserNameForCreate").
                         build(),
                 mockMainStyledText,
@@ -67,8 +66,8 @@ public class TestCreateEvent {
     @Test
     public void ref_should_be_appended_to_main_and_repo_should_be_bold_to_main_when_ref_type_is_not_repository() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withPayload(stubPayload.
+                stubEvent().
+                        withPayload(stubPayload().
                                 withRefType("refType").
                                 withRef("ref")).
                         withRepo("RepoForCreate").
@@ -93,10 +92,6 @@ public class TestCreateEvent {
         verify(mockMainStyledText).bold("RepoForCreate");
     }
 
-    private EventBuilder stubEventWithRefType(String refType) {
-        return stubEvent.withPayload(stubPayload.withRefType(refType));
-    }
-
     @Test
     public void repo_should_not_be_bold_to_main_when_repo_name_has_slash_as_the_last_character() {
         iconAndViewTextManager.setIconAndFormatStyledText(
@@ -112,6 +107,18 @@ public class TestCreateEvent {
 
     private void verifyNoRepoNameIsBold() {
         verify(mockMainStyledText, times(1)).bold(anyString());
+    }
+
+    private EventBuilder stubEventWithRefType(String refType) {
+        return stubEvent().withPayload(stubPayload().withRefType(refType));
+    }
+
+    private EventBuilder stubEvent() {
+        return new EventBuilder().defaultStubEventFor(Event.TYPE_CREATE).withPayload(stubPayload());
+    }
+
+    private CreatePayloadBuilder stubPayload() {
+        return new CreatePayloadBuilder().defaultStubPayload();
     }
 
 }
