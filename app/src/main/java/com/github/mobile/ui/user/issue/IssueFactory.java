@@ -11,23 +11,27 @@ public class IssueFactory {
 
     public static Issue create(Event event) {
         if (event.getPayload() instanceof IssueCommentPayload)
-            return create((IssueCommentPayload) event.getPayload());
+            return createFromIssue(issue(event));
 
-        return createFromIssuesPayload((IssuesPayload) event.getPayload());
+        return createFromTitle(title(event));
     }
 
-    public static Issue create(IssueCommentPayload payload) {
-        org.eclipse.egit.github.core.Issue issue = payload.getIssue();
+    private static String title(Event event) {
+        return ((IssuesPayload) event.getPayload()).getIssue().getTitle();
+    }
 
+    private static org.eclipse.egit.github.core.Issue issue(Event event) {
+        return ((IssueCommentPayload) event.getPayload()).getIssue();
+    }
+
+    private static Issue createFromIssue(org.eclipse.egit.github.core.Issue issue) {
         if (IssueUtils.isPullRequest(issue))
             return new PullRequestIssue(issue.getNumber());
         else
             return new NonPullRequestIssue(issue.getNumber());
     }
 
-    public static Issue createFromIssuesPayload(IssuesPayload payload) {
-        String title = payload.getIssue().getTitle();
-
+    private static Issue createFromTitle(String title) {
         if (FactoryUtils.isTrimmedTextEmpty(title))
             return new NoTitleIssue();
         else
