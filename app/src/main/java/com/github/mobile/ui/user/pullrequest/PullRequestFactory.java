@@ -9,11 +9,10 @@ public class PullRequestFactory {
     public static PullRequest create(Event event) {
         PullRequestPayload payload = (PullRequestPayload) event.getPayload();
 
-        if (isActionOpenedOrClosed(payload.getAction()) && isPullRequestNotEmpty(payload.getPullRequest())) {
+        if (isActionOpenedOrClosed(payload.getAction()) && isPullRequestNotEmpty(payload.getPullRequest()))
             return new TitlePullRequest(payload.getPullRequest().getTitle());
-        }
-
-        return new NonTitlePullRequest();
+        else
+            return new NonTitlePullRequest();
     }
 
     private static boolean isActionOpenedOrClosed(String action) {
