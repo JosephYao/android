@@ -23,16 +23,13 @@ import org.robolectric.annotation.Config;
 public class TestDeleteEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-    private final DeletePayloadBuilder stubPayload = new DeletePayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().
-            defaultStubEventFor(Event.TYPE_DELETE).
-            withPayload(stubPayload);
+
     StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_delete() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                stubEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -43,7 +40,7 @@ public class TestDeleteEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                stubEvent().
                         withLoginUserName("LoginUserNameForDelete").
                         build(),
                 mockMainStyledText,
@@ -55,8 +52,8 @@ public class TestDeleteEvent {
     @Test
     public void payload_ref_type_and_ref_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withPayload(stubPayload.
+                stubEvent().
+                        withPayload(stubPayload().
                                 withRefType("RefType").
                                 withRef("Ref")).
                         build(),
@@ -73,7 +70,7 @@ public class TestDeleteEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                stubEvent().
                         withRepo("RepoForDelete").
                         build(),
                 mockMainStyledText,
@@ -81,4 +78,15 @@ public class TestDeleteEvent {
 
         verify(mockMainStyledText).bold("RepoForDelete");
     }
+
+    private DeletePayloadBuilder stubPayload() {
+        return new DeletePayloadBuilder().defaultStubPayload();
+    }
+
+    private EventBuilder stubEvent() {
+        return new EventBuilder().
+                defaultStubEventFor(Event.TYPE_DELETE).
+                withPayload(stubPayload());
+    }
+
 }
