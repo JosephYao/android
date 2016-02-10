@@ -24,9 +24,8 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestPullRequestEvent {
 
-    public static final int PAYLOAD_NUMBER = 1;
-    private final PullRequestPayloadBuilder stubPayload = new PullRequestPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).with(stubPayload);
+    private static final int PAYLOAD_NUMBER = 1;
+
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
@@ -34,8 +33,7 @@ public class TestPullRequestEvent {
     @Test
     public void icon_should_be_pull_request() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        build(),
+                aPullRequestEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -45,7 +43,7 @@ public class TestPullRequestEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPullRequestEvent().
                         withLoginUserName("LoginUserNameForPullRequest").
                         build(),
                 mockMainStyledText,
@@ -57,7 +55,7 @@ public class TestPullRequestEvent {
     @Test
     public void action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithAction("action").
+                aPullRequestEventWithAction("action").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -69,7 +67,7 @@ public class TestPullRequestEvent {
     @Test
     public void synchronize_action_should_be_changed_to_updated_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithAction("synchronize").
+                aPullRequestEventWithAction("synchronize").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -81,9 +79,7 @@ public class TestPullRequestEvent {
     @Test
     public void payload_number_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withNumber(PAYLOAD_NUMBER)).
+                aPullRequestEventWithNumber(PAYLOAD_NUMBER).
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -95,7 +91,7 @@ public class TestPullRequestEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPullRequestEvent().
                         withRepo("RepoForPullRequest").
                         build(),
                 mockMainStyledText,
@@ -107,10 +103,7 @@ public class TestPullRequestEvent {
     @Test
     public void pull_request_title_should_be_appended_to_detail_when_action_is_opened() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("opened").
-                                withPullRequestTitle("title")).
+                aPullRequestEventWithActionAndTitle("opened", "title").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -121,10 +114,7 @@ public class TestPullRequestEvent {
     @Test
     public void pull_request_title_should_be_appended_to_detail_when_action_is_closed() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("closed").
-                                withPullRequestTitle("title")).
+                aPullRequestEventWithActionAndTitle("closed", "title").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -132,10 +122,26 @@ public class TestPullRequestEvent {
         verify(mockDetailsStyledText).append("title");
     }
 
-    private EventBuilder stubEventWithAction(String action) {
-        return stubEvent.
-                with(stubPayload.
-                        withAction(action));
+    private EventBuilder aPullRequestEventWithAction(String action) {
+        return aPullRequestEvent().with(aPullRequestPayload().withAction(action));
+    }
+
+    private PullRequestPayloadBuilder aPullRequestPayload() {
+        return new PullRequestPayloadBuilder();
+    }
+
+    private EventBuilder aPullRequestEvent() {
+        return new EventBuilder(Event.TYPE_PULL_REQUEST).with(aPullRequestPayload());
+    }
+
+    private EventBuilder aPullRequestEventWithNumber(int number) {
+        return aPullRequestEvent().with(aPullRequestPayload().withNumber(number));
+    }
+
+    private EventBuilder aPullRequestEventWithActionAndTitle(String action, String title) {
+        return aPullRequestEvent().with(aPullRequestPayload().
+                withAction(action).
+                withPullRequestTitle(title));
     }
 
 }
