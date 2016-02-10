@@ -24,9 +24,7 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestPushEvent {
 
-    private final PushPayloadBuilder stubPayload = new PushPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PUSH).
-            with(stubPayload);
+    private static final int MAX_NUMBER_OF_COMMITS_TO_APPEND = 3;
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
@@ -34,7 +32,7 @@ public class TestPushEvent {
     @Test
     public void icon_should_be_push() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aPushEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -44,7 +42,7 @@ public class TestPushEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPushEvent().
                         withLoginUserName("LoginUserNameForPush").
                         build(),
                 mockMainStyledText,
@@ -57,7 +55,7 @@ public class TestPushEvent {
     @Test
     public void ref_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithRef("RefForPush"),
+                aPushEventWithRef("RefForPush"),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
@@ -67,7 +65,7 @@ public class TestPushEvent {
     @Test
     public void ref_should_be_truncated_when_start_with_refs_heads() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithRef("RestOfRef"),
+                aPushEventWithRef("RestOfRef"),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
@@ -77,7 +75,7 @@ public class TestPushEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPushEvent().
                         withRepo("RepoForPush").
                         build(),
                 mockMainStyledText,
@@ -89,8 +87,7 @@ public class TestPushEvent {
     @Test
     public void one_new_commit_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayloadWithOneCommit()).
+                aPushEventWithNumberOfCommit(1).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -101,9 +98,7 @@ public class TestPushEvent {
     @Test
     public void two_new_commits_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.defaultStubPayload().
-                                withNumberOfCommits(2)).
+                aPushEventWithNumberOfCommit(2).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -115,9 +110,7 @@ public class TestPushEvent {
     @Test
     public void sha_should_be_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayloadWithOneCommit().
-                                withCommitSha("len<=7")).
+                aPushEventWithCommitSha("len<=7").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -128,9 +121,7 @@ public class TestPushEvent {
     @Test
     public void sha_longer_than_7_should_be_truncated_and_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayloadWithOneCommit().
-                                withCommitSha("longerThan7")).
+                aPushEventWithCommitSha("longerThan7").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -141,9 +132,7 @@ public class TestPushEvent {
     @Test
     public void message_without_new_line_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayloadWithOneCommit().
-                                withCommitMessage("message without new line")).
+                aPushEventWithCommitMessage("message without new line").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -154,9 +143,7 @@ public class TestPushEvent {
     @Test
     public void message_with_new_line_should_be_truncated_and_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayloadWithOneCommit().
-                                withCommitMessage("first line" + "\n" + "second line")).
+                aPushEventWithCommitMessage("first line" + "\n" + "second line").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -167,10 +154,7 @@ public class TestPushEvent {
     @Test
     public void maximum_three_commits_should_be_all_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.defaultStubPayload().
-                                withCommitMessage("MessageForPush").
-                                withNumberOfCommits(3)).
+                aPushEventWithNumberOfCommitAndMessage(MAX_NUMBER_OF_COMMITS_TO_APPEND).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -181,10 +165,7 @@ public class TestPushEvent {
     @Test
     public void fourth_commit_should_not_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.defaultStubPayload().
-                                withCommitMessage("MessageForPush").
-                                withNumberOfCommits(4)).
+                aPushEventWithNumberOfCommitAndMessage(MAX_NUMBER_OF_COMMITS_TO_APPEND + 1).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -193,12 +174,7 @@ public class TestPushEvent {
     }
 
     private void verifyOnlyMaximumCommitsAppendedToDetails() {
-        verify(mockDetailsStyledText, times(3)).append("MessageForPush");
-    }
-
-    private PushPayloadBuilder stubPayloadWithOneCommit() {
-        return stubPayload.defaultStubPayload().
-                withNumberOfCommits(1);
+        verify(mockDetailsStyledText, times(MAX_NUMBER_OF_COMMITS_TO_APPEND)).append("MessageForPush");
     }
 
     private void verifyMessageAppended(String text2) {
@@ -206,8 +182,8 @@ public class TestPushEvent {
         verify(mockDetailsStyledText).append(text2);
     }
 
-    private Event stubEventWithRef(String ref) {
-        return stubEvent.with(stubPayload.
+    private Event aPushEventWithRef(String ref) {
+        return aPushEvent().with(aPushPayload().
                 withRef("refs/heads/" + ref)).
                 build();
     }
@@ -220,6 +196,32 @@ public class TestPushEvent {
     private void verifyShaMonospace(String text2) {
         verify(mockDetailsStyledText).append('\n');
         verify(mockDetailsStyledText).monospace(text2);
+    }
+
+    private PushPayloadBuilder aPushPayload() {
+        return new PushPayloadBuilder();
+    }
+
+    private EventBuilder aPushEvent() {
+        return new EventBuilder(Event.TYPE_PUSH).with(aPushPayload());
+    }
+
+    private EventBuilder aPushEventWithNumberOfCommit(int number) {
+        return aPushEvent().with(aPushPayload().withNumberOfCommits(number));
+    }
+
+    private EventBuilder aPushEventWithCommitSha(String sha) {
+        return aPushEvent().with(aPushPayload().withNumberOfCommits(1).withCommitSha(sha));
+    }
+
+    private EventBuilder aPushEventWithCommitMessage(String message) {
+        return aPushEvent().with(aPushPayload().withNumberOfCommits(1).withCommitMessage(message));
+    }
+
+    private EventBuilder aPushEventWithNumberOfCommitAndMessage(int number) {
+        return aPushEvent().with(aPushPayload().
+                withCommitMessage("MessageForPush").
+                withNumberOfCommits(number));
     }
 
 }
