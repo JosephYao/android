@@ -21,13 +21,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestForkEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FORK);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_fork() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aForkEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -36,10 +36,8 @@ public class TestForkEvent {
 
     @Test
     public void actor_and_repo_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aForkEvent().
                         withLoginUserName("LoginUserNameForFork").
                         withRepo("RepoForFork").
                         build(),
@@ -50,4 +48,9 @@ public class TestForkEvent {
         verify(mockMainStyledText).append(" forked repository ");
         verify(mockMainStyledText).bold("RepoForFork");
     }
+
+    private EventBuilder aForkEvent() {
+        return new EventBuilder().defaultStubEventFor(Event.TYPE_FORK);
+    }
+
 }
