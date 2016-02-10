@@ -1,7 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.CommitComment;
 
 public class CommitCommentBuilder {
@@ -9,7 +7,7 @@ public class CommitCommentBuilder {
     private CommentBuilder<CommitComment> commentBuilder;
 
     public CommitCommentBuilder() {
-        commentBuilder = new CommentBuilder<>(CommitComment.class).defaultStubComment();
+        commentBuilder = new CommentBuilder<>(CommitComment.class);
     }
 
     public CommitCommentBuilder withComment(String comment) {
@@ -23,8 +21,8 @@ public class CommitCommentBuilder {
     }
 
     public CommitComment build() {
-        CommitComment stubComment = commentBuilder.build();
-        when(stubComment.getCommitId()).thenReturn(commitId);
-        return stubComment;
+        CommitComment commitComment = commentBuilder.build();
+        commitComment.setCommitId(commitId);
+        return commitComment;
     }
 }

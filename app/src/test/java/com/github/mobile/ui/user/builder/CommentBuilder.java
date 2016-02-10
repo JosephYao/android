@@ -1,8 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.Comment;
 
 public class CommentBuilder<T extends Comment> {
@@ -14,14 +11,22 @@ public class CommentBuilder<T extends Comment> {
         this.classOfComment = classOfComment;
     }
 
-    public CommentBuilder<T> defaultStubComment() {
-        return this;
+    public T build() {
+        T comment = comment();
+        comment.setBody(this.comment);
+        return comment;
     }
 
-    public T build() {
-        T stubComment = mock(classOfComment);
-        when(stubComment.getBody()).thenReturn(comment);
-        return stubComment;
+    private T comment() {
+        T comment = null;
+        try {
+            comment = classOfComment.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return comment;
     }
 
     public CommentBuilder<T> withComment(String comment) {

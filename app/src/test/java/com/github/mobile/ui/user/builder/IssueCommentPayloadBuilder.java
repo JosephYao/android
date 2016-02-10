@@ -38,7 +38,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
 
     public IssueCommentPayloadBuilder defaultStubPayload() {
         issueBuilder = new IssueBuilder().defaultStubIssue();
-        commentBuilder = new CommentBuilder<>(Comment.class).defaultStubComment();
+        commentBuilder = new CommentBuilder<>(Comment.class);
         pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
         this.issueNumber = 1;
         return this;
