@@ -23,14 +23,14 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestDownloadEvent {
 
-    private final DownloadPayloadBuilder stubPayload = new DownloadPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_DOWNLOAD).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_upload() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aDownloadEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -39,10 +39,8 @@ public class TestDownloadEvent {
 
     @Test
     public void actor_upload_to_repo_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent
+                aDownloadEvent()
                         .withLoginUserName("LoginUserNameForDownload")
                         .withRepo("RepoForDownload")
                         .build(),
@@ -56,16 +54,25 @@ public class TestDownloadEvent {
 
     @Test
     public void download_name_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent
-                        .with(stubPayload.
-                                withDownload("Download"))
+                aDownloadEventWithDownloadName("Download")
                         .build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
 
         verify(mockDetailsStyledText).append("Download");
     }
+
+    private EventBuilder aDownloadEventWithDownloadName(String name) {
+        return aDownloadEvent().with(aDownloadPayload().withDownload(name));
+    }
+
+    private DownloadPayloadBuilder aDownloadPayload() {
+        return new DownloadPayloadBuilder();
+    }
+
+    private EventBuilder aDownloadEvent() {
+        return new EventBuilder(Event.TYPE_DOWNLOAD).with(aDownloadPayload());
+    }
+
 }
