@@ -1,26 +1,21 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.PullRequestReviewCommentPayload;
 
 public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
-    private CommitCommentBuilder commitCommentBuilder;
+    private CommitCommentBuilder commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
 
     @Override
     public EventPayload build() {
-        PullRequestReviewCommentPayload stubPayload = mock(PullRequestReviewCommentPayload.class);
-        CommitComment stubComment = commitCommentBuilder.build();
-        when(stubPayload.getComment()).thenReturn(stubComment);
-        return stubPayload;
+        PullRequestReviewCommentPayload pullRequestReviewCommentPayload = new PullRequestReviewCommentPayload();
+        pullRequestReviewCommentPayload.setComment(comment());
+        return pullRequestReviewCommentPayload;
     }
 
-    public PullRequestReviewCommentPayloadBuilder defaultStubPayload() {
-        commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
-        return this;
+    private CommitComment comment() {
+        return commitCommentBuilder.build();
     }
 
     public PullRequestReviewCommentPayloadBuilder withCommitId(String commitId) {

@@ -23,18 +23,14 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestPullRequestReviewCommentEvent {
 
-    private final PullRequestReviewCommentPayloadBuilder stubPayload = new PullRequestReviewCommentPayloadBuilder()
-            .defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event
-            .TYPE_PULL_REQUEST_REVIEW_COMMENT).
-            with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aPullRequestReviewCommentEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -43,10 +39,8 @@ public class TestPullRequestReviewCommentEvent {
 
     @Test
     public void actor_and_repo_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPullRequestReviewCommentEvent().
                         withLoginUserName("LoginUserNameForPullRequestReviewComment").
                         withRepo("RepoForPullRequestReviewComment").
                         build(),
@@ -61,7 +55,7 @@ public class TestPullRequestReviewCommentEvent {
     @Test
     public void commit_id_should_be_appended_to_details_without_change_when_commit_id_is_10_characters_long() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithCommitId("10chlongId").
+                aPullRequestReviewCommentEventWithCommitId("10chlongId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -72,7 +66,7 @@ public class TestPullRequestReviewCommentEvent {
     @Test
     public void commit_id_should_be_trimmed_and_appended_to_details_when_commit_id_is_longer_than_10_characters() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithCommitId("longerthan10charId").
+                aPullRequestReviewCommentEventWithCommitId("longerthan10charId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -83,8 +77,7 @@ public class TestPullRequestReviewCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.with(stubPayload.
-                        withComment("comment")).
+                aPullRequestCommentEventWithComment("comment").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -100,8 +93,20 @@ public class TestPullRequestReviewCommentEvent {
         verify(mockDetailsStyledText).append('\n');
     }
 
-    private EventBuilder stubEventWithCommitId(String commitId) {
-        return stubEvent.with(stubPayload.withCommitId(commitId));
+    private EventBuilder aPullRequestReviewCommentEventWithCommitId(String commitId) {
+        return aPullRequestReviewCommentEvent().with(aPullRequestReviewCommentPayload().withCommitId(commitId));
+    }
+
+    private PullRequestReviewCommentPayloadBuilder aPullRequestReviewCommentPayload() {
+        return new PullRequestReviewCommentPayloadBuilder();
+    }
+
+    private EventBuilder aPullRequestReviewCommentEvent() {
+        return new EventBuilder(Event.TYPE_PULL_REQUEST_REVIEW_COMMENT).with(aPullRequestReviewCommentPayload());
+    }
+
+    private EventBuilder aPullRequestCommentEventWithComment(String comment) {
+        return aPullRequestReviewCommentEvent().with(aPullRequestReviewCommentPayload().withComment(comment));
     }
 
 }
