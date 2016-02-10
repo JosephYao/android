@@ -9,7 +9,7 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
     private CommitCommentBuilder commitCommentBuilder;
 
     public CommitCommentPayloadBuilder() {
-        commitCommentBuilder = new CommitCommentBuilder().defaultStubComment().withCommitId("commitId");
+        commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
     }
 
     public EventPayload build() {

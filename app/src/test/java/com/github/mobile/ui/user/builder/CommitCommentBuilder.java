@@ -8,9 +8,8 @@ public class CommitCommentBuilder {
     private String commitId;
     private CommentBuilder<CommitComment> commentBuilder;
 
-    public CommitCommentBuilder defaultStubComment() {
+    public CommitCommentBuilder() {
         commentBuilder = new CommentBuilder<>(CommitComment.class).defaultStubComment();
-        return this;
     }
 
     public CommitCommentBuilder withComment(String comment) {

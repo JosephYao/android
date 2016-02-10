@@ -19,7 +19,7 @@ public class PullRequestReviewCommentPayloadBuilder implements PayloadBuilder {
     }
 
     public PullRequestReviewCommentPayloadBuilder defaultStubPayload() {
-        commitCommentBuilder = new CommitCommentBuilder().defaultStubComment().withCommitId("commitId");
+        commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
         return this;
     }
 
