@@ -1,8 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.event.DeletePayload;
 import org.eclipse.egit.github.core.event.EventPayload;
 
@@ -12,10 +9,10 @@ public class DeletePayloadBuilder implements PayloadBuilder {
 
     @Override
     public EventPayload build() {
-        DeletePayload stubPayload = mock(DeletePayload.class);
-        when(stubPayload.getRefType()).thenReturn(this.refType);
-        when(stubPayload.getRef()).thenReturn(this.ref);
-        return stubPayload;
+        DeletePayload deletePayload = new DeletePayload();
+        deletePayload.setRefType(refType);
+        deletePayload.setRef(ref);
+        return deletePayload;
     }
 
     public DeletePayloadBuilder withRefType(String refType) {
