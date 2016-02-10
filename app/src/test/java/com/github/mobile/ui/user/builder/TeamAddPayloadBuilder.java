@@ -14,39 +14,36 @@ public class TeamAddPayloadBuilder implements PayloadBuilder {
 
     @Override
     public EventPayload build() {
-        TeamAddPayload stubPayload = mock(TeamAddPayload.class);
-        stubUserNameIfNeed(stubPayload);
-        stubTeamNameIfNeed(stubPayload);
+        TeamAddPayload stubPayload = new TeamAddPayload();
+        stubPayload.setUser(user());
+        stubPayload.setTeam(team());
         return stubPayload;
     }
 
-    private void stubTeamNameIfNeed(TeamAddPayload stubPayload) {
-        if (teamName != null) {
-            Team team = mock(Team.class);
-            when(team.getName()).thenReturn(teamName);
-            when(stubPayload.getTeam()).thenReturn(team);
-        }
+    private Team team() {
+        if (teamName == null)
+            return null;
+
+        Team team = mock(Team.class);
+        when(team.getName()).thenReturn(teamName);
+        return team;
     }
 
-    private void stubUserNameIfNeed(TeamAddPayload stubPayload) {
-        if (userName != null) {
-            User stubUser = mock(User.class);
-            when(stubUser.getLogin()).thenReturn(userName);
-            when(stubPayload.getUser()).thenReturn(stubUser);
-        }
+    private User user() {
+        if (userName == null)
+            return null;
+
+        User stubUser = new UserBuilder().withLoginUserName(userName).build();
+        return stubUser;
     }
 
-    public TeamAddPayloadBuilder defaultStubPayload() {
-        return this;
-    }
-
-    public TeamAddPayloadBuilder withUser(String userName) {
-        this.userName = userName;
+    public TeamAddPayloadBuilder withUser(String name) {
+        userName = name;
         return this;
     }
 
     public TeamAddPayloadBuilder withTeam(String name) {
-        this.teamName = name;
+        teamName = name;
         return this;
     }
 }

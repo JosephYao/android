@@ -22,17 +22,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestTeamAddEvent {
 
-    private final TeamAddPayloadBuilder stubPayload = new TeamAddPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_TEAM_ADD).
-            with(stubPayload).
-            withRepo("RepoForTeamAdd");
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_add_member() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aTeamAddEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -42,8 +38,9 @@ public class TestTeamAddEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        withLoginUserName("LoginUserForTeamAdd").build(),
+                aTeamAddEvent().
+                        withLoginUserName("LoginUserForTeamAdd").
+                        build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
@@ -54,8 +51,8 @@ public class TestTeamAddEvent {
     @Test
     public void payload_user_should_be_bold_to_main_if_not_empty() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.with(stubPayload.
-                        withUser("PayloadUserForTeamAdd")).build(),
+                aTeamAddEventWithUser("PayloadUserForTeamAdd").
+                        build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
@@ -66,7 +63,8 @@ public class TestTeamAddEvent {
     @Test
     public void repo_name_should_be_bold_to_main_if_payload_user_is_empty_and_repo_name_exists() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withRepo("Repos/RepoForTeamAdd").
+                aTeamAddEvent().
+                        withRepo("Repos/RepoForTeamAdd").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -78,7 +76,8 @@ public class TestTeamAddEvent {
     @Test
     public void nothing_should_be_bold_to_main_if_payload_user_is_empty_and_no_repo_name_exists() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withRepo("NoRepoNameExists").
+                aTeamAddEvent().
+                        withRepo("NoRepoNameExists").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -89,14 +88,29 @@ public class TestTeamAddEvent {
     @Test
     public void non_empty_team_name_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.with(stubPayload.
-                        withTeam("TeamName")).
+                aTeamAddEventWithTeam("TeamName").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
 
         verify(mockMainStyledText).append(' ');
         verify(mockMainStyledText).bold("TeamName");
+    }
+
+    private EventBuilder aTeamAddEventWithTeam(String name) {
+        return aTeamAddEvent().with(aTeamAddPayload().withTeam(name));
+    }
+
+    private TeamAddPayloadBuilder aTeamAddPayload() {
+        return new TeamAddPayloadBuilder();
+    }
+
+    private EventBuilder aTeamAddEvent() {
+        return new EventBuilder(Event.TYPE_TEAM_ADD).with(aTeamAddPayload()).withRepo("RepoForTeamAdd");
+    }
+
+    private EventBuilder aTeamAddEventWithUser(String name) {
+        return aTeamAddEvent().with(aTeamAddPayload().withUser(name));
     }
 
 }
