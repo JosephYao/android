@@ -41,8 +41,10 @@ public class EventBuilder {
         User stubUser = userBuilder.build();
         when(stubEvent.getActor()).thenReturn(stubUser);
 
-        EventPayload stubPayload = payloadBuilder.build();
-        when(stubEvent.getPayload()).thenReturn(stubPayload);
+        if (payloadBuilder != null) {
+            EventPayload stubPayload = payloadBuilder.build();
+            when(stubEvent.getPayload()).thenReturn(stubPayload);
+        }
 
         EventRepository stubRepo = stubRepo();
         when(stubEvent.getRepo()).thenReturn(stubRepo);

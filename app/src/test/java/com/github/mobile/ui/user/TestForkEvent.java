@@ -50,7 +50,7 @@ public class TestForkEvent {
     }
 
     private EventBuilder aForkEvent() {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_FORK);
+        return new EventBuilder(Event.TYPE_FORK);
     }
 
 }

@@ -21,13 +21,12 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestGollumEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GOLLUM);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
     public void icon_should_be_wiki() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aGollumEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -39,7 +38,7 @@ public class TestGollumEvent {
         StyledText mockMainStyledText = mockMainStyledText();
 
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aGollumEvent().
                         withLoginUserName("LoginUserNameForWiki").
                         withRepo("RepoForWiki").
                         build(),
@@ -50,4 +49,9 @@ public class TestGollumEvent {
         verify(mockMainStyledText).append(" updated the wiki in ");
         verify(mockMainStyledText).bold("RepoForWiki");
     }
+
+    private EventBuilder aGollumEvent() {
+        return new EventBuilder(Event.TYPE_GOLLUM);
+    }
+
 }
