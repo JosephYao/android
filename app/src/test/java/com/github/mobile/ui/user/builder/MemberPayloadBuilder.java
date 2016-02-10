@@ -19,7 +19,7 @@ public class MemberPayloadBuilder implements PayloadBuilder {
     }
 
     public MemberPayloadBuilder defaultStubPayload() {
-        userBuilder = new UserBuilder().defaultStubUser();
+        userBuilder = new UserBuilder();
         return this;
     }
 

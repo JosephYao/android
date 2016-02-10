@@ -16,7 +16,7 @@ public class FollowPayloadBuilder implements PayloadBuilder {
     }
 
     public FollowPayloadBuilder() {
-        userBuilder = new UserBuilder().defaultStubUser();
+        userBuilder = new UserBuilder();
     }
 
     public FollowPayloadBuilder withTarget(String target) {
