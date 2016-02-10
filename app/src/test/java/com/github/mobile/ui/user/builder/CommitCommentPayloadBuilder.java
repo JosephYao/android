@@ -11,9 +11,8 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
     private CommitCommentBuilder commitCommentBuilder;
 
-    public CommitCommentPayloadBuilder defaultStubPayload() {
+    public CommitCommentPayloadBuilder() {
         commitCommentBuilder = new CommitCommentBuilder().defaultStubComment().withCommitId("commitId");
-        return this;
     }
 
     public EventPayload build() {

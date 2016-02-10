@@ -25,7 +25,7 @@ public class EventBuilder {
 
     public EventBuilder defaultStubEventFor(String type) {
         this.type = type;
-        this.payloadBuilder = new CommitCommentPayloadBuilder().defaultStubPayload();
+        this.payloadBuilder = new CommitCommentPayloadBuilder();
         this.userBuilder = new UserBuilder().defaultStubUser();
         return this;
     }

@@ -78,7 +78,7 @@ public class TestCommitCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                aCommitCommentEvent().withPayload(stubPayload().
+                aCommitCommentEvent().withPayload(aCommitCommentPayload().
                         withComment("comment")).
                         build(),
                 stubMainStyledText(),
@@ -96,15 +96,15 @@ public class TestCommitCommentEvent {
     }
 
     private EventBuilder aCommitCommentEvent() {
-        return new EventBuilder(Event.TYPE_COMMIT_COMMENT).withPayload(stubPayload());
+        return new EventBuilder(Event.TYPE_COMMIT_COMMENT).withPayload(aCommitCommentPayload());
     }
 
-    private CommitCommentPayloadBuilder stubPayload() {
-        return new CommitCommentPayloadBuilder().defaultStubPayload();
+    private CommitCommentPayloadBuilder aCommitCommentPayload() {
+        return new CommitCommentPayloadBuilder();
     }
 
     private EventBuilder stubEventWithCommitId(String commitId) {
-        return aCommitCommentEvent().withPayload(stubPayload().withCommitId(commitId));
+        return aCommitCommentEvent().withPayload(aCommitCommentPayload().withCommitId(commitId));
     }
 
 }
