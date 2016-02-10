@@ -22,14 +22,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestFollowEvent {
 
-    private final FollowPayloadBuilder stubPayload = new FollowPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FOLLOW).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_follow() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aFollowEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -38,12 +37,8 @@ public class TestFollowEvent {
 
     @Test
     public void actor_and_follow_target_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withTarget("Target")).
+                aFollowEventWithTarget("Target").
                         withLoginUserName("LoginUserNameForFollow").
                         build(),
                 mockMainStyledText,
@@ -53,4 +48,17 @@ public class TestFollowEvent {
         verify(mockMainStyledText).append(" started following ");
         verify(mockMainStyledText).bold("Target");
     }
+
+    private EventBuilder aFollowEventWithTarget(String target) {
+        return aFollowEvent().with(aFollowPayload().withTarget(target));
+    }
+
+    private FollowPayloadBuilder aFollowPayload() {
+        return new FollowPayloadBuilder();
+    }
+
+    private EventBuilder aFollowEvent() {
+        return new EventBuilder(Event.TYPE_FOLLOW).with(aFollowPayload());
+    }
+
 }
