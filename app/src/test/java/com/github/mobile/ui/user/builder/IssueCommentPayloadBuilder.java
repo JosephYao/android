@@ -1,7 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.PullRequest;
@@ -9,7 +7,7 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.IssueCommentPayload;
 
 public class IssueCommentPayloadBuilder implements PayloadBuilder {
-    private IssueBuilder issueBuilder = new IssueBuilder().defaultStubIssue();
+    private IssueBuilder issueBuilder = new IssueBuilder();
     private Integer issueNumber = 100;
     private String comment;
     private CommentBuilder<Comment> commentBuilder = new CommentBuilder<>(Comment.class);
@@ -18,7 +16,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     @Override
     public EventPayload build() {
         IssueCommentPayload issueCommentPayload = new IssueCommentPayload();
-        issueCommentPayload.setIssue(stubIssue());
+        issueCommentPayload.setIssue(issue());
         issueCommentPayload.setComment(comment());
         return issueCommentPayload;
     }
@@ -27,11 +25,11 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
         return commentBuilder.withComment(comment).build();
     }
 
-    private Issue stubIssue() {
-        Issue stubIssue = issueBuilder.withNumber(issueNumber).build();
+    private Issue issue() {
+        Issue issue = issueBuilder.withNumber(issueNumber).build();
         PullRequest stubPullRequest = pullRequestBuilder.withHtmlUrl("HtmlUrl").build();
-        when(stubIssue.getPullRequest()).thenReturn(stubPullRequest);
-        return stubIssue;
+        issue.setPullRequest(stubPullRequest);
+        return issue;
     }
 
     public IssueCommentPayloadBuilder withPullRequest() {

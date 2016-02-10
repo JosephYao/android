@@ -15,13 +15,16 @@ public class IssuesPayloadBuilder implements PayloadBuilder {
     public EventPayload build() {
         IssuesPayload stubPayload = mock(IssuesPayload.class);
         when(stubPayload.getAction()).thenReturn(action);
-        Issue stubIssue = issueBuilder.build();
-        when(stubPayload.getIssue()).thenReturn(stubIssue);
+        when(stubPayload.getIssue()).thenReturn(issue());
         return stubPayload;
     }
 
+    private Issue issue() {
+        return issueBuilder.build();
+    }
+
     public IssuesPayloadBuilder defaultStubPayload() {
-        issueBuilder = new IssueBuilder().defaultStubIssue().withNumber(100);
+        issueBuilder = new IssueBuilder().withNumber(100);
         return this;
     }
 

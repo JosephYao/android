@@ -1,17 +1,10 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.Issue;
 
 public class IssueBuilder {
     private Integer number;
     private String title;
-
-    public IssueBuilder defaultStubIssue() {
-        return this;
-    }
 
     public IssueBuilder withNumber(Integer number) {
         this.number = number;
@@ -19,10 +12,10 @@ public class IssueBuilder {
     }
 
     public Issue build() {
-        Issue stubIssue = mock(Issue.class);
-        when(stubIssue.getNumber()).thenReturn(number);
-        when(stubIssue.getTitle()).thenReturn(title);
-        return stubIssue;
+        Issue issue = new Issue();
+        issue.setNumber(number);
+        issue.setTitle(title);
+        return issue;
     }
 
     public IssueBuilder withTitle(String title) {
