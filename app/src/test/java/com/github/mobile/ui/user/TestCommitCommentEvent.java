@@ -31,7 +31,7 @@ public class TestCommitCommentEvent {
     @Test
     public void icon_should_be_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().build(),
+                aCommitCommentEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -41,7 +41,7 @@ public class TestCommitCommentEvent {
     @Test
     public void actor_commented_on_repo_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent()
+                aCommitCommentEvent()
                         .withLoginUserName("LoginUserName")
                         .withRepo("Repo")
                         .build(),
@@ -78,7 +78,7 @@ public class TestCommitCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().withPayload(stubPayload().
+                aCommitCommentEvent().withPayload(stubPayload().
                         withComment("comment")).
                         build(),
                 stubMainStyledText(),
@@ -95,8 +95,8 @@ public class TestCommitCommentEvent {
         verify(mockDetailsStyledText).append('\n');
     }
 
-    private EventBuilder stubEvent() {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_COMMIT_COMMENT);
+    private EventBuilder aCommitCommentEvent() {
+        return new EventBuilder(Event.TYPE_COMMIT_COMMENT).withPayload(stubPayload());
     }
 
     private CommitCommentPayloadBuilder stubPayload() {
@@ -104,7 +104,7 @@ public class TestCommitCommentEvent {
     }
 
     private EventBuilder stubEventWithCommitId(String commitId) {
-        return stubEvent().withPayload(stubPayload().withCommitId(commitId));
+        return aCommitCommentEvent().withPayload(stubPayload().withCommitId(commitId));
     }
 
 }
