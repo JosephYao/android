@@ -56,7 +56,7 @@ public class TestCommitCommentEvent {
     @Test
     public void commit_id_should_be_appended_to_details_without_change_when_commit_id_is_10_characters_long() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithCommitId("10chlongId").
+                aCommitCommentEventWithCommitId("10chlongId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -67,7 +67,7 @@ public class TestCommitCommentEvent {
     @Test
     public void commit_id_should_be_trimmed_and_appended_to_details_when_commit_id_is_longer_than_10_characters() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithCommitId("longerthan10charId").
+                aCommitCommentEventWithCommitId("longerthan10charId").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -78,8 +78,7 @@ public class TestCommitCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                aCommitCommentEvent().withPayload(aCommitCommentPayload().
-                        withComment("comment")).
+                aCommitCommentEventWithComment("comment").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -103,8 +102,12 @@ public class TestCommitCommentEvent {
         return new CommitCommentPayloadBuilder();
     }
 
-    private EventBuilder stubEventWithCommitId(String commitId) {
+    private EventBuilder aCommitCommentEventWithCommitId(String commitId) {
         return aCommitCommentEvent().withPayload(aCommitCommentPayload().withCommitId(commitId));
+    }
+
+    private EventBuilder aCommitCommentEventWithComment(String comment) {
+        return aCommitCommentEvent().withPayload(aCommitCommentPayload().withComment(comment));
     }
 
 }
