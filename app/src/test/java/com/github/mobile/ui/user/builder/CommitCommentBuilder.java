@@ -4,11 +4,7 @@ import org.eclipse.egit.github.core.CommitComment;
 
 public class CommitCommentBuilder {
     private String commitId;
-    private CommentBuilder<CommitComment> commentBuilder;
-
-    public CommitCommentBuilder() {
-        commentBuilder = new CommentBuilder<>(CommitComment.class);
-    }
+    private CommentBuilder<CommitComment> commentBuilder = new CommentBuilder<>(CommitComment.class);
 
     public CommitCommentBuilder withComment(String comment) {
         commentBuilder.withComment(comment);

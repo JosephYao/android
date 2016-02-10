@@ -5,7 +5,7 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
 
 public class GistPayloadBuilder implements PayloadBuilder {
-    private String gistId;
+    private String gistId = "GistId";
     private String action;
 
     @Override
@@ -20,10 +20,6 @@ public class GistPayloadBuilder implements PayloadBuilder {
         Gist gist = new Gist();
         gist.setId(gistId);
         return gist;
-    }
-
-    public GistPayloadBuilder() {
-        this.gistId = "GistId";
     }
 
     public GistPayloadBuilder withAction(String action) {

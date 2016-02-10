@@ -6,11 +6,7 @@ import org.eclipse.egit.github.core.event.EventPayload;
 
 public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
-    private CommitCommentBuilder commitCommentBuilder;
-
-    public CommitCommentPayloadBuilder() {
-        commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
-    }
+    private CommitCommentBuilder commitCommentBuilder = new CommitCommentBuilder().withCommitId("commitId");
 
     public EventPayload build() {
         CommitCommentPayload commitCommentPayload = new CommitCommentPayload();

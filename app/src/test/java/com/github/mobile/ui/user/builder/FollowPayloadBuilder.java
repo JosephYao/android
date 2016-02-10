@@ -5,7 +5,7 @@ import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.FollowPayload;
 
 public class FollowPayloadBuilder implements PayloadBuilder {
-    private UserBuilder userBuilder;
+    private UserBuilder userBuilder = new UserBuilder();
 
     @Override
     public EventPayload build() {
@@ -13,10 +13,6 @@ public class FollowPayloadBuilder implements PayloadBuilder {
         User stubUser = userBuilder.build();
         followPayload.setTarget(stubUser);
         return followPayload;
-    }
-
-    public FollowPayloadBuilder() {
-        userBuilder = new UserBuilder();
     }
 
     public FollowPayloadBuilder withTarget(String target) {

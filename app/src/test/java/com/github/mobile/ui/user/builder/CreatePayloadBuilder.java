@@ -5,12 +5,8 @@ import org.eclipse.egit.github.core.event.EventPayload;
 
 public class CreatePayloadBuilder implements PayloadBuilder {
 
-    private String refType;
+    private String refType = "refType";
     private String ref;
-
-    public CreatePayloadBuilder() {
-        this.refType = "refType";
-    }
 
     public EventPayload build() {
         CreatePayload createPayload = new CreatePayload();
