@@ -36,12 +36,11 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
         when(stubPayload.getIssue()).thenReturn(stubIssue);
     }
 
-    public IssueCommentPayloadBuilder defaultStubPayload() {
+    public IssueCommentPayloadBuilder() {
         issueBuilder = new IssueBuilder().defaultStubIssue();
         commentBuilder = new CommentBuilder<>(Comment.class);
         pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
         this.issueNumber = 1;
-        return this;
     }
 
     public IssueCommentPayloadBuilder withPullRequest() {
@@ -54,7 +53,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
         return this;
     }
 
-    public IssueCommentPayloadBuilder withOutPullRequest() {
+    public IssueCommentPayloadBuilder withoutPullRequest() {
         pullRequestBuilder = new NullPullRequestBuilder();
         return this;
     }

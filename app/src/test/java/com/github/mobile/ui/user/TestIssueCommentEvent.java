@@ -24,15 +24,15 @@ import org.robolectric.annotation.Config;
 public class TestIssueCommentEvent {
 
     public static final int ISSUE_NUMBER = 1;
-    private final IssueCommentPayloadBuilder stubPayload = new IssueCommentPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUE_COMMENT).with(stubPayload);
+
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_issue_comment() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                anIssueCommentEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -42,7 +42,7 @@ public class TestIssueCommentEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                anIssueCommentEvent().
                         withLoginUserName("LoginUserNameForIssueComment").
                         build(),
                 mockMainStyledText,
@@ -55,7 +55,7 @@ public class TestIssueCommentEvent {
     @Test
     public void pull_request_issue_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.with(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
+                anIssueCommentEvent().with(anIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
                         withPullRequest()).
                         build(),
                 mockMainStyledText,
@@ -67,8 +67,8 @@ public class TestIssueCommentEvent {
     @Test
     public void other_issue_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.with(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
-                        withOutPullRequest()).
+                anIssueCommentEvent().with(anIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
+                        withoutPullRequest()).
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -79,7 +79,7 @@ public class TestIssueCommentEvent {
     @Test
     public void repo_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                anIssueCommentEvent().
                         withRepo("RepoForIssueComment").
                         build(),
                 mockMainStyledText,
@@ -91,12 +91,8 @@ public class TestIssueCommentEvent {
 
     @Test
     public void comment_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withComment("IssueComment")).
+                anIssueCommentEventWithComment("IssueComment").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -104,7 +100,20 @@ public class TestIssueCommentEvent {
         verify(mockDetailsStyledText).append("IssueComment");
     }
 
-    private IssueCommentPayloadBuilder stubIssueCommentPayloadWithIssueNumber(int issueNumber) {
-        return stubPayload.withIssueNumber(issueNumber);
+    private EventBuilder anIssueCommentEventWithComment(String issueComment) {
+        return anIssueCommentEvent().with(anIssueCommentPayload().withComment(issueComment));
     }
+
+    private IssueCommentPayloadBuilder anIssueCommentPayloadWithIssueNumber(int issueNumber) {
+        return anIssueCommentPayload().withIssueNumber(issueNumber);
+    }
+
+    private IssueCommentPayloadBuilder anIssueCommentPayload() {
+        return new IssueCommentPayloadBuilder();
+    }
+
+    private EventBuilder anIssueCommentEvent() {
+        return new EventBuilder(Event.TYPE_ISSUE_COMMENT).with(anIssueCommentPayload());
+    }
+
 }
