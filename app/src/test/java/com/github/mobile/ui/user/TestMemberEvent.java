@@ -22,16 +22,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestMemberEvent {
 
-    private final MemberPayloadBuilder stubPayload = new MemberPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).with(stubPayload);
-
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_add_member() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aMemberEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -41,7 +38,7 @@ public class TestMemberEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aMemberEvent().
                         withLoginUserName("LoginUserNameForMember").
                         build(),
                 mockMainStyledText,
@@ -54,9 +51,7 @@ public class TestMemberEvent {
     @Test
     public void member_and_repo_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withMember("LoginMember")).
+                aMemberEventWithMemberName("LoginMember").
                         withRepo("RepoForMemberAdd").
                         build(),
                 mockMainStyledText,
@@ -65,6 +60,18 @@ public class TestMemberEvent {
         verify(mockMainStyledText).bold("LoginMember");
         verify(mockMainStyledText).append(" as a collaborator to ");
         verify(mockMainStyledText).bold("RepoForMemberAdd");
+    }
+
+    private EventBuilder aMemberEventWithMemberName(String name) {
+        return aMemberEvent().with(aMemberPayload().withMember(name));
+    }
+
+    private MemberPayloadBuilder aMemberPayload() {
+        return new MemberPayloadBuilder();
+    }
+
+    private EventBuilder aMemberEvent() {
+        return new EventBuilder(Event.TYPE_MEMBER).with(aMemberPayload());
     }
 
 }

@@ -1,26 +1,21 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.MemberPayload;
 
 public class MemberPayloadBuilder implements PayloadBuilder {
-    private UserBuilder userBuilder;
+    private UserBuilder userBuilder = new UserBuilder();
 
     @Override
     public EventPayload build() {
-        MemberPayload stubPayload = mock(MemberPayload.class);
-        User stubUser = userBuilder.build();
-        when(stubPayload.getMember()).thenReturn(stubUser);
-        return stubPayload;
+        MemberPayload memberPayload = new MemberPayload();
+        memberPayload.setMember(member());
+        return memberPayload;
     }
 
-    public MemberPayloadBuilder defaultStubPayload() {
-        userBuilder = new UserBuilder();
-        return this;
+    private User member() {
+        return userBuilder.build();
     }
 
     public MemberPayloadBuilder withMember(String loginUserName) {
