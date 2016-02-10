@@ -1,8 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.EventPayload;
@@ -16,10 +13,10 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
     }
 
     public EventPayload build() {
-        CommitCommentPayload stubCommitCommentPayload = mock(CommitCommentPayload.class);
+        CommitCommentPayload commitCommentPayload = new CommitCommentPayload();
         CommitComment stubComment = commitCommentBuilder.build();
-        when(stubCommitCommentPayload.getComment()).thenReturn(stubComment);
-        return stubCommitCommentPayload;
+        commitCommentPayload.setComment(stubComment);
+        return commitCommentPayload;
     }
 
     public CommitCommentPayloadBuilder withCommitId(String commitId) {
