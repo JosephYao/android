@@ -23,7 +23,7 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestIssueCommentEvent {
 
-    public static final int ISSUE_NUMBER = 1;
+    private static final int ISSUE_NUMBER = 1;
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
