@@ -18,10 +18,6 @@ public class DeletePayloadBuilder implements PayloadBuilder {
         return stubPayload;
     }
 
-    public DeletePayloadBuilder defaultStubPayload() {
-        return this;
-    }
-
     public DeletePayloadBuilder withRefType(String refType) {
         this.refType = refType;
         return this;

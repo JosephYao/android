@@ -29,7 +29,7 @@ public class TestDeleteEvent {
     @Test
     public void icon_should_be_delete() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().build(),
+                aDeleteEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -40,7 +40,7 @@ public class TestDeleteEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
+                aDeleteEvent().
                         withLoginUserName("LoginUserNameForDelete").
                         build(),
                 mockMainStyledText,
@@ -52,10 +52,7 @@ public class TestDeleteEvent {
     @Test
     public void payload_ref_type_and_ref_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
-                        withPayload(stubPayload().
-                                withRefType("RefType").
-                                withRef("Ref")).
+                aDeleteEventWithRefTypeAndRef("RefType", "Ref").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -70,7 +67,7 @@ public class TestDeleteEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
+                aDeleteEvent().
                         withRepo("RepoForDelete").
                         build(),
                 mockMainStyledText,
@@ -79,14 +76,17 @@ public class TestDeleteEvent {
         verify(mockMainStyledText).bold("RepoForDelete");
     }
 
-    private DeletePayloadBuilder stubPayload() {
-        return new DeletePayloadBuilder().defaultStubPayload();
+    private DeletePayloadBuilder aDeletePayload() {
+        return new DeletePayloadBuilder();
     }
 
-    private EventBuilder stubEvent() {
-        return new EventBuilder().
-                defaultStubEventFor(Event.TYPE_DELETE).
-                withPayload(stubPayload());
+    private EventBuilder aDeleteEvent() {
+        return new EventBuilder(Event.TYPE_DELETE).withPayload(aDeletePayload());
     }
 
+    private EventBuilder aDeleteEventWithRefTypeAndRef(String refType, String ref) {
+        return aDeleteEvent().withPayload(aDeletePayload().
+                withRefType(refType).
+                withRef(ref));
+    }
 }
