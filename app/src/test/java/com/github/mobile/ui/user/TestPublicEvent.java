@@ -20,13 +20,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestPublicEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PUBLIC);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_null() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aPublicEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -35,10 +35,8 @@ public class TestPublicEvent {
 
     @Test
     public void actor_and_repo_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aPublicEvent().
                         withLoginUserName("LoginUserNameForPublic").
                         withRepo("RepoForPublic").
                         build(),
@@ -49,4 +47,9 @@ public class TestPublicEvent {
         verify(mockMainStyledText).append(" open sourced repository ");
         verify(mockMainStyledText).bold("RepoForPublic");
     }
+
+    private EventBuilder aPublicEvent() {
+        return new EventBuilder(Event.TYPE_PUBLIC);
+    }
+
 }
