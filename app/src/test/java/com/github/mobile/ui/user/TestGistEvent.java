@@ -22,15 +22,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestGistEvent {
 
-    private final GistPayloadBuilder stubPayload = new GistPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_gist() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aGistEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -40,7 +38,7 @@ public class TestGistEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                aGistEvent().
                         withLoginUserName("LoginUserNameForGist").
                         build(),
                 mockMainStyledText,
@@ -53,9 +51,7 @@ public class TestGistEvent {
     @Test
     public void create_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("create")).
+                aGistEventWithAction("create").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -66,9 +62,7 @@ public class TestGistEvent {
     @Test
     public void update_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("update")).
+                aGistEventWithAction("update").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -79,9 +73,7 @@ public class TestGistEvent {
     @Test
     public void other_action_should_be_appended_to_main_without_change() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("otherAction")).
+                aGistEventWithAction("otherAction").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -92,9 +84,7 @@ public class TestGistEvent {
     @Test
     public void gist_id_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withGistId("GistId")).
+                aGistEventWithGistId("GistId").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -102,4 +92,21 @@ public class TestGistEvent {
         verify(mockMainStyledText).append(" Gist ");
         verify(mockMainStyledText).append("GistId");
     }
+
+    private EventBuilder aGistEventWithGistId(String gistId) {
+        return aGistEvent().with(aGistPayload().withGistId(gistId));
+    }
+
+    private GistPayloadBuilder aGistPayload() {
+        return new GistPayloadBuilder();
+    }
+
+    private EventBuilder aGistEvent() {
+        return new EventBuilder(Event.TYPE_GIST).with(aGistPayload());
+    }
+
+    private EventBuilder aGistEventWithAction(String action) {
+        return aGistEvent().with(aGistPayload().withAction(action));
+    }
+
 }

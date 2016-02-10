@@ -1,8 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.GistPayload;
@@ -13,22 +10,20 @@ public class GistPayloadBuilder implements PayloadBuilder {
 
     @Override
     public EventPayload build() {
-        GistPayload stubPayload = mock(GistPayload.class);
-        Gist stubGist = stubGist();
-        when(stubPayload.getGist()).thenReturn(stubGist);
-        when(stubPayload.getAction()).thenReturn(action);
-        return stubPayload;
+        GistPayload gistPayload = new GistPayload();
+        gistPayload.setAction(action);
+        gistPayload.setGist(gist());
+        return gistPayload;
     }
 
-    private Gist stubGist() {
-        Gist stubGist = mock(Gist.class);
-        when(stubGist.getId()).thenReturn(this.gistId);
-        return stubGist;
+    private Gist gist() {
+        Gist gist = new Gist();
+        gist.setId(gistId);
+        return gist;
     }
 
-    public GistPayloadBuilder defaultStubPayload() {
+    public GistPayloadBuilder() {
         this.gistId = "GistId";
-        return this;
     }
 
     public GistPayloadBuilder withAction(String action) {
