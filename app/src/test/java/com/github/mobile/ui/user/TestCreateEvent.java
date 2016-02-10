@@ -31,7 +31,7 @@ public class TestCreateEvent {
     @Test
     public void icon_should_be_create() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().build(),
+                aCreateEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -41,7 +41,7 @@ public class TestCreateEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
+                aCreateEvent().
                         withLoginUserName("LoginUserNameForCreate").
                         build(),
                 mockMainStyledText,
@@ -54,7 +54,7 @@ public class TestCreateEvent {
     @Test
     public void ref_type_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithRefType("refType").
+                aCreateEventWithRefType("refType").
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -66,10 +66,7 @@ public class TestCreateEvent {
     @Test
     public void ref_should_be_appended_to_main_and_repo_should_be_bold_to_main_when_ref_type_is_not_repository() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent().
-                        withPayload(stubPayload().
-                                withRefType("refType").
-                                withRef("ref")).
+                aCreateEventWithRefTypeAndRef("refType", "ref").
                         withRepo("RepoForCreate").
                         build(),
                 mockMainStyledText,
@@ -83,7 +80,7 @@ public class TestCreateEvent {
     @Test
     public void repo_should_be_trimmed_from_slash_and_bold_to_main_when_ref_type_is_repository() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithRefType("repository").
+                aCreateEventWithRefType("repository").
                         withRepo("Repos/RepoForCreate").
                         build(),
                 mockMainStyledText,
@@ -95,7 +92,7 @@ public class TestCreateEvent {
     @Test
     public void repo_should_not_be_bold_to_main_when_repo_name_has_slash_as_the_last_character() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithRefType("repository").
+                aCreateEventWithRefType("repository").
                         withLoginUserName("willBeBold").
                         withRepo("WillNotBeBold/").
                         build(),
@@ -109,16 +106,22 @@ public class TestCreateEvent {
         verify(mockMainStyledText, times(1)).bold(anyString());
     }
 
-    private EventBuilder stubEventWithRefType(String refType) {
-        return stubEvent().withPayload(stubPayload().withRefType(refType));
+    private EventBuilder aCreateEvent() {
+        return new EventBuilder(Event.TYPE_CREATE).withPayload(aCreatePayload());
     }
 
-    private EventBuilder stubEvent() {
-        return new EventBuilder().defaultStubEventFor(Event.TYPE_CREATE).withPayload(stubPayload());
+    private CreatePayloadBuilder aCreatePayload() {
+        return new CreatePayloadBuilder();
     }
 
-    private CreatePayloadBuilder stubPayload() {
-        return new CreatePayloadBuilder().defaultStubPayload();
+    private EventBuilder aCreateEventWithRefType(String refType) {
+        return aCreateEvent().withPayload(aCreatePayload().
+                withRefType(refType));
     }
 
+    private EventBuilder aCreateEventWithRefTypeAndRef(String refType, String ref) {
+        return aCreateEvent().withPayload(aCreatePayload().
+                withRefType(refType).
+                withRef(ref));
+    }
 }

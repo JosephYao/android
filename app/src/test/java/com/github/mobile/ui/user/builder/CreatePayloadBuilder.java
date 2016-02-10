@@ -11,9 +11,8 @@ public class CreatePayloadBuilder implements PayloadBuilder {
     private String refType;
     private String ref;
 
-    public CreatePayloadBuilder defaultStubPayload() {
+    public CreatePayloadBuilder() {
         this.refType = "refType";
-        return this;
     }
 
     public EventPayload build() {
