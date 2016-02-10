@@ -16,16 +16,20 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestNotImplementedEvent {
 
+    private final IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+
     @Test(expected = IllegalStateException.class)
     public void not_implemented_event_type() {
-        IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                new EventBuilder().defaultStubEventFor("not implemented").build(),
+                aNotImplementedEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
         fail();
+    }
+
+    private EventBuilder aNotImplementedEvent() {
+        return new EventBuilder("not implemented");
     }
 
 }
