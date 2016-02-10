@@ -1,31 +1,23 @@
 package com.github.mobile.ui.user.builder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.IssuesPayload;
 
 public class IssuesPayloadBuilder implements PayloadBuilder {
-    private IssueBuilder issueBuilder;
+    private IssueBuilder issueBuilder = new IssueBuilder().withNumber(100);
     private String action;
 
     @Override
     public EventPayload build() {
-        IssuesPayload stubPayload = mock(IssuesPayload.class);
-        when(stubPayload.getAction()).thenReturn(action);
-        when(stubPayload.getIssue()).thenReturn(issue());
-        return stubPayload;
+        IssuesPayload issuesPayload = new IssuesPayload();
+        issuesPayload.setAction(action);
+        issuesPayload.setIssue(issue());
+        return issuesPayload;
     }
 
     private Issue issue() {
         return issueBuilder.build();
-    }
-
-    public IssuesPayloadBuilder defaultStubPayload() {
-        issueBuilder = new IssueBuilder().withNumber(100);
-        return this;
     }
 
     public IssuesPayloadBuilder withAction(String action) {

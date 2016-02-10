@@ -25,16 +25,16 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestIssuesEvent {
 
-    public static final int ISSUE_NUMBER = 1;
-    private final IssuesPayloadBuilder stubPayload = new IssuesPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).with(stubPayload);
+    private static final int ISSUE_NUMBER = 1;
+
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
+    private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
     @Test
     public void icon_should_be_issue_open() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithIssueAction("opened"),
+                anIssuesEventWithAction("opened").build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -44,7 +44,7 @@ public class TestIssuesEvent {
     @Test
     public void icon_should_be_issue_reopen() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithIssueAction("reopened"),
+                anIssuesEventWithAction("reopened").build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -54,7 +54,7 @@ public class TestIssuesEvent {
     @Test
     public void icon_should_be_issue_close() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithIssueAction("closed"),
+                anIssuesEventWithAction("closed").build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -64,7 +64,7 @@ public class TestIssuesEvent {
     @Test
     public void icon_should_be_null_when_any_other_action() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEventWithIssueAction("otherAction"),
+                anIssuesEventWithAction("otherAction").build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -74,7 +74,7 @@ public class TestIssuesEvent {
     @Test
     public void actor_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                anIssuesEvent().
                         withLoginUserName("LoginUserNameForIssues").
                         build(),
                 mockMainStyledText,
@@ -86,10 +86,7 @@ public class TestIssuesEvent {
     @Test
     public void action_should_be_append_and_issue_number_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withAction("action").
-                                withIssueNumber(ISSUE_NUMBER)).
+                anIssuesEventWithActionAndIssueNumber("action", ISSUE_NUMBER).
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -103,7 +100,7 @@ public class TestIssuesEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
+                anIssuesEvent().
                         withRepo("RepoForIssues").
                         build(),
                 mockMainStyledText,
@@ -114,12 +111,8 @@ public class TestIssuesEvent {
 
     @Test
     public void issue_title_should_be_appended_to_details() {
-        StyledText mockDetailsStyledText = mockDetailsStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.
-                        with(stubPayload.
-                                withIssueTitle("IssueTitle")).
+                anIssuesEventWithIssueTitle("IssueTitle").
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -127,11 +120,26 @@ public class TestIssuesEvent {
         verify(mockDetailsStyledText).append("IssueTitle");
     }
 
-    private Event stubEventWithIssueAction(String action) {
-        return stubEvent.
-                with(stubPayload.
-                        withAction(action)).
-                build();
+    private EventBuilder anIssuesEventWithIssueTitle(String issueTitle) {
+        return anIssuesEvent().with(anIssuesPayload().withIssueTitle(issueTitle));
+    }
+
+    private IssuesPayloadBuilder anIssuesPayload() {
+        return new IssuesPayloadBuilder();
+    }
+
+    private EventBuilder anIssuesEvent() {
+        return new EventBuilder(Event.TYPE_ISSUES).with(anIssuesPayload());
+    }
+
+    private EventBuilder anIssuesEventWithActionAndIssueNumber(String action, int issueNumber) {
+        return anIssuesEvent().with(anIssuesPayload().
+                withAction(action).
+                withIssueNumber(issueNumber));
+    }
+
+    private EventBuilder anIssuesEventWithAction(String action) {
+        return anIssuesEvent().with(anIssuesPayload().withAction(action));
     }
 
 }
