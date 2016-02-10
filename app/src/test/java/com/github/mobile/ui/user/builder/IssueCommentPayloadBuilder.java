@@ -11,7 +11,7 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
     private Integer issueNumber = 100;
     private String comment;
     private CommentBuilder<Comment> commentBuilder = new CommentBuilder<>(Comment.class);
-    private PullRequestBuilder pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
+    private PullRequestBuilder pullRequestBuilder = new PullRequestBuilder();
 
     @Override
     public EventPayload build() {
@@ -27,13 +27,16 @@ public class IssueCommentPayloadBuilder implements PayloadBuilder {
 
     private Issue issue() {
         Issue issue = issueBuilder.withNumber(issueNumber).build();
-        PullRequest stubPullRequest = pullRequestBuilder.withHtmlUrl("HtmlUrl").build();
-        issue.setPullRequest(stubPullRequest);
+        issue.setPullRequest(pullRequest());
         return issue;
     }
 
+    private PullRequest pullRequest() {
+        return pullRequestBuilder.withHtmlUrl("HtmlUrl").build();
+    }
+
     public IssueCommentPayloadBuilder withPullRequest() {
-        pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
+        pullRequestBuilder = new PullRequestBuilder();
         return this;
     }
 

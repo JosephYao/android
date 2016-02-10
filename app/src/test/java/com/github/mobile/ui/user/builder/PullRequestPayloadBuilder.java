@@ -17,13 +17,16 @@ public class PullRequestPayloadBuilder implements PayloadBuilder {
         PullRequestPayload stubPayload = mock(PullRequestPayload.class);
         when(stubPayload.getAction()).thenReturn(action);
         when(stubPayload.getNumber()).thenReturn(number);
-        PullRequest stubPullRequest = pullRequestBuilder.build();
-        when(stubPayload.getPullRequest()).thenReturn(stubPullRequest);
+        when(stubPayload.getPullRequest()).thenReturn(pullRequest());
         return stubPayload;
     }
 
+    private PullRequest pullRequest() {
+        return pullRequestBuilder.build();
+    }
+
     public PullRequestPayloadBuilder defaultStubPayload() {
-        pullRequestBuilder = new PullRequestBuilder().defaultStubPullRequest();
+        pullRequestBuilder = new PullRequestBuilder();
         return this;
     }
 
