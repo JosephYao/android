@@ -27,7 +27,7 @@ public class TestIssuesEvent {
 
     public static final int ISSUE_NUMBER = 1;
     private final IssuesPayloadBuilder stubPayload = new IssuesPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUES).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -87,7 +87,7 @@ public class TestIssuesEvent {
     public void action_should_be_append_and_issue_number_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("action").
                                 withIssueNumber(ISSUE_NUMBER)).
                         build(),
@@ -118,7 +118,7 @@ public class TestIssuesEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withIssueTitle("IssueTitle")).
                         build(),
                 stubMainStyledText(),
@@ -129,7 +129,7 @@ public class TestIssuesEvent {
 
     private Event stubEventWithIssueAction(String action) {
         return stubEvent.
-                withPayload(stubPayload.
+                with(stubPayload.
                         withAction(action)).
                 build();
     }

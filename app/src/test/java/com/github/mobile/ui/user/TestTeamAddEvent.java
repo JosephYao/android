@@ -24,7 +24,7 @@ public class TestTeamAddEvent {
 
     private final TeamAddPayloadBuilder stubPayload = new TeamAddPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_TEAM_ADD).
-            withPayload(stubPayload).
+            with(stubPayload).
             withRepo("RepoForTeamAdd");
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
@@ -54,7 +54,7 @@ public class TestTeamAddEvent {
     @Test
     public void payload_user_should_be_bold_to_main_if_not_empty() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
+                stubEvent.with(stubPayload.
                         withUser("PayloadUserForTeamAdd")).build(),
                 mockMainStyledText,
                 stubDetailsStyledText());
@@ -89,7 +89,7 @@ public class TestTeamAddEvent {
     @Test
     public void non_empty_team_name_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
+                stubEvent.with(stubPayload.
                         withTeam("TeamName")).
                         build(),
                 mockMainStyledText,

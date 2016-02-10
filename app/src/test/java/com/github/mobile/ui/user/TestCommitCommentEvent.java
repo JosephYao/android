@@ -95,7 +95,7 @@ public class TestCommitCommentEvent {
     }
 
     private EventBuilder aCommitCommentEvent() {
-        return new EventBuilder(Event.TYPE_COMMIT_COMMENT).withPayload(aCommitCommentPayload());
+        return new EventBuilder(Event.TYPE_COMMIT_COMMENT).with(aCommitCommentPayload());
     }
 
     private CommitCommentPayloadBuilder aCommitCommentPayload() {
@@ -103,11 +103,11 @@ public class TestCommitCommentEvent {
     }
 
     private EventBuilder aCommitCommentEventWithCommitId(String commitId) {
-        return aCommitCommentEvent().withPayload(aCommitCommentPayload().withCommitId(commitId));
+        return aCommitCommentEvent().with(aCommitCommentPayload().withCommitId(commitId));
     }
 
     private EventBuilder aCommitCommentEventWithComment(String comment) {
-        return aCommitCommentEvent().withPayload(aCommitCommentPayload().withComment(comment));
+        return aCommitCommentEvent().with(aCommitCommentPayload().withComment(comment));
     }
 
 }

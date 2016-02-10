@@ -27,7 +27,7 @@ public class TestPullRequestReviewCommentEvent {
             .defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event
             .TYPE_PULL_REQUEST_REVIEW_COMMENT).
-            withPayload(stubPayload);
+            with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
 
@@ -83,7 +83,7 @@ public class TestPullRequestReviewCommentEvent {
     @Test
     public void comment_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubPayload.
+                stubEvent.with(stubPayload.
                         withComment("comment")).
                         build(),
                 stubMainStyledText(),
@@ -101,7 +101,7 @@ public class TestPullRequestReviewCommentEvent {
     }
 
     private EventBuilder stubEventWithCommitId(String commitId) {
-        return stubEvent.withPayload(stubPayload.withCommitId(commitId));
+        return stubEvent.with(stubPayload.withCommitId(commitId));
     }
 
 }

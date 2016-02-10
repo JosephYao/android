@@ -23,7 +23,7 @@ import org.robolectric.annotation.Config;
 public class TestGistEvent {
 
     private final GistPayloadBuilder stubPayload = new GistPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_GIST).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -54,7 +54,7 @@ public class TestGistEvent {
     public void create_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("create")).
                         build(),
                 mockMainStyledText,
@@ -67,7 +67,7 @@ public class TestGistEvent {
     public void update_action_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("update")).
                         build(),
                 mockMainStyledText,
@@ -80,7 +80,7 @@ public class TestGistEvent {
     public void other_action_should_be_appended_to_main_without_change() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("otherAction")).
                         build(),
                 mockMainStyledText,
@@ -93,8 +93,8 @@ public class TestGistEvent {
     public void gist_id_should_be_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
-                            withGistId("GistId")).
+                        with(stubPayload.
+                                withGistId("GistId")).
                         build(),
                 mockMainStyledText,
                 stubDetailsStyledText());

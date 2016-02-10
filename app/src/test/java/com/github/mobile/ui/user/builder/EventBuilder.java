@@ -55,7 +55,7 @@ public class EventBuilder {
         return stubRepo;
     }
 
-    public EventBuilder withPayload(PayloadBuilder payloadBuilder) {
+    public EventBuilder with(PayloadBuilder payloadBuilder) {
         this.payloadBuilder = payloadBuilder;
         return this;
     }

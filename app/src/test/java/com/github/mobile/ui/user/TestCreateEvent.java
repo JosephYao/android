@@ -107,7 +107,7 @@ public class TestCreateEvent {
     }
 
     private EventBuilder aCreateEvent() {
-        return new EventBuilder(Event.TYPE_CREATE).withPayload(aCreatePayload());
+        return new EventBuilder(Event.TYPE_CREATE).with(aCreatePayload());
     }
 
     private CreatePayloadBuilder aCreatePayload() {
@@ -115,12 +115,12 @@ public class TestCreateEvent {
     }
 
     private EventBuilder aCreateEventWithRefType(String refType) {
-        return aCreateEvent().withPayload(aCreatePayload().
+        return aCreateEvent().with(aCreatePayload().
                 withRefType(refType));
     }
 
     private EventBuilder aCreateEventWithRefTypeAndRef(String refType, String ref) {
-        return aCreateEvent().withPayload(aCreatePayload().
+        return aCreateEvent().with(aCreatePayload().
                 withRefType(refType).
                 withRef(ref));
     }

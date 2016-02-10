@@ -24,7 +24,7 @@ import org.robolectric.annotation.Config;
 public class TestDownloadEvent {
 
     private final DownloadPayloadBuilder stubPayload = new DownloadPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_DOWNLOAD).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_DOWNLOAD).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -60,8 +60,8 @@ public class TestDownloadEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent
-                        .withPayload(stubPayload.
-                            withDownload("Download"))
+                        .with(stubPayload.
+                                withDownload("Download"))
                         .build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);

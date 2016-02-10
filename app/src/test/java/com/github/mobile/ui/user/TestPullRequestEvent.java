@@ -26,7 +26,7 @@ public class TestPullRequestEvent {
 
     public static final int PAYLOAD_NUMBER = 1;
     private final PullRequestPayloadBuilder stubPayload = new PullRequestPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PULL_REQUEST).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
@@ -82,7 +82,7 @@ public class TestPullRequestEvent {
     public void payload_number_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withNumber(PAYLOAD_NUMBER)).
                         build(),
                 mockMainStyledText,
@@ -108,7 +108,7 @@ public class TestPullRequestEvent {
     public void pull_request_title_should_be_appended_to_detail_when_action_is_opened() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("opened").
                                 withPullRequestTitle("title")).
                         build(),
@@ -122,7 +122,7 @@ public class TestPullRequestEvent {
     public void pull_request_title_should_be_appended_to_detail_when_action_is_closed() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withAction("closed").
                                 withPullRequestTitle("title")).
                         build(),
@@ -134,7 +134,7 @@ public class TestPullRequestEvent {
 
     private EventBuilder stubEventWithAction(String action) {
         return stubEvent.
-                withPayload(stubPayload.
+                with(stubPayload.
                         withAction(action));
     }
 

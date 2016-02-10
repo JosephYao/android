@@ -23,7 +23,7 @@ import org.robolectric.annotation.Config;
 public class TestFollowEvent {
 
     private final FollowPayloadBuilder stubPayload = new FollowPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FOLLOW).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_FOLLOW).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
 
     @Test
@@ -42,7 +42,7 @@ public class TestFollowEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withTarget("Target")).
                         withLoginUserName("LoginUserNameForFollow").
                         build(),

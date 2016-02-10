@@ -26,7 +26,7 @@ public class TestPushEvent {
 
     private final PushPayloadBuilder stubPayload = new PushPayloadBuilder().defaultStubPayload();
     private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_PUSH).
-            withPayload(stubPayload);
+            with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
     private final StyledText mockDetailsStyledText = mockDetailsStyledText();
@@ -90,7 +90,7 @@ public class TestPushEvent {
     public void one_new_commit_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayloadWithOneCommit()).
+                        with(stubPayloadWithOneCommit()).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
@@ -102,7 +102,7 @@ public class TestPushEvent {
     public void two_new_commits_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        with(stubPayload.defaultStubPayload().
                                 withNumberOfCommits(2)).
                         build(),
                 stubMainStyledText(),
@@ -116,7 +116,7 @@ public class TestPushEvent {
     public void sha_should_be_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayloadWithOneCommit().
+                        with(stubPayloadWithOneCommit().
                                 withCommitSha("len<=7")).
                         build(),
                 stubMainStyledText(),
@@ -129,7 +129,7 @@ public class TestPushEvent {
     public void sha_longer_than_7_should_be_truncated_and_monospace_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayloadWithOneCommit().
+                        with(stubPayloadWithOneCommit().
                                 withCommitSha("longerThan7")).
                         build(),
                 stubMainStyledText(),
@@ -142,7 +142,7 @@ public class TestPushEvent {
     public void message_without_new_line_should_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayloadWithOneCommit().
+                        with(stubPayloadWithOneCommit().
                                 withCommitMessage("message without new line")).
                         build(),
                 stubMainStyledText(),
@@ -155,7 +155,7 @@ public class TestPushEvent {
     public void message_with_new_line_should_be_truncated_and_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayloadWithOneCommit().
+                        with(stubPayloadWithOneCommit().
                                 withCommitMessage("first line" + "\n" + "second line")).
                         build(),
                 stubMainStyledText(),
@@ -168,7 +168,7 @@ public class TestPushEvent {
     public void maximum_three_commits_should_be_all_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        with(stubPayload.defaultStubPayload().
                                 withCommitMessage("MessageForPush").
                                 withNumberOfCommits(3)).
                         build(),
@@ -182,7 +182,7 @@ public class TestPushEvent {
     public void fourth_commit_should_not_be_appended_to_details() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.defaultStubPayload().
+                        with(stubPayload.defaultStubPayload().
                                 withCommitMessage("MessageForPush").
                                 withNumberOfCommits(4)).
                         build(),
@@ -207,7 +207,7 @@ public class TestPushEvent {
     }
 
     private Event stubEventWithRef(String ref) {
-        return stubEvent.withPayload(stubPayload.
+        return stubEvent.with(stubPayload.
                 withRef("refs/heads/" + ref)).
                 build();
     }

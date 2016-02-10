@@ -81,11 +81,11 @@ public class TestDeleteEvent {
     }
 
     private EventBuilder aDeleteEvent() {
-        return new EventBuilder(Event.TYPE_DELETE).withPayload(aDeletePayload());
+        return new EventBuilder(Event.TYPE_DELETE).with(aDeletePayload());
     }
 
     private EventBuilder aDeleteEventWithRefTypeAndRef(String refType, String ref) {
-        return aDeleteEvent().withPayload(aDeletePayload().
+        return aDeleteEvent().with(aDeletePayload().
                 withRefType(refType).
                 withRef(ref));
     }

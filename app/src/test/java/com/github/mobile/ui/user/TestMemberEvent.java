@@ -23,7 +23,7 @@ import org.robolectric.annotation.Config;
 public class TestMemberEvent {
 
     private final MemberPayloadBuilder stubPayload = new MemberPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_MEMBER).with(stubPayload);
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
@@ -55,7 +55,7 @@ public class TestMemberEvent {
     public void member_and_repo_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
+                        with(stubPayload.
                                 withMember("LoginMember")).
                         withRepo("RepoForMemberAdd").
                         build(),

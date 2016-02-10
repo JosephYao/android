@@ -25,7 +25,7 @@ public class TestIssueCommentEvent {
 
     public static final int ISSUE_NUMBER = 1;
     private final IssueCommentPayloadBuilder stubPayload = new IssueCommentPayloadBuilder().defaultStubPayload();
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUE_COMMENT).withPayload(stubPayload);
+    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_ISSUE_COMMENT).with(stubPayload);
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
@@ -55,7 +55,7 @@ public class TestIssueCommentEvent {
     @Test
     public void pull_request_issue_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
+                stubEvent.with(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
                         withPullRequest()).
                         build(),
                 mockMainStyledText,
@@ -67,7 +67,7 @@ public class TestIssueCommentEvent {
     @Test
     public void other_issue_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.withPayload(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
+                stubEvent.with(stubIssueCommentPayloadWithIssueNumber(ISSUE_NUMBER).
                         withOutPullRequest()).
                         build(),
                 mockMainStyledText,
@@ -95,8 +95,8 @@ public class TestIssueCommentEvent {
 
         iconAndViewTextManager.setIconAndFormatStyledText(
                 stubEvent.
-                        withPayload(stubPayload.
-                            withComment("IssueComment")).
+                        with(stubPayload.
+                                withComment("IssueComment")).
                         build(),
                 stubMainStyledText(),
                 mockDetailsStyledText);
