@@ -22,6 +22,7 @@ import org.robolectric.annotation.Config;
 public class TestGollumEvent {
 
     IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
+    private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_wiki() {
@@ -35,8 +36,6 @@ public class TestGollumEvent {
 
     @Test
     public void actor_and_repo_should_be_bold_and_appended_to_main() {
-        StyledText mockMainStyledText = mockMainStyledText();
-
         iconAndViewTextManager.setIconAndFormatStyledText(
                 aGollumEvent().
                         withLoginUserName("LoginUserNameForWiki").
