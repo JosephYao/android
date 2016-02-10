@@ -21,14 +21,13 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class)
 public class TestWatchEvent {
 
-    private final EventBuilder stubEvent = new EventBuilder().defaultStubEventFor(Event.TYPE_WATCH);
     private IconAndViewTextManager iconAndViewTextManager = new IconAndViewTextManager(null);
     private final StyledText mockMainStyledText = mockMainStyledText();
 
     @Test
     public void icon_should_be_star() {
         String icon = iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent.build(),
+                aWatchEvent().build(),
                 stubMainStyledText(),
                 stubDetailsStyledText());
 
@@ -38,7 +37,7 @@ public class TestWatchEvent {
     @Test
     public void actor_should_be_bold_and_appended_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent
+                aWatchEvent()
                         .withLoginUserName("LoginUserNameForWatch")
                         .build(),
                 mockMainStyledText,
@@ -51,7 +50,7 @@ public class TestWatchEvent {
     @Test
     public void repo_should_be_bold_to_main() {
         iconAndViewTextManager.setIconAndFormatStyledText(
-                stubEvent
+                aWatchEvent()
                         .withRepo("RepoForWatch")
                         .build(),
                 mockMainStyledText,
@@ -59,4 +58,9 @@ public class TestWatchEvent {
 
         verify(mockMainStyledText).bold("RepoForWatch");
     }
+
+    private EventBuilder aWatchEvent() {
+        return new EventBuilder(Event.TYPE_WATCH);
+    }
+
 }
