@@ -1,6 +1,5 @@
 package com.github.mobile.ui.user.builder;
 
-import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.EventPayload;
 
@@ -10,8 +9,7 @@ public class CommitCommentPayloadBuilder implements PayloadBuilder {
 
     public EventPayload build() {
         CommitCommentPayload commitCommentPayload = new CommitCommentPayload();
-        CommitComment stubComment = commitCommentBuilder.build();
-        commitCommentPayload.setComment(stubComment);
+        commitCommentPayload.setComment(commitCommentBuilder.build());
         return commitCommentPayload;
     }
 
